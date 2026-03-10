@@ -1,1 +1,42 @@
+# dependencies
 node_modules
+.pnpm-store
+
+# logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# env files
+.env
+.env.local
+.env.development
+.env.production
+
+# next.js
+.next
+out
+dist
+build
+
+# turbopack cache
+.turbo
+
+# typescript
+*.tsbuildinfo
+
+# coverage
+coverage
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode
+.idea
+
+# lockfiles inside packages (monorepo rule)
+client/pnpm-lock.yaml
+server/pnpm-lock.yaml
