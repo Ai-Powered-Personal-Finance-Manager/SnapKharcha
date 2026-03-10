@@ -418,5 +418,5 @@ This project is licensed under the **ISC License** — see the [LICENSE](LICENSE
 
 ---
 
-> Built with ❤️ as a Final Year Team Project — 2025  
+> Final Year Team Project — 2025  
 > [github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha](https://github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha)
