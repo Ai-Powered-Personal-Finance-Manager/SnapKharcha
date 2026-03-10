@@ -2,10 +2,13 @@
 
 > A final year team project | AI-powered personal & business expense tracking with bill scanning, smart insights, and budget alerts.
 
-![Next.js](https://img.shields.io/badge/Next.js-14-black?style=flat-square&logo=next.js)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3-38bdf8?style=flat-square&logo=tailwindcss)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-4-38bdf8?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![Express](https://img.shields.io/badge/Express-5-000000?style=flat-square&logo=express)](https://expressjs.com/)
+[![pnpm](https://img.shields.io/badge/pnpm-10.28.2-f69220?style=flat-square&logo=pnpm)](https://pnpm.io/)
+[![License](https://img.shields.io/badge/License-ISC-green?style=flat-square)](LICENSE)
 
 ---
 
@@ -19,6 +22,7 @@
 - [Environment Variables](#environment-variables)
 - [Available Scripts](#available-scripts)
 - [Pages & Routes](#pages--routes)
+- [API Overview](#api-overview)
 - [Color System & Design Tokens](#color-system--design-tokens)
 - [Team](#team)
 - [Future Roadmap](#future-roadmap)
@@ -37,6 +41,8 @@
 - *(Business Mode)* Generate customer invoices, track sales, and view profit & loss summaries
 
 The system supports two user types — **Personal Users** and **Business Users** (restaurants, grocery shops, marts) — each with their own dashboard and features.
+
+**Repository:** [https://github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha](https://github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha)
 
 ---
 
@@ -66,49 +72,95 @@ The system supports two user types — **Personal Users** and **Business Users**
 
 ## 🛠 Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Framework** | [Next.js 14](https://nextjs.org/) (App Router) |
-| **Language** | TypeScript |
-| **Styling** | Tailwind CSS v3 |
-| **Fonts** | [Syne](https://fonts.google.com/specimen/Syne) (headings) + [DM Sans](https://fonts.google.com/specimen/DM+Sans) (body) via Google Fonts |
-| **Icons** | Inline SVG (no icon library dependency) |
-| **Images** | [Unsplash](https://unsplash.com/) (placeholder — replace with real screenshots) |
-| **Linting** | ESLint (Next.js default config) |
+### Monorepo
+| Tool | Version | Purpose |
+|---|---|---|
+| [pnpm](https://pnpm.io/) | `10.28.2` | Package manager & monorepo workspace runner |
+
+### Frontend (`/client`)
+| Technology | Version | Purpose |
+|---|---|---|
+| [Next.js](https://nextjs.org/) | `16.1.6` | React framework (App Router) |
+| [React](https://react.dev/) | `19.2.3` | UI library |
+| [TypeScript](https://www.typescriptlang.org/) | `^5` | Type safety |
+| [Tailwind CSS](https://tailwindcss.com/) | `^4` | Utility-first styling |
+| [shadcn/ui](https://ui.shadcn.com/) | `^3.8.5` | Pre-built accessible UI components |
+| [Radix UI](https://www.radix-ui.com/) | `^1.4.3` | Headless UI primitives |
+| [React Hook Form](https://react-hook-form.com/) | `^7.71.2` | Form state management |
+| [Zod](https://zod.dev/) | `^4.3.6` | Schema validation (shared with server) |
+| [TanStack Query](https://tanstack.com/query) | `^5.90.21` | Server state, caching, API calls |
+| [Axios](https://axios-http.com/) | `^1.13.6` | HTTP client |
+| [Sonner](https://sonner.emilkowal.ski/) | `^2.0.7` | Toast notifications |
+| [Lucide React](https://lucide.dev/) | `^0.576.0` | Icon library |
+| [Syne + DM Sans](https://fonts.google.com/) | — | Google Fonts (headings + body) |
+
+### Backend (`/server`)
+| Technology | Version | Purpose |
+|---|---|---|
+| [Node.js](https://nodejs.org/) | `>=18` | Runtime |
+| [Express](https://expressjs.com/) | `^5.2.1` | HTTP server & routing |
+| [PostgreSQL](https://www.postgresql.org/) (`pg`) | `^8.20.0` | Primary database |
+| [JWT](https://jwt.io/) (`jsonwebtoken`) | `^9.0.3` | Authentication tokens |
+| [bcrypt](https://github.com/kelektiv/node.bcrypt.js) | `^6.0.0` | Password hashing |
+| [Zod](https://zod.dev/) | `^4.3.6` | Request validation |
+| [Multer](https://github.com/expressjs/multer) | `^2.1.1` | File/image uploads (bill snaps) |
+| [XLSX](https://sheetjs.com/) | `^0.18.5` | Excel import/export |
+| [Helmet](https://helmetjs.github.io/) | `^8.1.0` | HTTP security headers |
+| [CORS](https://github.com/expressjs/cors) | `^2.8.6` | Cross-origin requests |
+| [Morgan](https://github.com/expressjs/morgan) | `^1.10.1` | HTTP request logging |
+| [dotenv](https://github.com/motdotla/dotenv) | `^17.3.1` | Environment variables |
+| [Nodemon](https://nodemon.io/) | `^3.1.14` | Dev auto-restart |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-snapkharcha/
-├── app/                          # Next.js App Router
-│   ├── layout.tsx                # Root layout — fonts, metadata
-│   ├── page.tsx                  # Landing page (assembles all sections)
-│   ├── globals.css               # Tailwind base + custom animations
-│   ├── not-found.tsx             # 404 page
-│   ├── login/
-│   │   └── page.tsx              # Login page
-│   ├── register/
-│   │   └── page.tsx              # Signup page (2-step: type select → form)
-│   └── forgot-password/
-│       └── page.tsx              # Forgot password (email → OTP → reset → success)
+SnapKharcha/                          # Monorepo root
+├── package.json                      # Root workspace config (pnpm)
+├── pnpm-workspace.yaml               # Declares client & server as workspaces
+├── README.md
 │
-├── components/                   # Reusable section components
-│   ├── Navbar.tsx                # Sticky nav with scroll effect + mobile menu
-│   ├── HeroSection.tsx           # Animated canvas + headline + dashboard preview
-│   ├── FeaturesSection.tsx       # 6-feature hover card grid
-│   ├── HowItWorksSection.tsx     # 4-step alternating image/text layout
-│   ├── BusinessSection.tsx       # Business user section (dark green bg)
-│   ├── SocialProofSection.tsx    # Stats + testimonials
-│   ├── PricingSection.tsx        # 3-tier pricing with monthly/yearly toggle
-│   ├── CTASection.tsx            # Final CTA (green bg)
-│   └── Footer.tsx                # Multi-column footer + newsletter
+├── client/                           # Next.js frontend
+│   ├── package.json
+│   ├── next.config.ts
+│   ├── tailwind.config.ts
+│   ├── postcss.config.mjs
+│   ├── tsconfig.json
+│   │
+│   ├── app/                          # Next.js App Router
+│   │   ├── layout.tsx                # Root layout — fonts, metadata
+│   │   ├── page.tsx                  # Landing page
+│   │   ├── globals.css               # Tailwind base + animations
+│   │   ├── not-found.tsx             # 404 page
+│   │   ├── login/page.tsx            # Login page
+│   │   ├── register/page.tsx         # Signup (2-step: type → form)
+│   │   └── forgot-password/page.tsx  # Password reset flow
+│   │
+│   ├── components/                   # Reusable UI components
+│   │   ├── Navbar.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── FeaturesSection.tsx
+│   │   ├── HowItWorksSection.tsx
+│   │   ├── BusinessSection.tsx
+│   │   ├── SocialProofSection.tsx
+│   │   ├── PricingSection.tsx
+│   │   ├── CTASection.tsx
+│   │   └── Footer.tsx
+│   │
+│   └── public/                       # Static assets
 │
-├── public/                       # Static assets
-├── tailwind.config.js            # Tailwind config with custom colors
-├── package.json
-└── README.md
+└── server/                           # Express backend
+    ├── package.json
+    ├── .env                          # Environment variables (never commit)
+    │
+    └── src/
+        ├── server.js                 # App entry point
+        ├── routes/                   # API route handlers
+        ├── controllers/              # Business logic
+        ├── middleware/               # Auth, error handling, validation
+        ├── models/                   # DB query functions
+        └── utils/                    # Helpers (JWT, hashing, etc.)
 ```
 
 ---
@@ -119,109 +171,190 @@ snapkharcha/
 
 Make sure you have the following installed:
 
-- [Node.js](https://nodejs.org/) `v18.0.0` or higher
-- [npm](https://www.npmjs.com/) `v9+` or [yarn](https://yarnpkg.com/) `v1.22+`
+| Tool | Version | Check |
+|---|---|---|
+| [Node.js](https://nodejs.org/) | `v18+` | `node -v` |
+| [pnpm](https://pnpm.io/installation) | `v10+` | `pnpm -v` |
+| [PostgreSQL](https://www.postgresql.org/download/) | `v14+` | `psql --version` |
 
-Check your versions:
+> **Install pnpm** if you don't have it:
+> ```bash
+> npm install -g pnpm
+> ```
 
-```bash
-node -v
-npm -v
-```
+---
 
 ### Installation
 
 **1. Clone the repository**
 
 ```bash
-git clone https://github.com/your-username/snapkharcha.git
-cd snapkharcha
+git clone https://github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha.git
+cd SnapKharcha
 ```
 
-**2. Install dependencies**
+**2. Install all dependencies** (installs both client & server in one command)
 
 ```bash
-npm install
-# or
-yarn install
+pnpm install
 ```
 
-**3. Run the development server**
+**3. Set up environment variables**
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Copy the example env file for the server
+cp server/.env.example server/.env
 ```
 
-**4. Open in browser**
+Then open `server/.env` and fill in your values (see [Environment Variables](#environment-variables)).
 
-```
-http://localhost:3000
+**4. Set up the database**
+
+```bash
+# Create the PostgreSQL database
+psql -U postgres -c "CREATE DATABASE snapkharcha;"
+
+# Run migrations (once migration scripts are added)
+# pnpm --filter server db:migrate
 ```
 
-The app hot-reloads automatically when you save changes.
+**5. Run the full stack in development**
+
+```bash
+# Runs both client (Next.js) and server (Express) in parallel
+pnpm dev
+```
+
+Or run them separately:
+
+```bash
+# Frontend only — http://localhost:3000
+pnpm dev:client
+
+# Backend only — http://localhost:5000
+pnpm dev:server
+```
 
 ---
 
 ## 🔑 Environment Variables
 
-Create a `.env.local` file in the root of the project:
+Create a `server/.env` file (never commit this to GitHub):
 
 ```env
-# App
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-NEXT_PUBLIC_APP_NAME=SnapKharcha
+# ── Server ──────────────────────────────────
+NODE_ENV=development
+PORT=5000
 
-# Database (add when backend is connected)
-DATABASE_URL=
+# ── Database (PostgreSQL) ───────────────────
+DATABASE_URL=postgresql://postgres:yourpassword@localhost:5432/snapkharcha
+# Or individual fields:
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=snapkharcha
+DB_USER=postgres
+DB_PASSWORD=yourpassword
 
-# AI / OCR API (add when bill-snap feature is integrated)
+# ── Authentication ──────────────────────────
+JWT_SECRET=your_super_secret_jwt_key_here
+JWT_EXPIRES_IN=7d
+
+# ── CORS ────────────────────────────────────
+CLIENT_URL=http://localhost:3000
+
+# ── File Upload ─────────────────────────────
+MAX_FILE_SIZE_MB=5
+UPLOAD_DIR=uploads/
+
+# ── AI / OCR (for bill snap feature) ────────
 OPENAI_API_KEY=
 # or
 GOOGLE_VISION_API_KEY=
 
-# Auth (add when authentication is implemented)
-NEXTAUTH_SECRET=
-NEXTAUTH_URL=http://localhost:3000
-
-# Email (for OTP sending)
-SMTP_HOST=
-SMTP_PORT=
-SMTP_USER=
-SMTP_PASS=
+# ── Email / OTP ─────────────────────────────
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=your@email.com
+SMTP_PASS=your_app_password
 ```
 
-> ⚠️ Never commit `.env.local` to GitHub. It is already listed in `.gitignore`.
+Create a `client/.env.local` file:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+NEXT_PUBLIC_APP_NAME=SnapKharcha
+```
+
+> ⚠️ Both `.env` and `.env.local` are already in `.gitignore` — never commit them.
 
 ---
 
 ## 📜 Available Scripts
 
+### Root (run from `SnapKharcha/`)
+
 | Command | Description |
 |---|---|
-| `npm run dev` | Start development server at `localhost:3000` |
-| `npm run build` | Build the app for production |
-| `npm run start` | Start the production server (after build) |
-| `npm run lint` | Run ESLint to check for code issues |
+| `pnpm install` | Install all dependencies for both client & server |
+| `pnpm dev` | Run **both** client and server in parallel (development) |
+| `pnpm dev:client` | Run frontend only (`localhost:3000`) |
+| `pnpm dev:server` | Run backend only (`localhost:5000`) |
+| `pnpm build` | Build both client and server for production |
+| `pnpm start` | Start both in production mode |
+
+### Client only (run from `client/`)
+
+| Command | Description |
+|---|---|
+| `pnpm dev` | Next.js dev server |
+| `pnpm build` | Production build |
+| `pnpm start` | Start production server |
+| `pnpm lint` | Run ESLint |
+
+### Server only (run from `server/`)
+
+| Command | Description |
+|---|---|
+| `pnpm dev` | Start with Nodemon (auto-restart on save) |
+| `pnpm start` | Start with Node (production) |
 
 ---
 
 ## 🗺 Pages & Routes
 
+### Frontend Routes (`/client`)
+
 | Route | File | Description |
 |---|---|---|
 | `/` | `app/page.tsx` | Landing page |
 | `/login` | `app/login/page.tsx` | User login |
-| `/register` | `app/register/page.tsx` | User signup (Personal / Business) |
-| `/forgot-password` | `app/forgot-password/page.tsx` | Password reset flow |
-| `*` (any unknown) | `app/not-found.tsx` | 404 error page |
+| `/register` | `app/register/page.tsx` | Signup — Personal or Business |
+| `/forgot-password` | `app/forgot-password/page.tsx` | Password reset (OTP flow) |
+| `*` | `app/not-found.tsx` | 404 error page |
+
+### Backend API Endpoints (`/server`) — Planned
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/api/auth/register` | Register new user |
+| `POST` | `/api/auth/login` | Login & get JWT token |
+| `POST` | `/api/auth/forgot-password` | Send OTP to email |
+| `POST` | `/api/auth/verify-otp` | Verify OTP code |
+| `POST` | `/api/auth/reset-password` | Set new password |
+| `GET` | `/api/expenses` | Get user's expenses |
+| `POST` | `/api/expenses` | Add new expense |
+| `POST` | `/api/expenses/snap` | Upload bill image for AI scan |
+| `GET` | `/api/insights` | Get AI-generated spending insights |
+| `GET` | `/api/budgets` | Get budget limits |
+| `POST` | `/api/budgets` | Set/update budget |
+| `GET` | `/api/goals` | Get savings goals |
+| `POST` | `/api/goals` | Create savings goal |
+| `GET` | `/api/business/invoices` | Get business invoices |
+| `POST` | `/api/business/invoices` | Generate new invoice |
 
 ---
 
 ## 🎨 Color System & Design Tokens
-
-The project uses a consistent design token system defined across all components:
 
 | Token | Value | Usage |
 |---|---|---|
@@ -245,7 +378,7 @@ font-family: 'Syne', sans-serif;
 font-family: 'DM Sans', sans-serif;
 ```
 
-Both fonts are loaded via Google Fonts in `app/layout.tsx` — no npm package needed.
+Loaded via Google Fonts in `client/app/layout.tsx` — no npm package needed.
 
 ---
 
@@ -258,32 +391,32 @@ Both fonts are loaded via Google Fonts in `app/layout.tsx` — no npm package ne
 | [Team Member 3] | AI / ML Integration |
 | [Team Member 4] | UI/UX Design |
 
-> Update this table with your actual team members.
+> Update this table with your actual team members and GitHub profiles.
 
 ---
 
 ## 🔮 Future Roadmap
 
-Features planned for future development (mentioned in project documentation as add-ons):
+Features planned as add-ons (documented for project submission):
 
-- [ ] **Backend API** — Node.js / Django REST API with database integration
-- [ ] **AI Bill OCR** — Google Vision API or OpenAI GPT-4 Vision for receipt scanning
-- [ ] **Authentication** — NextAuth.js with JWT + Google OAuth
-- [ ] **Push Notifications** — Firebase Cloud Messaging for budget alerts
-- [ ] **Mobile App** — React Native version for iOS & Android
-- [ ] **Bank Integration** — Plaid/Setu API for auto-import of bank transactions
-- [ ] **Multi-language** — Hindi + regional language support
-- [ ] **Dark Mode** — System-preference-aware dark/light toggle
-- [ ] **AI Chatbot** — In-app financial advisor chatbot
-- [ ] **Export Reports** — PDF/Excel monthly expense reports
-- [ ] **Tax Helper** — Auto-categorize tax-deductible expenses
+- [ ] AI Bill OCR — Google Vision API / OpenAI GPT-4 Vision for receipt scanning
+- [ ] Push Notifications — Firebase Cloud Messaging for budget alerts
+- [ ] Mobile App — React Native version for iOS & Android
+- [ ] Bank Integration — Plaid / Setu API for auto-import of transactions
+- [ ] Multi-language — Hindi + regional language support
+- [ ] Dark Mode — System-preference-aware toggle
+- [ ] AI Chatbot — In-app financial advisor
+- [ ] PDF/Excel Export — Monthly expense reports
+- [ ] Tax Helper — Auto-categorize tax-deductible expenses
+- [ ] Two-Factor Authentication — SMS/email 2FA
 
 ---
 
 ## 📄 License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **ISC License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-> Final Year Team Project — 2025
+> Final Year Team Project — 2025  
+> [github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha](https://github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha)
