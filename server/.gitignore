@@ -1,0 +1,34 @@
+# Node modules
+node_modules/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Environment files (keep secrets out)
+.env
+.env.local
+.env.development
+.env.production
+
+# Build/output folders (if you transpile TypeScript or bundle)
+dist/
+build/
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage reports
+coverage/
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temporary swap files
+*.swp
+*.swo
