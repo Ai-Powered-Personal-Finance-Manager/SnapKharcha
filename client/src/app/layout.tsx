@@ -1,20 +1,19 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import AppProvider from "@/src/providers/AppProvider";
 import { Suspense } from "react";
 import Loading from "@/src/components/Loading";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-geist",
   display: "swap",
 });
 
-const poppins = Poppins({
+const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-poppins",
+  variable: "--font-geist-mono",
   display: "swap",
 });
 
@@ -31,9 +30,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${poppins.variable} antialiased`}
+        className={`${geist.variable} ${geistMono.variable} antialiased`}
       >
-        <Suspense fallback={<Loading/>}>
+        <Suspense fallback={<Loading />}>
           <AppProvider>
             {children}
           </AppProvider>
