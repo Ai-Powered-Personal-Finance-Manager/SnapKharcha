@@ -1,12 +1,12 @@
-import Navbar from "@/src/components/home/Navbar";
-import HeroSection from "@/src/components/home/HeroSection";
-import FeaturesSection from "@/src/components/home/FeaturesSection";
-import HowItWorksSection from "@/src/components/home/HowItWorksSection";
-import BusinessSection from "@/src/components/home/BusinessSection";
-import SocialProofSection from "@/src/components/home/SocialProofSection";
-import PricingSection from "@/src/components/home/PricingSection";
-import CTASection from "@/src/components/home/CTASection";
-import Footer from "@/src/components/home/Footer";
+import { BusinessSection } from "../components/home/sections/BusinessSection";
+import { CTASection } from "../components/home/sections/CTASection";
+import { FeaturesSection } from "../components/home/sections/FeaturesSection";
+import { Footer } from "../components/home/sections/Footer";
+import { HeroSection } from "../components/home/sections/HeroSection";
+import { HowItWorksSection } from "../components/home/sections/HowItWorksSection";
+import { Navbar } from "../components/home/sections/navbar/components/Navbar";
+import { PricingSection } from "../components/home/sections/PricingSection";
+import { SocialProofSection } from "../components/home/sections/SocialProofSection";
 
 export default function HomePage() {
   return (

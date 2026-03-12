@@ -1,8 +1,8 @@
 "use client";
-import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
 
-export default function HeroSection() {
+export const HeroSection = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -14,7 +14,14 @@ export default function HeroSection() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number }[] = [];
+    const particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+    }[] = [];
     for (let i = 0; i < 80; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -77,7 +84,10 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
       {/* Particle Canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none"
+      />
 
       {/* Radial Glow */}
       <div className="absolute inset-0 pointer-events-none">
@@ -97,8 +107,10 @@ export default function HeroSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20 flex flex-col items-center text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500 bg-green-100 text-green-500 text-xs font-semibold mb-8 animate-fade-in"
-          style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        <div
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-green-500 bg-green-100 text-green-500 text-xs font-semibold mb-8 animate-fade-in"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}
+        >
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
           AI-Powered Personal Finance · Final Year Project 2025
         </div>
@@ -110,9 +122,7 @@ export default function HeroSection() {
         >
           Your Money,{" "}
           <span className="relative inline-block">
-            <span className="relative z-10 text-green-500">
-              Understood
-            </span>
+            <span className="relative z-10 text-green-500">Understood</span>
             <span className="absolute inset-0 blur-2xl text-transparent bg-clip-text bg-green-500 opacity-40 select-none z-0">
               Understood
             </span>
@@ -125,9 +135,12 @@ export default function HeroSection() {
           className="text-[#8888aa] text-lg sm:text-xl max-w-2xl mb-10 leading-relaxed"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          Snap a bill, log an expense, or import your transactions — SnapKharcha categorizes, analyzes,
-          and gives you <strong className="text-green-500 font-semibold">personalized financial insights</strong> in real time.
-          Built for individuals and businesses alike.
+          Snap a bill, log an expense, or import your transactions — SnapKharcha
+          categorizes, analyzes, and gives you{" "}
+          <strong className="text-green-500 font-semibold">
+            personalized financial insights
+          </strong>{" "}
+          in real time. Built for individuals and businesses alike.
         </p>
 
         {/* CTA Buttons */}
@@ -138,8 +151,18 @@ export default function HeroSection() {
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
             Start Tracking Free
-            <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            <svg
+              className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M13 7l5 5m0 0l-5 5m5-5H6"
+              />
             </svg>
           </Link>
           <Link
@@ -147,9 +170,24 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl border border-[#1e1e2e] text-black font-semibold text-sm hover:border-[#00C950]/40 hover:bg-[#00C950]/5 transition-all duration-300"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            <svg className="w-4 h-4 text-[#00C950]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg
+              className="w-4 h-4 text-[#00C950]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
             </svg>
             Watch Demo
           </Link>
@@ -166,7 +204,10 @@ export default function HeroSection() {
               <div className="w-3 h-3 rounded-full bg-[#ff5f57]" />
               <div className="w-3 h-3 rounded-full bg-[#febc2e]" />
               <div className="w-3 h-3 rounded-full bg-[#28c840]" />
-              <div className="flex-1 mx-4 bg-[#1e1e2e] rounded-md px-3 py-1 text-xs text-[#44445a]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              <div
+                className="flex-1 mx-4 bg-[#1e1e2e] rounded-md px-3 py-1 text-xs text-[#44445a]"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
                 snapkharcha.com/dashboard
               </div>
             </div>
@@ -182,17 +223,50 @@ export default function HeroSection() {
 
           {/* Floating stat cards */}
           <div className="absolute -left-4 top-1/3 bg-[#111118] border border-[#1e1e2e] rounded-2xl p-4 shadow-xl hidden lg:block">
-            <p className="text-[#8888aa] text-xs mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>Monthly Savings</p>
-            <p className="text-[#00C950] text-2xl font-bold" style={{ fontFamily: "'Syne', sans-serif" }}>₹12,400</p>
-            <p className="text-[#00C950] text-xs flex items-center gap-1 mt-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>
+            <p
+              className="text-[#8888aa] text-xs mb-1"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              Monthly Savings
+            </p>
+            <p
+              className="text-[#00C950] text-2xl font-bold"
+              style={{ fontFamily: "'Syne', sans-serif" }}
+            >
+              ₹12,400
+            </p>
+            <p
+              className="text-[#00C950] text-xs flex items-center gap-1 mt-1"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M5 10l7-7m0 0l7 7m-7-7v18"
+                />
+              </svg>
               +18% from last month
             </p>
           </div>
 
           <div className="absolute -right-4 top-1/4 bg-[#111118] border border-[#1e1e2e] rounded-2xl p-4 shadow-xl hidden lg:block">
-            <p className="text-[#8888aa] text-xs mb-1" style={{ fontFamily: "'DM Sans', sans-serif" }}>AI Insights</p>
-            <p className="text-white text-sm font-semibold max-w-[160px]" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <p
+              className="text-[#8888aa] text-xs mb-1"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              AI Insights
+            </p>
+            <p
+              className="text-white text-sm font-semibold max-w-[160px]"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
               🍔 Food spending up 23% — consider meal planning
             </p>
           </div>
@@ -207,23 +281,45 @@ export default function HeroSection() {
               "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&q=80&fit=crop&crop=face",
               "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&q=80&fit=crop&crop=face",
             ].map((src, i) => (
-              <img key={i} src={src} alt="user" className="w-9 h-9 rounded-full border-2 border-[#0a0a0f] object-cover" />
+              <img
+                key={i}
+                src={src}
+                alt="user"
+                className="w-9 h-9 rounded-full border-2 border-[#0a0a0f] object-cover"
+              />
             ))}
           </div>
           <div className="text-center sm:text-left">
             <div className="flex items-center gap-1 text-[#fbbf24] text-sm mb-0.5">
               {"★★★★★"}
             </div>
-            <p className="text-[#8888aa] text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <p
+              className="text-[#8888aa] text-sm"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
               Loved by <strong className="text-black">2,000+</strong> beta users
             </p>
           </div>
           <div className="h-10 w-px bg-[#1e1e2e] hidden sm:block" />
           <div className="flex gap-6">
             {["Personal", "Business", "AI-Ready"].map((tag) => (
-              <div key={tag} className="flex items-center gap-1.5 text-[#8888aa] text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                <svg className="w-4 h-4 text-[#00ff15]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              <div
+                key={tag}
+                className="flex items-center gap-1.5 text-[#8888aa] text-sm"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                <svg
+                  className="w-4 h-4 text-[#00ff15]"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 {tag}
               </div>
@@ -233,4 +329,4 @@ export default function HeroSection() {
       </div>
     </section>
   );
-}
+};
