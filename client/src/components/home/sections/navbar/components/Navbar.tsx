@@ -12,13 +12,13 @@ export const Navbar = () => {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        "fixed top-0 left-0 right-0 px-6 z-50 transition-all duration-500",
         navbar.scrolled
           ? "bg-white backdrop-blur-xl shadow-lg "
           : "bg-transparent",
       )}
     >
-      <div className="max-w-7xl px-6 mx-auto py-4 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto py-4 flex items-center justify-between">
         <Logo />
 
         {/* DESKTOP NAV LINKS */}

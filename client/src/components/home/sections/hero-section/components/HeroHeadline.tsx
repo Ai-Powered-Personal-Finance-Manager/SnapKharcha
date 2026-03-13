@@ -2,7 +2,7 @@ export const HeroHeadline = () => {
   return (
     <>
       <h1
-        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-black leading-[1.05] mb-6 max-w-5xl"
+        className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold text-black leading-tight mb-6 max-w-5xl"
         style={{ fontFamily: "'Syne', sans-serif" }}
       >
         Your Money,{" "}
