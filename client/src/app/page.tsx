@@ -1,10 +1,9 @@
+import { HeroSection, Navbar } from "../components/home/sections";
 import { BusinessSection } from "../components/home/sections/BusinessSection";
 import { CTASection } from "../components/home/sections/CTASection";
 import { FeaturesSection } from "../components/home/sections/FeaturesSection";
 import { Footer } from "../components/home/sections/Footer";
-import { HeroSection } from "../components/home/sections/HeroSection";
 import { HowItWorksSection } from "../components/home/sections/HowItWorksSection";
-import { Navbar } from "../components/home/sections/navbar/components/Navbar";
 import { PricingSection } from "../components/home/sections/PricingSection";
 import { SocialProofSection } from "../components/home/sections/SocialProofSection";
 

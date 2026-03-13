@@ -1,11 +1,10 @@
 "use client";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/src/lib/utils";
-import { Logo } from "../../Logo";
-import { navLinks } from "../data/navlinks";
-import { useNavbar } from "../hooks/useNavbar";
-import { MobileNavigationHamburgerInterface } from "../interface/navbarInterface";
-import { NavLink } from "./NavLink";
+import { LinkButton, Logo } from "../../../shared";
+import { navLinks } from "../data";
+import { useNavbar } from "../hooks";
+import { MobileNavigationHamburgerInterface } from "../interface";
 
 export const Navbar = () => {
   const navbar = useNavbar();
@@ -47,7 +46,7 @@ const DesktopNavigation = () => {
   return (
     <div className="hidden lg:flex items-center gap-8">
       {navLinks.map((link) => (
-        <NavLink
+        <LinkButton
           key={link.label}
           href={link.href}
           label={link.label}
@@ -64,9 +63,13 @@ const DesktopNavigation = () => {
 const CTAButtons = () => {
   return (
     <div className="hidden lg:flex items-center gap-3">
-      <NavLink href="/auth/login" label="Sign In" className="px-4 py-2" />
+      <LinkButton
+        href="/auth/login"
+        label="Sign In"
+        className="px-4 py-2 text-black font-semibold"
+      />
 
-      <NavLink
+      <LinkButton
         href="/auth/register"
         label="Get Started Free"
         className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-green-500 text-white hover:opacity-90 transition-all duration-200 shadow-lg shadow-[#00C950]/20 hover:shadow-[#00C950]/40 hover:scale-105"
@@ -109,7 +112,7 @@ const MobileNavigationSheet = ({
           <Logo />
         </SheetTitle>
         {navLinks.map((link) => (
-          <NavLink
+          <LinkButton
             key={link.label}
             href={link.href}
             label={link.label}
@@ -119,12 +122,12 @@ const MobileNavigationSheet = ({
         ))}
 
         <div className="flex flex-col mt-auto gap-3 pt-2">
-          <NavLink
+          <LinkButton
             href="/auth/login"
             label="Sign In"
             className="flex-1 text-center text-sm hover:text-black py-2.5 border border-[#1e1e2e] rounded-xl transition-colors duration-200 text-black"
           />
-          <NavLink
+          <LinkButton
             href="/auth/register"
             label="Get Started"
             className="flex-1 text-center text-sm font-semibold py-2.5 rounded-xl bg-green-500 text-white"

@@ -1,16 +1,19 @@
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
-import { NavLinkInterface } from "../interface/navbarInterface";
+import { LinkButtonInterface } from "../interface";
+import { dir } from "console";
 
-export const NavLink = ({
+export const LinkButton = ({
   href,
   label,
   className,
   children,
   onClick,
-}: NavLinkInterface) => {
+  dir,
+}: LinkButtonInterface) => {
   return (
     <Link
+      dir={dir}
       href={href}
       onClick={onClick}
       className={cn(
