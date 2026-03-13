@@ -1,5 +1,6 @@
 "use client";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { cn } from "@/src/lib/utils";
 import { Logo } from "../../Logo";
 import { navLinks } from "../data/navlinks";
 import { useNavbar } from "../hooks/useNavbar";
@@ -11,11 +12,12 @@ export const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
         navbar.scrolled
           ? "bg-white backdrop-blur-xl shadow-lg "
-          : "bg-transparent"
-      }`}
+          : "bg-transparent",
+      )}
     >
       <div className="max-w-7xl px-6 mx-auto py-4 flex items-center justify-between">
         <Logo />
