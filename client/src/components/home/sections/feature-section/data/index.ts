@@ -1,0 +1,1 @@
+export { featuresData } from "./featureSectionData";
