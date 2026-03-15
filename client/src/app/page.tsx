@@ -1,10 +1,11 @@
 import {
+  BusinessSection,
   FeaturesSection,
   HeroSection,
   HowItWorksSection,
   Navbar,
 } from "../components/home/sections";
-import { BusinessSection } from "../components/home/sections/BusinessSection";
+
 import { CTASection } from "../components/home/sections/CTASection";
 import { Footer } from "../components/home/sections/Footer";
 
