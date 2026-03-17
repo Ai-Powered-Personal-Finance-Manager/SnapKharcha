@@ -4,8 +4,7 @@ const icons = [Wallet, CreditCard, ShoppingCart, PiggyBank];
 
 export const Loading = () => {
   return (
-    <div className="relative w-screen h-screen bg-gray-900 flex flex-col justify-center items-center overflow-hidden">
-      {/* App Name */}
+    <div className="relative h-screen bg-[#00271E] flex flex-col justify-center items-center overflow-hidden">
       <h1 className="text-4xl font-bold text-white mb-10">
         Snap
         <span className="text-green-500">Kharcha</span>
