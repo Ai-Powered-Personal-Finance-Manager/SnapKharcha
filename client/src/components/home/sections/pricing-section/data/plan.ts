@@ -1,6 +1,6 @@
-import { planInterface } from "../interface";
+import { PlanInterface } from "../interface";
 
-export const plans: planInterface[] = [
+export const plans: PlanInterface[] = [
   {
     name: "Personal Free",
     price: { monthly: "₹0", yearly: "₹0" },
