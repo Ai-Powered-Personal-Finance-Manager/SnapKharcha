@@ -1,9 +1,10 @@
 import { Logo } from "../../../shared";
+import { FooterBrandInterface } from "../interface";
 
-export const FooterBrand = () => {
+export const FooterBrand = ({ navigation }: FooterBrandInterface) => {
   return (
     <div className="col-span-2">
-      <Logo isFooter showIcon />
+      <Logo isFooter navigation={navigation} />
 
       <p
         className="text-gray-400 text-sm leading-relaxed mb-6 mt-4 max-w-xs"

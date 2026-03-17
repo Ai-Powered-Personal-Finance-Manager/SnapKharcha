@@ -1,0 +1,1 @@
+export { useHomepageView } from "./useHomepage";

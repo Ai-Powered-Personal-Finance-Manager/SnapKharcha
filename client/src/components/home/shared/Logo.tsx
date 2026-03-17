@@ -7,9 +7,17 @@ import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { LogoInterface } from "../interface";
 
-export const Logo = ({ showIcon, isFooter }: LogoInterface) => {
+export const Logo = ({ showIcon, isFooter, navigation }: LogoInterface) => {
+  const handleRefNavigation = navigation;
   return (
-    <Link href="/" className="flex items-center gap-2 group">
+    <Link
+      href="/"
+      onClick={(e) => {
+        e.preventDefault();
+        if (navigation) handleRefNavigation("/");
+      }}
+      className="flex items-center gap-2 group"
+    >
       {showIcon && (
         <div className="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center shadow-lg shadow-[#0099ff]/20 group-hover:shadow-[#0099ff]/40 transition-all duration-300">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">

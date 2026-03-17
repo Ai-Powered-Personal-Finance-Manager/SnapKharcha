@@ -8,3 +8,6 @@ export interface FooterDataInterface {
   Legal: FooterNavInterface[];
   Support: FooterNavInterface[];
 }
+export interface FooterBrandInterface {
+  navigation: any;
+}

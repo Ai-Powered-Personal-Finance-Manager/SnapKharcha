@@ -1,7 +1,6 @@
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { LinkButtonInterface } from "../interface";
-import { dir } from "console";
 
 export const LinkButton = ({
   href,

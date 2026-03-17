@@ -5,7 +5,7 @@ export const FooterBottomBar = () => {
         className="text-gray-500 text-sm text-center sm:text-left"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        © 2025 SnapKharcha.
+        © 2026 SnapKharcha.
       </p>
       <div className="flex items-center gap-4">
         {["Privacy", "Terms", "Cookies"].map((item) => (
