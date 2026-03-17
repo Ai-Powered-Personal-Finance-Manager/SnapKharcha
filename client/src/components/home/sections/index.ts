@@ -5,3 +5,4 @@ export * from "./navbar/components";
 export * from "./pricing-section/component";
 export * from "./social-proof-section/component";
 export * from "./work-mechnics/component";
+export * from "./cta-section/component"

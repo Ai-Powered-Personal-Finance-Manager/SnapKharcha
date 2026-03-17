@@ -6,7 +6,7 @@ export const HeroCTA = () => {
       <LinkButton
         href="/auth/register"
         label="Start Tracking Free"
-        className="group inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-green-500 text-white font-bold text-sm hover:opacity-90 transition-all duration-300 shadow-xl shadow-[#00C950]/25 hover:shadow-[#00C950]/40 hover:scale-105"
+        className="group inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-green-500 text-white font-bold text-sm hover:opacity-90 transition-all duration-300 shadow-xl shadow-[#00C950]/25 hover:shadow-[#00C950]/40 hover:scale-105 hover:text-white"
         children={
           <svg
             className="w-4 h-4 group-hover:translate-x-1 transition-transform"

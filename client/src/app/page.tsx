@@ -1,5 +1,6 @@
 import {
   BusinessSection,
+  CTASection,
   FeaturesSection,
   HeroSection,
   HowItWorksSection,
@@ -8,7 +9,6 @@ import {
   SocialProofSection,
 } from "../components/home/sections";
 
-import { CTASection } from "../components/home/sections/CTASection";
 import { Footer } from "../components/home/sections/Footer";
 
 export default function HomePage() {
