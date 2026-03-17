@@ -2,14 +2,13 @@ import {
   BusinessSection,
   CTASection,
   FeaturesSection,
+  Footer,
   HeroSection,
   HowItWorksSection,
   Navbar,
   PricingSection,
   SocialProofSection,
 } from "../components/home/sections";
-
-import { Footer } from "../components/home/sections/Footer";
 
 export default function HomePage() {
   return (

@@ -26,6 +26,7 @@ export const HeroDashboardPreview = () => {
           alt="Finova AI Dashboard Preview"
           height={1000}
           width={1000}
+          loading="eager"
           className="w-full object-cover object-top"
           style={{ maxHeight: "480px" }}
         />

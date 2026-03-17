@@ -4,7 +4,7 @@ import { businessTypeCardDataInterface } from "../interface";
 
 export const LeftStickySection = () => {
   return (
-    <div className="flex-1 max-w-xl lg:sticky top-28">
+    <div className="flex-1 lg:max-w-xl max-lg:w-full lg:sticky top-28">
       <PillBadge
         text="For Business"
         className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.2em] uppercase text-[#d97706] bg-[#d97706]/10 border border-[#d97706]/30 px-4 py-2 rounded-full mb-5"
@@ -45,11 +45,11 @@ const LeftSectionHeader = () => {
 
 const BusinessTypeCard = ({ data }: businessTypeCardDataInterface) => {
   return (
-    <div className="space-y-3 mb-10">
+    <div className="space-y-3 mb-10 w-full">
       {data.map((type, i) => (
         <div
           key={i}
-          className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/8 hover:border-[#00C950]/40 hover:bg-[#00C950]/8 transition-all duration-200"
+          className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/8 hover:border-[#00C950]/40 hover:bg-[#00C950]/8 transition-all duration-200  w-full"
         >
           <span className="text-2xl">{type.emoji}</span>
           <div>

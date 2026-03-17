@@ -21,7 +21,7 @@ export const Testimonials = ({ testimonials }: testimonialsDataInterface) => {
       </div>
 
       {/* testimonial data */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {testimonials.map((t, i) => (
           <div
             key={i}
