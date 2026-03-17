@@ -4,13 +4,12 @@ import {
   HeroSection,
   HowItWorksSection,
   Navbar,
+  PricingSection,
   SocialProofSection,
 } from "../components/home/sections";
 
 import { CTASection } from "../components/home/sections/CTASection";
 import { Footer } from "../components/home/sections/Footer";
-
-import { PricingSection } from "../components/home/sections/PricingSection";
 
 export default function HomePage() {
   return (
