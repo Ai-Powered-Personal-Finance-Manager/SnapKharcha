@@ -1,10 +1,9 @@
-
+import AppProvider from "@/src/providers/AppProvider";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import AppProvider from "@/src/providers/AppProvider";
 import { Suspense } from "react";
-import Loading from "@/src/components/Loading";
+import { Loading } from "../components/Loading";
+import "./globals.css";
 
 const geist = Geist({
   subsets: ["latin"],
@@ -30,13 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={`${geist.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${geist.variable} ${geistMono.variable} antialiased`}>
         <Suspense fallback={<Loading />}>
-          <AppProvider>
-            {children}
-          </AppProvider>
+          <AppProvider>{children}</AppProvider>
         </Suspense>
       </body>
     </html>
