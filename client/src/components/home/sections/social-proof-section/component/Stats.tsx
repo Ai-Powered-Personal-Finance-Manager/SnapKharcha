@@ -9,7 +9,7 @@ export const Stats = ({ stats }: statsDataInterface) => {
           className="group text-center p-7 rounded-2xl bg-white border border-gray-100 hover:border-gray-200 hover:shadow-xl hover:shadow-gray-100 transition-all duration-300"
         >
           <p
-            className="text-4xl font-extrabold mb-2 group-hover:scale-110 transition-transform duration-300"
+            className="md:text-4xl text-3xl font-extrabold mb-2 group-hover:scale-110 transition-transform duration-300"
             style={{ color: stat.color, fontFamily: "'Syne', sans-serif" }}
           >
             {stat.value}
