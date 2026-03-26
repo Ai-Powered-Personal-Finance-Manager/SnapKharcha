@@ -1,9 +1,12 @@
-import express from "express"; // backend server framework
-import cors from "cors"; // allow frontend requests
-import helmet from "helmet"; // security headers
-import morgan from "morgan"; // request logging middleware
 import "dotenv/config";
-import pool from "./config/db.js";
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import prisma from "./config/prisma.js";
+import authRouter from "./routes/authRoutes.js";
+import session from "express-session";
+import passport from "./config/passport.js";
 
 const app = express();
 
@@ -12,16 +15,32 @@ app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
 
+// Session is required by passport temporarily during OAuth redirect
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false } // set true in production with HTTPS
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.get("/", (req, res) => {
     res.send("API running...");
 });
 
-pool.connect()
-    .then(() => console.log("PostgreSQL Connected"))
-    .catch(err => console.error("DB connection error", err));
+app.use("/api/auth", authRouter);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(PORT, async () => {
+    try {
+        await prisma.$connect();
+        console.log("✅ Prisma connected to the database successfully");
+        console.log(`🚀 Server running on port ${PORT}`);
+    } catch (error) {
+        console.error("❌ Failed to connect to database:", error);
+        process.exit(1);
+    }
 });

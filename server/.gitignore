@@ -32,3 +32,4 @@ Thumbs.db
 # Temporary swap files
 *.swp
 *.swo
+/src/generated/prisma
