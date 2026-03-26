@@ -16,16 +16,11 @@ export interface LeftPanelInterface {
 
 export interface RightPanelInterface {
   form: UseFormReturn<LoginFormValues>;
-  handleSubmit: () => void;
+  handleSubmit: (data: LoginFormValues) => void;
   showPassword: boolean;
   setShowPassword: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
+  handleRememberMe: () => void;
 }
 
-export interface LoginFormInterface {
-  isLoading: boolean;
-  form: UseFormReturn<LoginFormValues>;
-  handleSubmit: () => void;
-  showPassword: boolean;
-  setShowPassword: Dispatch<SetStateAction<boolean>>;
-}
+export interface LoginFormInterface extends RightPanelInterface {}

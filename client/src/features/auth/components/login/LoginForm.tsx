@@ -6,8 +6,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/src/components/ui/input";
-import { CONFIG } from "@/src/core/config";
 
+import { CONFIG } from "@/src/core/config";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { LoginFormInterface } from "../../interface/login";
@@ -18,6 +18,7 @@ export const LoginForm = ({
   setShowPassword,
   showPassword,
   form,
+  handleRememberMe
 }: LoginFormInterface) => {
   return (
     <div className="space-y-4">
@@ -25,7 +26,7 @@ export const LoginForm = ({
         className="flex flex-col gap-3"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        {/* Email */}ft
+        {/* Email */}
         <FieldGroup>
           <Controller
             name="email"
@@ -89,14 +90,6 @@ export const LoginForm = ({
                   >
                     Password
                   </FieldLabel>
-
-                  <Link
-                    href={CONFIG.AUTH.FORGOT_PASSWORD}
-                    className="text-xs text-[#00C950] hover:underline font-medium -mb-2"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                  >
-                    Forgot password?
-                  </Link>
                 </div>
                 <div className="relative">
                   <svg
@@ -176,32 +169,43 @@ export const LoginForm = ({
           />
         </FieldGroup>
 
-        {/* Remember me */}
-        <FieldGroup className="mt-2">
-          <Controller
-            name="rememberMe"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <div className="flex items-center gap-2">
-                  <div>
-                    <Checkbox
-                      checked={field.value ? true : false}
-                      onCheckedChange={field.onChange}
-                    />
+        <div className="flex justify-between items-center">
+          {/* Remember me */}
+          <FieldGroup className="mt-2">
+            <Controller
+              name="rememberMe"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <div className="flex items-center gap-2">
+                    <div>
+                      <Checkbox
+                        id="rememberMe"
+                        className="data-[state=checked]:text-green-500 cursor-pointer"
+                        checked={field.value ? true : false}
+                        onCheckedChange={field.onChange}
+                      />
+                    </div>
+                    <FieldLabel
+                      className="text-sm text-gray-500 tracking-wider cursor-pointer"
+                      style={{ fontFamily: "'DM Sans', sans-serif" }}
+                      htmlFor="rememberMe"
+                    >
+                      Remember me
+                    </FieldLabel>
                   </div>
-                  <FieldLabel
-                    className="text-sm text-gray-500 tracking-wider"
-                    style={{ fontFamily: "'DM Sans', sans-serif" }}
-                    htmlFor="rememberMe"
-                  >
-                    Remember me
-                  </FieldLabel>
-                </div>
-              </Field>
-            )}
-          />
-        </FieldGroup>
+                </Field>
+              )}
+            />
+          </FieldGroup>
+          <Link
+            href={CONFIG.AUTH.FORGOT_PASSWORD}
+            className="text-xs text-[#00C950] hover:underline font-medium -mb-2 w-full  text-end"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
+          >
+            Forgot password?
+          </Link>
+        </div>
 
         <button
           type="submit"

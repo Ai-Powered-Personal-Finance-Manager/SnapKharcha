@@ -1,3 +1,4 @@
+"use client";
 import { Logo } from "@/src/components/home/shared";
 import { LeftPanelInterface } from "../../interface/login";
 

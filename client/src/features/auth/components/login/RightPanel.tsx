@@ -1,3 +1,4 @@
+"use client";
 import { Logo } from "@/src/components/home/shared";
 import { CONFIG } from "@/src/core/config";
 import Link from "next/link";
@@ -10,6 +11,7 @@ export const RightPanel = ({
   setShowPassword,
   showPassword,
   form,
+  handleRememberMe,
 }: RightPanelInterface) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden bg-white">
@@ -94,6 +96,7 @@ export const RightPanel = ({
 
         <LoginForm
           form={form}
+          handleRememberMe={handleRememberMe}
           setShowPassword={setShowPassword}
           showPassword={showPassword}
           handleSubmit={handleSubmit}
@@ -123,7 +126,7 @@ export const RightPanel = ({
           </p>
         </div>
 
-        <p
+        {/* <p
           className="text-center text-gray-500 text-sm mt-6"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
@@ -134,7 +137,7 @@ export const RightPanel = ({
           >
             Create a free account
           </Link>
-        </p>
+        </p> */}
       </div>
     </div>
   );

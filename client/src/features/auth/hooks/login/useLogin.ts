@@ -1,4 +1,7 @@
 "use client";
+
+import { CONFIG } from "@/src/core/config";
+import TokenService from "@/src/core/service/tokenService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -17,8 +20,28 @@ export const useLogin = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = () => {
+  // handle remember me
+  const handleRememeberMe = () => {
+    const { rememberMe, ...rest } = form.getValues();
+    if (!rememberMe) {
+      return rest;
+    }
+    TokenService.setLocalStorage(
+      CONFIG.LOCALSTORAGE.REMEMBERED_EMAIL,
+      rest.email,
+    );
+    TokenService.setLocalStorage(
+      CONFIG.LOCALSTORAGE.REMEMBERED_PASSWORD,
+      rest.password,
+    );
+  };
+
+  // form submit handler
+  const handleSubmit = (data: LoginFormValues) => {
+    handleRememeberMe();
+    //api call here
     setIsLoading(true);
+    console.log("Login data", data);
     setTimeout(() => setIsLoading(false), 2000);
   };
 
@@ -30,5 +53,6 @@ export const useLogin = () => {
     handleSubmit,
     isLoading,
     loginSchema: loginFormSchema,
+    handleRememeberMe,
   };
 };
