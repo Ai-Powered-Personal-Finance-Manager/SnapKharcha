@@ -1,16 +1,11 @@
 import { Logo } from "@/src/components/home/shared";
 import { RightPanelInterface } from "../../interface/register";
-import { RegisterFirstStep } from "./RegisterFirstStep";
-import { RegisterSecondStep } from "./RegisterSecondStep";
+import { RegisterForm } from "./RegisterForm";
+import { RegisterPreview } from "./RegisterPreview";
 
 export const RightPanel = ({
   form,
-  setStep,
-  setUserType,
-  showConfirm,
   showPassword,
-  step,
-  userType,
   handleSubmit,
   setShowPassword,
 }: RightPanelInterface) => {
@@ -30,48 +25,14 @@ export const RightPanel = ({
       <Logo showIcon className="mb-6 lg:hidden flex" />
 
       <div className="w-full max-w-md relative z-10">
-        {/* Step indicator */}
-        <div className="flex items-center gap-2 mb-8">
-          {[1, 2].map((s) => (
-            <div key={s} className="flex items-center gap-2">
-              <div
-                className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${step >= s ? "bg-[#00C950] text-white shadow-md shadow-[#00C950]/30" : "bg-gray-100 border border-gray-200 text-gray-400"}`}
-                style={{ fontFamily: "'DM Sans', sans-serif" }}
-              >
-                {step > s ? "✓" : s}
-              </div>
-              {s < 2 && (
-                <div
-                  className={`w-16 h-px transition-all duration-300 ${step > s ? "bg-[#00C950]" : "bg-gray-200"}`}
-                />
-              )}
-            </div>
-          ))}
-          <p
-            className="ml-2 text-gray-400 text-xs"
-            style={{ fontFamily: "'DM Sans', sans-serif" }}
-          >
-            Step {step} of 2
-          </p>
-        </div>
+        <RegisterPreview />
 
-        {/* ── STEP 1: Account type ── */}
-        <RegisterFirstStep
-          step={step}
-          setStep={setStep}
-          setUserType={setUserType}
-        />
-
-        {/* ── STEP 2: Fill details ── */}
-        <RegisterSecondStep
+        {/* Register form*/}
+        <RegisterForm
           form={form}
           setShowPassword={setShowPassword}
           showPassword={showPassword}
           handleSubmit={handleSubmit}
-          setStep={setStep}
-          setUserType={setUserType}
-          step={step}
-          userType={userType}
         />
       </div>
     </div>

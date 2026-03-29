@@ -13,15 +13,10 @@ export const RegisterView = () => {
 
       {/* ── Right Panel ── */}
       <RightPanel
-        setShowPassword={register.setShowConfirm}
+        setShowPassword={register.setShowPassword}
         handleSubmit={register.handleFormSubmit}
         form={register.form}
-        setStep={register.setStep}
-        setUserType={register.setUserType}
-        showConfirm={register.showConfirm}
         showPassword={register.showPassword}
-        step={register.step}
-        userType={register.userType}
       />
     </div>
   );
