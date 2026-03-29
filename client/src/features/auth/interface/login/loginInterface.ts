@@ -14,6 +14,7 @@ export interface LeftPanelInterface {
   data: RecentActivityInterface[];
 }
 
+
 export interface RightPanelInterface {
   form: UseFormReturn<LoginFormValues>;
   handleSubmit: (data: LoginFormValues) => void;
