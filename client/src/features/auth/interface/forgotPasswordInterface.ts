@@ -64,6 +64,7 @@ export interface VerifyForgotEmailInterface {
 export interface SetNewPasswordInterface {
   showNewPassword: boolean;
   showConfirmPassword: boolean;
+  setStep: Dispatch<SetStateAction<Step>>;
   isLoading: boolean;
   handleSetNewPassword: (data: SetNewPasswordValues) => void;
   form: UseFormReturn<SetNewPasswordValues>;

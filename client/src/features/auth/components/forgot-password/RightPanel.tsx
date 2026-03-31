@@ -64,6 +64,7 @@ export const RightPanel = ({
         {/* ── Reset step ── */}
         {step === "reset" && (
           <SetNewPassword
+            setStep={setStep}
             showConfirmPassword={showConfirmPassword}
             showNewPassword={showNewPassword}
             toggleShowConfirmPassword={toggleShowConfirmPassword}

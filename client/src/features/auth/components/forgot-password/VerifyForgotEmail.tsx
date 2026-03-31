@@ -45,6 +45,22 @@ export const VerifyForgotEmail = ({
         </svg>
         Back
       </button>
+
+      <div className="w-14 h-14 rounded-2xl bg-[#f0f9ff] border border-[#bae6fd] flex items-center justify-center mb-6">
+        <svg
+          className="w-7 h-7 text-[#0284c7]"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={1.8}
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+      </div>
       <h1
         className="text-3xl font-extrabold text-gray-900 mb-2"
         style={{ fontFamily: "'Syne', sans-serif" }}

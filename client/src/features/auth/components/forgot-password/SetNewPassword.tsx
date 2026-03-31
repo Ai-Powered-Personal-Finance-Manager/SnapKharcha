@@ -17,9 +17,30 @@ export const SetNewPassword = ({
   showNewPassword,
   toggleShowConfirmPassword,
   toggleShowNewPassword,
+  setStep
 }: SetNewPasswordInterface) => {
   return (
     <div>
+      <button
+        onClick={() => setStep("otp")}
+        className="flex items-center gap-1.5 text-gray-400 hover:text-gray-700 text-sm mb-6 transition-colors group"
+        style={{ fontFamily: "'DM Sans', sans-serif" }}
+      >
+        <svg
+          className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+        Back
+      </button>
       <div className="w-14 h-14 rounded-2xl bg-[#f0fdf4] border border-[#bbf7d0] flex items-center justify-center mb-6">
         <svg
           className="w-7 h-7 text-[#00C950]"
