@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { LoginFormValues } from "../../schemas";
+import { LoginFormValues } from "../schemas";
 
 export interface RecentActivityInterface {
   icon: string;
@@ -13,7 +13,6 @@ export interface RecentActivityInterface {
 export interface LeftPanelInterface {
   data: RecentActivityInterface[];
 }
-
 
 export interface RightPanelInterface {
   form: UseFormReturn<LoginFormValues>;

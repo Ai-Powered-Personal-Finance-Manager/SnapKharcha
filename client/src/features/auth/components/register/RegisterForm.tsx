@@ -10,7 +10,7 @@ import { CONFIG } from "@/src/core/config";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
-import { RegisterFormInterface } from "../../interface/register";
+import { RegisterFormInterface } from "../../interface/registerInterface";
 
 export const RegisterForm = ({
   form,
@@ -94,7 +94,7 @@ export const RegisterForm = ({
                   )}
                 </Field>
               )}
-            ></Controller>
+            />
           </FieldGroup>
 
           {/* email */}
@@ -127,7 +127,7 @@ export const RegisterForm = ({
                   )}
                 </Field>
               )}
-            ></Controller>
+            />
           </FieldGroup>
 
           {/* password */}

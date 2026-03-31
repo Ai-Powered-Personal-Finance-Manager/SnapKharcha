@@ -1,10 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { RegisterFormValues } from "../../schemas/registerSchema";
-
-export type UserType = "personal" | "business" | null;
-
-export type Step = 1 | 2;
+import { RegisterFormValues } from "../schemas/registerSchema";
 
 export interface RightPanelInterface {
   showPassword: boolean;

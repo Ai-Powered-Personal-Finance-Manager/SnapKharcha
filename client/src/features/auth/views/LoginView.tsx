@@ -1,7 +1,7 @@
 "use client";
 
 import { LeftPanel, RightPanel } from "../components/login";
-import { useLogin } from "../hooks/login";
+import { useLogin } from "../hooks";
 
 export const LoginView = () => {
   const login = useLogin();

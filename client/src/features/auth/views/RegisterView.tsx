@@ -1,7 +1,7 @@
 "use client";
 
 import { LeftPanel, RightPanel } from "../components/register";
-import { useRegister } from "../hooks/register";
+import { useRegister } from "../hooks";
 
 export const RegisterView = () => {
   const register = useRegister();

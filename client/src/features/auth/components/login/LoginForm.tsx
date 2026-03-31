@@ -11,7 +11,7 @@ import { CONFIG } from "@/src/core/config";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
-import { LoginFormInterface } from "../../interface/login";
+import { LoginFormInterface } from "../../interface/loginInterface";
 
 export const LoginForm = ({
   handleSubmit,
@@ -128,6 +128,7 @@ export const LoginForm = ({
                   <div className="flex items-center gap-2">
                     <div>
                       <Checkbox
+                        onClick={handleRememberMe}
                         id="rememberMe"
                         className="data-[state=checked]:text-green-500 cursor-pointer"
                         checked={field.value ? true : false}

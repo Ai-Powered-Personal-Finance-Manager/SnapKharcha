@@ -5,8 +5,8 @@ import TokenService from "@/src/core/service/tokenService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { recentActivity } from "../../data/login";
-import { loginFormSchema, LoginFormValues } from "../../schemas";
+import { recentActivity } from "../data/login";
+import { loginFormSchema, LoginFormValues } from "../schemas";
 
 export const useLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
