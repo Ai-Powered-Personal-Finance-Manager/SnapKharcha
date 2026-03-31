@@ -11,6 +11,7 @@ import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { RegisterFormInterface } from "../../interface/registerInterface";
+import PasswordStrength from "../../shared/PasswordStrength";
 
 export const RegisterForm = ({
   form,
@@ -81,7 +82,13 @@ export const RegisterForm = ({
                   <Input
                     {...field}
                     maxLength={32}
+                    value={field.value}
                     id="fullName"
+                    onBlur={(e) => {
+                      const value = e.target.value.trim();
+                      field.onChange(value);
+                      field.onBlur();
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                     aria-invalid={fieldState.invalid}
                     placeholder="John Doe"
@@ -115,6 +122,12 @@ export const RegisterForm = ({
                     {...field}
                     maxLength={32}
                     id="email"
+                    value={field.value || ""}
+                    onBlur={(e) => {
+                      const value = e.target.value.trim();
+                      field.onChange(value);
+                      field.onBlur();
+                    }}
                     className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                     aria-invalid={fieldState.invalid}
                     placeholder="example@gmail.com"
@@ -152,6 +165,7 @@ export const RegisterForm = ({
                     <Input
                       {...field}
                       id="password"
+                      value={field.value}
                       maxLength={32}
                       type={showPassword ? "text" : "password"}
                       className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
@@ -185,6 +199,8 @@ export const RegisterForm = ({
               )}
             />
           </FieldGroup>
+
+          <PasswordStrength control={form.control} tracker="password" />
 
           {/* terms and conditions */}
           <FieldGroup className="mt-2">

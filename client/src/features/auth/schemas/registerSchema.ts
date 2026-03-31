@@ -2,10 +2,11 @@ import { z } from "zod";
 
 export const registerSchema = z
   .object({
-    name: z.string().min(1, "Enter full name"),
-    email: z.string().min(1, "Email is required").email(),
+    name: z.string().trim().min(1, "Enter full name"),
+    email: z.string().trim().min(1, "Email is required").email(),
     password: z
       .string()
+      .trim()
       .min(1, "Enter password")
       .superRefine((val, ctx) => {
         const missing: string[] = [];

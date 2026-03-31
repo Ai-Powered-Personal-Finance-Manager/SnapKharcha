@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Field,
   FieldError,
@@ -8,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { SetNewPasswordInterface } from "../../interface/forgotPasswordInterface";
+import PasswordStrength from "../../shared/PasswordStrength";
 
 export const SetNewPassword = ({
   isLoading,
@@ -17,7 +20,7 @@ export const SetNewPassword = ({
   showNewPassword,
   toggleShowConfirmPassword,
   toggleShowNewPassword,
-  setStep
+  setStep,
 }: SetNewPasswordInterface) => {
   return (
     <div>
@@ -96,6 +99,7 @@ export const SetNewPassword = ({
                       {...field}
                       id="newPassword"
                       maxLength={32}
+                      value={field.value}
                       type={showNewPassword ? "text" : "password"}
                       className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                       aria-invalid={fieldState.invalid}
@@ -126,6 +130,8 @@ export const SetNewPassword = ({
             />
           </FieldGroup>
 
+          <PasswordStrength control={form.control} tracker="newPassword" />
+
           <FieldGroup className="mt-2">
             <Controller
               name="confirmPassword"
@@ -148,6 +154,7 @@ export const SetNewPassword = ({
                       {...field}
                       id="confirmPassword"
                       maxLength={32}
+                      value={field.value}
                       type={showConfirmPassword ? "text" : "password"}
                       className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                       aria-invalid={fieldState.invalid}

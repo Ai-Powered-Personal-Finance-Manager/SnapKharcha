@@ -1,3 +1,5 @@
+"use client";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -15,7 +17,7 @@ import {
 const RESET_TIMER = 30;
 
 export const useForgotPassword = () => {
-  const [step, setStep] = useState<Step>("email");
+  const [step, setStep] = useState<Step>("reset");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 

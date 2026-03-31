@@ -1,4 +1,5 @@
 "use client";
+
 import { LeftPanel, RightPanel } from "../components/forgot-password";
 import { useForgotPassword } from "../hooks";
 

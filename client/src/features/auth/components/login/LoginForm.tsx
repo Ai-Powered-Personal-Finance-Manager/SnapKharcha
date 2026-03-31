@@ -46,6 +46,12 @@ export const LoginForm = ({
                   <Input
                     {...field}
                     maxLength={32}
+                    value={field.value}
+                    onBlur={(e) => {
+                      const value = e.target.value.trim();
+                      field.onChange(value);
+                      field.onBlur();
+                    }}
                     id="email"
                     className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                     aria-invalid={fieldState.invalid}
@@ -87,6 +93,7 @@ export const LoginForm = ({
                     {...field}
                     id="password"
                     maxLength={32}
+                    value={field.value}
                     type={showPassword ? "text" : "password"}
                     className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                     aria-invalid={fieldState.invalid}

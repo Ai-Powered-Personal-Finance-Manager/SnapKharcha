@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const forgotEmailSchema = z.object({
-  email: z.string().min(1, "Email is required").email(),
+  email: z.string().trim().min(1, "Email is required").email(),
 });
 
 export const verifyEmailSchema = z.object({

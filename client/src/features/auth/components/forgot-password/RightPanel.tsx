@@ -1,3 +1,5 @@
+"use client";
+
 import { Logo } from "@/src/components/home/shared";
 import { RightPanelInterface } from "../../interface/forgotPasswordInterface";
 import { ForgotEmail } from "./ForgotEmail";
