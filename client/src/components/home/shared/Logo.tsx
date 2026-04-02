@@ -7,7 +7,12 @@ import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { LogoInterface } from "../interface";
 
-export const Logo = ({ showIcon, isFooter, navigation }: LogoInterface) => {
+export const Logo = ({
+  showIcon,
+  isFooter,
+  navigation,
+  className,
+}: LogoInterface) => {
   const handleRefNavigation = navigation;
   return (
     <Link
@@ -16,7 +21,7 @@ export const Logo = ({ showIcon, isFooter, navigation }: LogoInterface) => {
         e.preventDefault();
         if (navigation) handleRefNavigation("/");
       }}
-      className="flex items-center gap-2 group"
+      className={cn(" flex items-center gap-2 group", className)}
     >
       {showIcon && (
         <div className="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center shadow-lg shadow-[#0099ff]/20 group-hover:shadow-[#0099ff]/40 transition-all duration-300">

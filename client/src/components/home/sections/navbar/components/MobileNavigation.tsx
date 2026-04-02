@@ -8,6 +8,7 @@ import {
   MobileNavigationHamburgerInterface,
   MobileNavigationSheetInterface,
 } from "../interface";
+import { CONFIG } from "@/src/core/config";
 
 export const MobileNavigationHamburger = ({
   menuOpen,
@@ -48,7 +49,8 @@ export const MobileNavigationSheet = ({
           <Link
             key={link.label}
             href={link.href}
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               handleRefNavigation(link.href);
               setMenuOpen(false);
             }}
@@ -63,12 +65,12 @@ export const MobileNavigationSheet = ({
 
         <div className="flex flex-col mt-auto gap-3 pt-2">
           <LinkButton
-            href="/auth/login"
+            href={CONFIG.AUTH.LOGIN}
             label="Sign In"
             className="flex-1 text-center text-sm hover:text-black py-2.5 border border-[#1e1e2e] rounded-xl transition-colors duration-200 text-black"
           />
           <LinkButton
-            href="/auth/register"
+            href={CONFIG.AUTH.REGISTER}
             label="Get Started"
             className="flex-1 text-center text-sm font-semibold py-2.5 rounded-xl bg-green-500 text-white"
           />

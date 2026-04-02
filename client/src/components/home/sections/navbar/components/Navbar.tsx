@@ -1,4 +1,5 @@
 "use client";
+import { CONFIG } from "@/src/core/config";
 import { cn } from "@/src/lib/utils";
 import { LinkButton, Logo } from "../../../shared";
 import { useNavbar } from "../hooks";
@@ -54,13 +55,13 @@ const CTAButtons = () => {
   return (
     <div className="hidden lg:flex items-center gap-3">
       <LinkButton
-        href="/auth/login"
+        href={CONFIG.AUTH.LOGIN}
         label="Sign In"
         className="px-4 py-2 text-black font-semibold"
       />
 
       <LinkButton
-        href="/auth/register"
+        href={CONFIG.AUTH.FORGOT_PASSWORD}
         label="Get Started Free"
         className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-green-500 text-white hover:opacity-90 transition-all duration-200 shadow-lg shadow-[#00C950]/20 hover:shadow-[#00C950]/40 hover:scale-105"
       />
