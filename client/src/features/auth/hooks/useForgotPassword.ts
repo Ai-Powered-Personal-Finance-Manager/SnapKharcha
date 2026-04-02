@@ -17,7 +17,7 @@ import {
 const RESET_TIMER = 30;
 
 export const useForgotPassword = () => {
-  const [step, setStep] = useState<Step>("reset");
+  const [step, setStep] = useState<Step>("email");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
