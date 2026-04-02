@@ -19,7 +19,7 @@ export const CTASection = () => {
         />
 
         <h2
-          className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight"
+          className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white mb-6 leading-tight"
           style={{ fontFamily: "'Syne', sans-serif" }}
         >
           Take Control of Your <span className="text-green-500">Finances</span>{" "}
