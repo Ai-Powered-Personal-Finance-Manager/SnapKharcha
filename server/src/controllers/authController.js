@@ -5,6 +5,23 @@ import crypto from 'crypto';
 import { sendWelcomeEmail } from '../utils/sendWelcomeEmail.js';
 import { sendOtpEmail } from '../utils/sendOtpEmail.js';
 
+// Helper to generate both tokens
+const generateTokens = (user) => {
+    const accessToken = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_SECRET,
+        { expiresIn: '15m' } // short lived
+    );
+
+    const refreshToken = jwt.sign(
+        { id: user.id, email: user.email },
+        process.env.JWT_REFRESH_SECRET, // different secret
+        { expiresIn: '7d' } // long lived
+    );
+
+    return { accessToken, refreshToken };
+};
+
 // Register user
 export const register = async (req, res) => {
     try {
@@ -39,8 +56,8 @@ export const register = async (req, res) => {
         );
 
         // Return user without password
-        const { password: _, ...userWithoutPassword } = user;
-        res.status(201).json(userWithoutPassword);
+        // const { password: _, ...userWithoutPassword } = user;
+        res.status(201).json({success: "User Register Successfully!", email: user.email });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -55,25 +72,47 @@ export const login = async (req, res) => {
         // Find user
         const user = await prisma.user.findUnique({ where: { email } });
         if (!user) {
-        return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
         // Compare password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
+            return res.status(400).json({ message: 'Invalid credentials' });
         }
 
-        // Generate JWT
-        const token = jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET || 'secret', // Replace 'secret' with strong secret in prod
-        { expiresIn: '1h' }
-        );
+        // // Generate JWT
+        // const token = jwt.sign(
+        //     { id: user.id, email: user.email },
+        //     process.env.JWT_SECRET || 'secret', // Replace 'secret' with strong secret in prod
+        //     { expiresIn: '1h' }
+        // );
 
-        // Return token and user info
-        const { password: _, ...userWithoutPassword } = user;
-        res.json({ user: userWithoutPassword, token });
+        // // Return token and user info
+        // const { password: _, ...userWithoutPassword } = user;
+        // res.json({ user: userWithoutPassword, token });
+
+        // Generate both tokens
+        const { accessToken, refreshToken } = generateTokens(user);
+
+        // Save refresh token to DB
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { refreshToken }
+        });
+
+        // Send refresh token as httpOnly cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
+
+        // Send access token in response body
+        // const { password: _, ...userWithoutPassword } = user;
+        res.json({ success: "User Loggedin Successfully!" , accessToken });
+        
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Server error' });
@@ -241,23 +280,83 @@ export const resetPassword = async (req, res) => {
     }
 };
 
-export const googleAuthCallback = (req, res) => {
+// GOOGLE OAUTH CALLBACK
+export const googleAuthCallback = async (req, res) => {
     try {
-        // req.user is set by passport after successful OAuth
         const user = req.user;
 
-        // Generate JWT same as normal login
-        const token = jwt.sign(
-            { id: user.id, email: user.email },
-            process.env.JWT_SECRET,
-            { expiresIn: '1h' }
-        );
+        // Generate both tokens
+        const { accessToken, refreshToken } = generateTokens(user);
+
+        // Save refresh token to DB
+        await prisma.user.update({
+            where: { id: user.id },
+            data: { refreshToken }
+        });
+
+        // Set refresh token as cookie
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000
+        });
 
         // Redirect to frontend with token in URL
         // Frontend grabs it from URL and stores in localStorage
-        res.redirect(`${process.env.CLIENT_URL}/oauth-callback?token=${token}`);
+        res.redirect(`${process.env.CLIENT_URL}/oauth-callback?token=${accessToken}`);
     } catch (error) {
         console.error(error);
         res.redirect(`${process.env.CLIENT_URL}/login?error=oauth_failed`);
+    }
+};
+
+// REFRESH TOKEN — get new access token
+export const refreshToken = async (req, res) => {
+    try {
+        const token = req.cookies.refreshToken;
+
+        if (!token) {
+            return res.status(401).json({ message: 'No refresh token' });
+        }
+
+        // Verify refresh token
+        const decoded = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+
+        // Check if refresh token matches what's in DB
+        const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+        if (!user || user.refreshToken !== token) {
+            return res.status(403).json({ message: 'Invalid refresh token' });
+        }
+
+        // Generate new access token
+        const accessToken = jwt.sign(
+            { id: user.id, email: user.email },
+            process.env.JWT_SECRET,
+            { expiresIn: '15m' }
+        );
+
+        res.json({ accessToken });
+    } catch (error) {
+        return res.status(403).json({ message: 'Invalid or expired refresh token' });
+    }
+};
+
+// logout
+export const logout = async (req, res) => {
+    try {
+        const token = req.cookies.refreshToken;
+        if (token) {
+            await prisma.user.updateMany({
+                where: { refreshToken: token },
+                data: { refreshToken: null }
+            });
+        }
+
+        res.clearCookie('refreshToken');
+        res.status(200).json({ message: 'Logged out successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
 };

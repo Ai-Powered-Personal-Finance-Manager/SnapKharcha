@@ -18,6 +18,7 @@ model User {
   password        String?   //optional since now we use oauth
   googleId        String?   @unique
   avatar          String?   // profile picture from Google
+  refreshToken    String? 
   otp             String?
   otpExpiresAt    DateTime?
   createdAt       DateTime  @default(now())
