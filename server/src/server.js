@@ -7,6 +7,9 @@ import prisma from "./config/prisma.js";
 import authRouter from "./routes/authRoutes.js";
 import session from "express-session";
 import passport from "./config/passport.js";
+import cookieParser from 'cookie-parser';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.js';
 
 const app = express();
 
@@ -14,6 +17,7 @@ app.use(cors());
 app.use(helmet());
 app.use(morgan("dev"));
 app.use(express.json());
+app.use(cookieParser());
 
 // Session is required by passport temporarily during OAuth redirect
 app.use(session({
@@ -26,10 +30,13 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.get("/", (req, res) => {
     res.send("API running...");
 });
 
+//routes
 app.use("/api/auth", authRouter);
 
 const PORT = process.env.PORT || 5000;
