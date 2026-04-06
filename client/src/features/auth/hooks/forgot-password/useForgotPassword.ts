@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Step } from "../interface/forgotPasswordInterface";
+import { Step } from "../../interface/forgotPasswordInterface";
 import {
   ForgotEmailDefault,
   forgotEmailSchema,
@@ -12,7 +12,7 @@ import {
   SetNewPasswordValues,
   verifyEmailSchema,
   VerifyEmailValues,
-} from "../schemas/forgotPasswordSchema";
+} from "../../schemas/forgotPasswordSchema";
 
 const RESET_TIMER = 30;
 
