@@ -26,12 +26,12 @@ export interface LeftPanelInterface {
 
 export interface RightPanelInterface {
   step: Step;
-  isLoading: boolean;
   showNewPassword: boolean;
   showConfirmPassword: boolean;
   resendTimer: number;
-  // isEmailSubmitLoading: boolean;
-  // isVerifyOTPLoading: boolean;
+  isForgotEmailLoading: boolean;
+  isVerifyOTPLoading: boolean;
+  isSetNewPasswordLoading: boolean;
   setStep: Dispatch<SetStateAction<Step>>;
   emailForm: UseFormReturn<ForgotEmailValues>;
   otpForm: UseFormReturn<VerifyEmailValues>;

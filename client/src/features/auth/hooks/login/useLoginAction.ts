@@ -1,14 +1,11 @@
+import { CONFIG } from "@/src/core/config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authService } from "../../services/api/authApiService";
 
 type LoginResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    access_token: string;
-    refresh_token: string;
-  };
+  success: string;
+  accessToken: string;
 };
 
 export function useLoginAction() {
@@ -23,7 +20,7 @@ export function useLoginAction() {
       authService.login(data),
 
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["login"] });
+      queryClient.invalidateQueries({ queryKey: [CONFIG.REVALIDATE.LOGIN] });
       toast.success(data.success);
     },
 

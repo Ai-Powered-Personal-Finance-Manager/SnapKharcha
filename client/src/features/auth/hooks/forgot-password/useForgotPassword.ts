@@ -13,6 +13,7 @@ import {
   verifyEmailSchema,
   VerifyEmailValues,
 } from "../../schemas/forgotPasswordSchema";
+import { useForgotPasswordAction } from "./useForgotPasswordAction";
 
 const RESET_TIMER = 30;
 
@@ -21,8 +22,8 @@ export const useForgotPassword = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  //loading will come later from tanstack
-  const [isLoading, setIsLoading] = useState(false);
+  const { mutate: forgotEmail, isPending: isForgotEmailLoading } =
+    useForgotPasswordAction();
 
   const [resendTimer, setResendTimer] = useState(RESET_TIMER);
 
@@ -72,14 +73,16 @@ export const useForgotPassword = () => {
 
   // step 1
   const handleEmailSubmit = (data: ForgotEmailValues) => {
-    console.log("email", data);
-    simulate(() => setStep("otp"));
+    forgotEmail(data, {
+      onSuccess: () => {
+        setStep("otp");
+      },
+    });
   };
 
   // step 2
   const handleOtpSubmit = (data: VerifyEmailValues) => {
     console.log("new password", data);
-    simulate(() => setStep("reset"));
   };
 
   const handleResetOtp = () => {
@@ -91,16 +94,6 @@ export const useForgotPassword = () => {
   // step 3
   const handleSetNewPassword = (data: SetNewPasswordValues) => {
     console.log("new password", data);
-    simulate(() => setStep("success"));
-    //handle api call later
-  };
-
-  const simulate = (next: () => void) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      next();
-    }, 1500);
   };
 
   const steps: Step[] = ["email", "otp", "reset"];
@@ -124,10 +117,9 @@ export const useForgotPassword = () => {
     step,
     setStep,
     steps,
-    simulate,
     forgotEmailForm,
     otpForm,
-    isLoading,
+    isForgotEmailLoading,
     handleEmailSubmit,
     handleOtpSubmit,
     handleResetOtp,

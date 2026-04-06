@@ -1,3 +1,4 @@
+import { CONFIG } from "@/src/core/config";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authService } from "../../services/api/authApiService";
@@ -17,7 +18,7 @@ export function useRegisterAction() {
   >({
     mutationFn: (data) => authService.create(data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["register"] });
+      queryClient.invalidateQueries({ queryKey: [CONFIG.REVALIDATE.REGISTER] });
       toast.success(data.success);
     },
     onError: (error: any) => {

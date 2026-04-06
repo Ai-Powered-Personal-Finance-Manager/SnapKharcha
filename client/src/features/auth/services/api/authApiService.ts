@@ -20,6 +20,16 @@ export class AuthAPIService {
     const res = await clientAPI.post("/auth/register", data);
     return res?.data;
   }
+
+  async forgotEmail(data: { email: string }) {
+    const res = await clientAPI.post("/auth/forgot-password", data);
+    return res?.data;
+  }
+
+  async verifyOTP(data: { otp: string }) {
+    const res = await clientAPI.post("/auth/verify-otp", data);
+    return res?.data;
+  }
 }
 
 export const authService = new AuthAPIService();
