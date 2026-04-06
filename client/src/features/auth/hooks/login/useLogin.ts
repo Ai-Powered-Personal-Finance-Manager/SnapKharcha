@@ -5,8 +5,9 @@ import TokenService from "@/src/core/service/tokenService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { recentActivity } from "../data/login";
-import { loginFormSchema, LoginFormValues } from "../schemas";
+import { recentActivity } from "../../data/login";
+import { LoginFormValues, loginFormSchema } from "../../schemas";
+import { useLoginAction } from "./useLoginAction";
 
 export const useLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,8 +21,9 @@ export const useLogin = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  const login = useLoginAction();
   // handle remember me
-  const handleRememeberMe = () => {
+  const handleRememeberMe = (data: LoginFormValues) => {
     const { rememberMe, ...rest } = form.getValues();
     if (!rememberMe) {
       return rest;
@@ -34,15 +36,18 @@ export const useLogin = () => {
       CONFIG.LOCALSTORAGE.REMEMBERED_PASSWORD,
       rest.password,
     );
+    return rest;
   };
 
   // form submit handler
   const handleSubmit = (data: LoginFormValues) => {
-    handleRememeberMe();
-    //api call here
-    setIsLoading(true);
-    console.log("Login data", data);
-    setTimeout(() => setIsLoading(false), 2000);
+    const payload = handleRememeberMe(data);
+
+    login.mutate(payload, {
+      onSuccess: (res) => {
+        console.log("Login success", res);
+      },
+    });
   };
 
   return {
