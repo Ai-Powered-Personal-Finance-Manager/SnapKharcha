@@ -1,9 +1,10 @@
 "use client";
 
 import { CONFIG } from "@/src/core/config";
-import TokenService from "@/src/core/service/tokenService";
+
+import { localStorageUtil } from "@/src/core/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { recentActivity } from "../../data/login";
 import { LoginFormValues, loginFormSchema } from "../../schemas";
@@ -19,24 +20,36 @@ export const useLogin = () => {
     },
     resolver: zodResolver(loginFormSchema),
   });
-  // const [isLoading, setIsLoading] = useState(false);
 
   const { mutate: login, isPending } = useLoginAction();
 
+  // Sync browser autofill to RHF
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const values = form.getValues();
+
+      if (!values.email) {
+        const rememberedEmail = localStorageUtil.get<string>(
+          CONFIG.LOCALSTORAGE.REMEMBERED_EMAIL,
+        );
+
+        if (rememberedEmail) {
+          form.setValue("email", rememberedEmail);
+          form.setValue("rememberMe", true);
+        }
+      }
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   // handle remember me
   const handleRememeberMe = (data: LoginFormValues) => {
-    const { rememberMe, ...rest } = form.getValues();
+    const { rememberMe, ...rest } = data;
     if (!rememberMe) {
       return rest;
     }
-    TokenService.setLocalStorage(
-      CONFIG.LOCALSTORAGE.REMEMBERED_EMAIL,
-      rest.email,
-    );
-    TokenService.setLocalStorage(
-      CONFIG.LOCALSTORAGE.REMEMBERED_PASSWORD,
-      rest.password,
-    );
+    localStorageUtil.set(CONFIG.LOCALSTORAGE.REMEMBERED_EMAIL, rest.email);
     return rest;
   };
 

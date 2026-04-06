@@ -13,7 +13,6 @@ export const LoginView = () => {
 
       {/* ── Right Panel (form) ── */}
       <RightPanel
-        handleRememberMe={login.handleRememeberMe}
         form={login.form}
         handleSubmit={login.handleSubmit}
         isLoading={login.isLoading}

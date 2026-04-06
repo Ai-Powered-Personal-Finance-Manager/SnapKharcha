@@ -1,6 +1,7 @@
 "use client";
 import { Logo } from "@/src/components/home/shared";
-import { LeftPanelInterface } from "../../interface/login";
+import { LeftPanelInterface } from "../../interface/loginInterface";
+
 
 export const LeftPanel = ({ data }: LeftPanelInterface) => {
   return (

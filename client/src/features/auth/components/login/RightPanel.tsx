@@ -2,7 +2,8 @@
 import { Logo } from "@/src/components/home/shared";
 import { CONFIG } from "@/src/core/config";
 import Link from "next/link";
-import { RightPanelInterface } from "../../interface/login";
+
+import { RightPanelInterface } from "../../interface/loginInterface";
 import { LoginForm } from "./LoginForm";
 
 export const RightPanel = ({
@@ -11,7 +12,6 @@ export const RightPanel = ({
   setShowPassword,
   showPassword,
   form,
-  handleRememberMe,
 }: RightPanelInterface) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden bg-white">
@@ -96,7 +96,6 @@ export const RightPanel = ({
 
         <LoginForm
           form={form}
-          handleRememberMe={handleRememberMe}
           setShowPassword={setShowPassword}
           showPassword={showPassword}
           handleSubmit={handleSubmit}

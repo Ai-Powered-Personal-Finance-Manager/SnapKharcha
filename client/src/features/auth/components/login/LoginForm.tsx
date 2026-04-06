@@ -19,7 +19,6 @@ export const LoginForm = ({
   setShowPassword,
   showPassword,
   form,
-  handleRememberMe,
 }: LoginFormInterface) => {
   return (
     <div className="space-y-4">
@@ -53,6 +52,7 @@ export const LoginForm = ({
                       field.onBlur();
                     }}
                     id="email"
+                    autoComplete="email"
                     className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
                     aria-invalid={fieldState.invalid}
                     placeholder="you@example.com"
@@ -93,6 +93,7 @@ export const LoginForm = ({
                     {...field}
                     id="password"
                     maxLength={32}
+                    autoComplete="current-password"
                     value={field.value}
                     type={showPassword ? "text" : "password"}
                     className="w-full px-4 py-5 pl-11 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
@@ -135,7 +136,6 @@ export const LoginForm = ({
                   <div className="flex items-center gap-2">
                     <div>
                       <Checkbox
-                        onClick={handleRememberMe}
                         id="rememberMe"
                         className="data-[state=checked]:text-green-500 cursor-pointer"
                         checked={field.value ? true : false}

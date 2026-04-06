@@ -1,4 +1,5 @@
-import { RecentActivityInterface } from "../../interface/login";
+import { RecentActivityInterface } from "../../interface/loginInterface";
+
 
 export const recentActivity: RecentActivityInterface[] = [
   {

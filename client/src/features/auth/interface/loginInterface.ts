@@ -20,7 +20,6 @@ export interface RightPanelInterface {
   showPassword: boolean;
   setShowPassword: Dispatch<SetStateAction<boolean>>;
   isLoading: boolean;
-  handleRememberMe: () => void;
 }
 
 export interface LoginFormInterface extends RightPanelInterface {}

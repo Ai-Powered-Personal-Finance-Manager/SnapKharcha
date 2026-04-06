@@ -3,6 +3,7 @@
 @description: Reusable Logo component
 */
 
+import { CONFIG } from "@/src/core/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { LogoInterface } from "../interface";
@@ -16,10 +17,10 @@ export const Logo = ({
   const handleRefNavigation = navigation;
   return (
     <Link
-      href="/"
-      onClick={(e) => {
-        e.preventDefault();
-        if (navigation) handleRefNavigation("/");
+      href={CONFIG.AUTH.HOME}
+      onClick={() => {
+        // e.preventDefault();
+        if (navigation) handleRefNavigation(CONFIG.AUTH.HOME);
       }}
       className={cn(" flex items-center gap-2 group", className)}
     >
