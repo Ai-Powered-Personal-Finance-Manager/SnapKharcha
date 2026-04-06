@@ -2,7 +2,7 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/src/lib/utils";
-import { CheckboxFieldInterface } from "./checkboxFieldInterface";
+import { CheckboxFieldInterface } from "../interface/checkboxFieldInterface";
 
 export default function CheckboxField({
   label,
@@ -38,7 +38,7 @@ export default function CheckboxField({
         id={name}
         name={name}
         checked={checked}
-        onCheckedChange={(checked: string) => {
+        onCheckedChange={(checked) => {
           onCheckedChange?.(checked as string);
         }}
         disabled={disabled}

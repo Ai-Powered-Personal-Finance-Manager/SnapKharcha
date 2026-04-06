@@ -17,9 +17,9 @@ export const RegisterForm = ({
   form,
   handleSubmit,
   setShowPassword,
+  isLoading,
   showPassword,
 }: RegisterFormInterface) => {
-  console.log("showpassword", showPassword);
   return (
     <div>
       <div>
@@ -257,10 +257,36 @@ export const RegisterForm = ({
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl font-bold text-sm bg-[#00C950] text-white hover:bg-[#00b347] transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-[#00C950]/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={isLoading}
+            className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm bg-[#00C950] text-white hover:bg-[#00b347] transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-[#00C950]/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            Create Account →
+            {isLoading ? (
+              <>
+                <svg
+                  className="w-4 h-4 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Creating your account...
+              </>
+            ) : (
+              "Create Account →"
+            )}
           </button>
         </form>
       </div>

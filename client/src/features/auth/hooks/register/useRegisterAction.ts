@@ -2,34 +2,27 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authService } from "../../services/api/authApiService";
 
-type LoginResponse = {
-  success: boolean;
-  message: string;
-  data: {
-    access_token: string;
-    refresh_token: string;
-  };
+type RegisterResponse = {
+  success: string;
+  email: string;
 };
 
-export function useLoginAction() {
+export function useRegisterAction() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation<
-    LoginResponse,
+    RegisterResponse,
     Error,
-    { email: string; password: string }
+    { name: string; email: string; password: string }
   >({
-    mutationFn: (data: { email: string; password: string }) =>
-      authService.login(data),
-
+    mutationFn: (data) => authService.create(data),
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["login"] });
+      queryClient.invalidateQueries({ queryKey: ["register"] });
       toast.success(data.success);
     },
-
     onError: (error: any) => {
       console.log(error?.response?.data?.message);
-      toast.success(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message);
     },
   });
 

@@ -7,7 +7,8 @@ import {
   RegisterFormDefault,
   RegisterFormValues,
   registerSchema,
-} from "../schemas/registerSchema";
+} from "../../schemas/registerSchema";
+import { useRegisterAction } from "./useRegisterAction";
 
 export const useRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,10 +18,17 @@ export const useRegister = () => {
     defaultValues: RegisterFormDefault,
   });
 
+  const { mutate: register, isPending } = useRegisterAction();
+
   const handleFormSubmit = (data: RegisterFormValues) => {
     const { isTermsAgreed } = data;
     if (!isTermsAgreed) return;
-    console.log(data);
+
+    register(data, {
+      onSuccess: (res) => {
+        console.log("Registration success", res);
+      },
+    });
   };
 
   return {
@@ -29,6 +37,7 @@ export const useRegister = () => {
     showConfirm,
     setShowConfirm,
     form,
+    isLoading: isPending,
     handleFormSubmit,
   };
 };

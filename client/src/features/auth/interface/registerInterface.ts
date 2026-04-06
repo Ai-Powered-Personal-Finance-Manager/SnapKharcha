@@ -6,10 +6,11 @@ export interface RightPanelInterface {
   showPassword: boolean;
   setShowPassword: Dispatch<SetStateAction<boolean>>;
   form: UseFormReturn<RegisterFormValues>;
+  isLoading: boolean;
   handleSubmit: (data: RegisterFormValues) => void;
 }
 
 export interface RegisterFormInterface extends Pick<
   RightPanelInterface,
-  "form" | "handleSubmit" | "showPassword" | "setShowPassword"
+  "form" | "handleSubmit" | "showPassword" | "setShowPassword" | "isLoading"
 > {}

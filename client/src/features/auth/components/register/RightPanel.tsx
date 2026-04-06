@@ -1,5 +1,5 @@
 import { Logo } from "@/src/components/home/shared";
-import { RightPanelInterface } from "../../interface/register";
+import { RightPanelInterface } from "../../interface/registerInterface";
 import { RegisterForm } from "./RegisterForm";
 import { RegisterPreview } from "./RegisterPreview";
 
@@ -7,6 +7,7 @@ export const RightPanel = ({
   form,
   showPassword,
   handleSubmit,
+  isLoading,
   setShowPassword,
 }: RightPanelInterface) => {
   return (
@@ -30,6 +31,7 @@ export const RightPanel = ({
         {/* Register form*/}
         <RegisterForm
           form={form}
+          isLoading={isLoading}
           setShowPassword={setShowPassword}
           showPassword={showPassword}
           handleSubmit={handleSubmit}

@@ -19,9 +19,10 @@ export const useLogin = () => {
     },
     resolver: zodResolver(loginFormSchema),
   });
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const login = useLoginAction();
+  const { mutate: login, isPending } = useLoginAction();
+
   // handle remember me
   const handleRememeberMe = (data: LoginFormValues) => {
     const { rememberMe, ...rest } = form.getValues();
@@ -43,7 +44,9 @@ export const useLogin = () => {
   const handleSubmit = (data: LoginFormValues) => {
     const payload = handleRememeberMe(data);
 
-    login.mutate(payload, {
+    console.log("login payload", payload);
+
+    login(payload, {
       onSuccess: (res) => {
         console.log("Login success", res);
       },
@@ -56,7 +59,7 @@ export const useLogin = () => {
     form,
     setShowPassword,
     handleSubmit,
-    isLoading,
+    isLoading: isPending,
     loginSchema: loginFormSchema,
     handleRememeberMe,
   };
