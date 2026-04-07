@@ -5,8 +5,9 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
+    "swagger": "node src/swagger.js",
     "start": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon --ignore swagger-output.json --exec \"node src/swagger.js & node src/server.js\" src"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +31,7 @@
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.20.0",
     "prisma": "^7.5.0",
+    "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "xlsx": "^0.18.5",
