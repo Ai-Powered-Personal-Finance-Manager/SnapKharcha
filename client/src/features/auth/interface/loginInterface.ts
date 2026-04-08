@@ -23,3 +23,8 @@ export interface RightPanelInterface {
 }
 
 export interface LoginFormInterface extends RightPanelInterface {}
+
+export type LoginResponse = {
+  success: string;
+  accessToken: string;
+};

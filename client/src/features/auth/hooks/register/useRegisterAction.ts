@@ -1,10 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "../../services/api/authApiService";
-
-type RegisterResponse = {
-  success: string;
-  email: string;
-};
+import { RegisterResponse } from "../../interface/registerInterface";
 
 export function useRegisterAction() {
   return useMutation<
