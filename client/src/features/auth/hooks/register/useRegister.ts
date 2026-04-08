@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import {
   RegisterFormDefault,
   RegisterFormValues,
@@ -26,7 +27,10 @@ export const useRegister = () => {
 
     register(data, {
       onSuccess: (res) => {
-        console.log("Registration success", res);
+        toast.success(res.success);
+      },
+      onError: (err: any) => {
+        toast.error(err?.response?.data?.message || "Registration failed");
       },
     });
   };

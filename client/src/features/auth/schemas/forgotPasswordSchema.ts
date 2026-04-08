@@ -9,7 +9,7 @@ export const verifyEmailSchema = z.object({
     .string()
     .min(6, "Enter the 6-digit OTP")
     .max(6, "OTP must be 6 digits")
-    .regex(/^[a-zA-Z0-9]+$/, "OTP must be alphanumeric"),
+    .regex(/^\d{6}$/, "OTP must be 6 digits"),
 });
 
 export const setNewPasswordSchema = z

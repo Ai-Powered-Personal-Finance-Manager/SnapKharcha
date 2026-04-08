@@ -24,6 +24,7 @@ export const RightPanel = ({
   resendTimer,
   isForgotEmailLoading,
   isVerifyOTPLoading,
+  email,
   isSetNewPasswordLoading,
 }: RightPanelInterface) => {
   return (
@@ -60,8 +61,7 @@ export const RightPanel = ({
             setStep={setStep}
             form={otpForm}
             handleOtpSubmit={handleOtpSubmit}
-            canResend
-            email={emailForm.getValues("email")}
+            email={email}
           />
         )}
 
