@@ -17,8 +17,6 @@ clientAPI.interceptors.request.use(
       CONFIG.LOCALSTORAGE.ACCESS_TOKEN,
     );
 
-    console.log("ACCESS_TOKEN", token);
-
     if (token) {
       config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;

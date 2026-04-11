@@ -74,13 +74,16 @@ export interface SetNewPasswordInterface {
 
 export type ForgotEmailResponse = {
   message: string;
+  success: string;
 };
 
 export type VerifyOTPResponse = {
   message: string;
   resetToken: string;
+  success: string;
 };
 
 export type SetNewPassowrdResponse = {
   message: string;
+  success: string;
 };

@@ -31,7 +31,7 @@ export class AuthAPIService {
     return res?.data;
   }
 
-  async setNewPassword(data: { password: string }) {
+  async setNewPassword(data: { newPassword: string }) {
     const res = await clientAPI.post("/auth/reset-forgot-password", data);
     return res?.data;
   }

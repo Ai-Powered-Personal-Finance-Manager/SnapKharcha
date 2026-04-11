@@ -19,7 +19,7 @@ export function useVerifyOTP() {
 }
 
 export function useSetPassword() {
-  return useMutation<SetNewPassowrdResponse, Error, { password: string }>({
+  return useMutation<SetNewPassowrdResponse, Error, { newPassword: string }>({
     mutationFn: (data) => authService.setNewPassword(data),
   });
 }

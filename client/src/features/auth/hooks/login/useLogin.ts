@@ -62,7 +62,7 @@ export const useLogin = () => {
 
     login(payload, {
       onSuccess: (res) => {
-        toast.success(res?.success);
+        toast.success(res?.message);
         localStorageUtil.set(
           CONFIG.LOCALSTORAGE.ACCESS_TOKEN,
           res?.accessToken,

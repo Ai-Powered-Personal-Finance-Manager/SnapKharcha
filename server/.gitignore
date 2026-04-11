@@ -33,3 +33,6 @@ Thumbs.db
 *.swp
 *.swo
 /src/generated/prisma
+
+# swagger gen
+swagger-output.json

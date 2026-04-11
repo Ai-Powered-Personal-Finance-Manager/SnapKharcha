@@ -131,10 +131,10 @@ export const useForgotPassword = () => {
 
   // step 3 - set-new-password
   const handleSetNewPassword = (data: SetNewPasswordValues) => {
-    const password = data.confirmPassword;
+    const newPassword = data.confirmPassword;
 
     setNewPassword(
-      { password },
+      { newPassword },
       {
         onSuccess: (res: SetNewPassowrdResponse) => {
           toast.success(res?.message);

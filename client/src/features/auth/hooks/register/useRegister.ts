@@ -27,10 +27,10 @@ export const useRegister = () => {
 
     register(data, {
       onSuccess: (res) => {
-        toast.success(res.success);
+        toast.success(res.message);
       },
-      onError: (err: any) => {
-        toast.error(err?.response?.data?.message || "Registration failed");
+      onError: (err) => {
+        toast.error(err.message || "Registration failed");
       },
     });
   };

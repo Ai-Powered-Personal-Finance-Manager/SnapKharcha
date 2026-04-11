@@ -18,4 +18,5 @@ export interface RegisterFormInterface extends Pick<
 export type RegisterResponse = {
   success: string;
   email: string;
+  message: string;
 };
