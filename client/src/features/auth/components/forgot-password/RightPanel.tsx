@@ -8,7 +8,6 @@ import { SuccessMessage } from "./SuccessMessage";
 import { VerifyForgotEmail } from "./VerifyForgotEmail";
 
 export const RightPanel = ({
-  isLoading,
   step,
   emailForm,
   otpForm,
@@ -23,6 +22,10 @@ export const RightPanel = ({
   toggleShowConfirmPassword,
   toggleShowNewPassword,
   resendTimer,
+  isForgotEmailLoading,
+  isVerifyOTPLoading,
+  email,
+  isSetNewPasswordLoading,
 }: RightPanelInterface) => {
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 relative overflow-hidden bg-white">
@@ -44,7 +47,7 @@ export const RightPanel = ({
         {step === "email" && (
           <ForgotEmail
             handleEmailSubmit={handleEmailSubmit}
-            isLoading={isLoading}
+            isLoading={isForgotEmailLoading}
             form={emailForm}
           />
         )}
@@ -53,13 +56,12 @@ export const RightPanel = ({
         {step === "otp" && (
           <VerifyForgotEmail
             resendTimer={resendTimer}
-            isLoading={isLoading}
+            isLoading={isVerifyOTPLoading}
             handleResetOtp={handleResetOtp}
             setStep={setStep}
             form={otpForm}
             handleOtpSubmit={handleOtpSubmit}
-            canResend
-            email={emailForm.getValues("email")}
+            email={email}
           />
         )}
 
@@ -73,7 +75,7 @@ export const RightPanel = ({
             toggleShowNewPassword={toggleShowNewPassword}
             form={setNewPasswordForm}
             handleSetNewPassword={handleSetNewPassword}
-            isLoading={isLoading}
+            isLoading={isSetNewPasswordLoading}
           />
         )}
 

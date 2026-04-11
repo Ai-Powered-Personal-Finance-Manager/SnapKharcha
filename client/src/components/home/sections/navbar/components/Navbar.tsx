@@ -61,7 +61,7 @@ const CTAButtons = () => {
       />
 
       <LinkButton
-        href={CONFIG.AUTH.FORGOT_PASSWORD}
+        href={CONFIG.AUTH.REGISTER}
         label="Get Started Free"
         className="text-sm font-semibold px-5 py-2.5 rounded-xl bg-green-500 text-white hover:opacity-90 transition-all duration-200 shadow-lg shadow-[#00C950]/20 hover:shadow-[#00C950]/40 hover:scale-105"
       />

@@ -1,5 +1,4 @@
-import { ENV, ROUTES } from "../constant";
-import { LOCALSTORAGE } from "../constant/localStorage";
+import { ENV, LOCALSTORAGE, REVALIDATE, ROUTES } from "../constant";
 
 export const CONFIG = {
   API: {
@@ -11,6 +10,7 @@ export const CONFIG = {
     FORGOT_PASSWORD: "/forgot-password",
     REGISTER: "/register",
   },
+  REVALIDATE: REVALIDATE,
   ROUTES: ROUTES,
   ENV: ENV,
   LOCALSTORAGE: LOCALSTORAGE,

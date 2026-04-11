@@ -26,12 +26,12 @@ export interface LeftPanelInterface {
 
 export interface RightPanelInterface {
   step: Step;
-  isLoading: boolean;
   showNewPassword: boolean;
   showConfirmPassword: boolean;
   resendTimer: number;
-  // isEmailSubmitLoading: boolean;
-  // isVerifyOTPLoading: boolean;
+  isForgotEmailLoading: boolean;
+  isVerifyOTPLoading: boolean;
+  isSetNewPasswordLoading: boolean;
   setStep: Dispatch<SetStateAction<Step>>;
   emailForm: UseFormReturn<ForgotEmailValues>;
   otpForm: UseFormReturn<VerifyEmailValues>;
@@ -42,6 +42,7 @@ export interface RightPanelInterface {
   handleResetOtp: () => void;
   toggleShowNewPassword: () => void;
   toggleShowConfirmPassword: () => void;
+  email: string;
 }
 
 export interface ForgotEmailInterface {
@@ -54,7 +55,6 @@ export interface VerifyForgotEmailInterface {
   setStep: Dispatch<SetStateAction<Step>>;
   email: string;
   resendTimer: number;
-  canResend: boolean;
   handleOtpSubmit: (data: VerifyEmailValues) => void;
   handleResetOtp: () => void;
   form: UseFormReturn<VerifyEmailValues>;
@@ -71,3 +71,19 @@ export interface SetNewPasswordInterface {
   toggleShowNewPassword: () => void;
   toggleShowConfirmPassword: () => void;
 }
+
+export type ForgotEmailResponse = {
+  message: string;
+  success: string;
+};
+
+export type VerifyOTPResponse = {
+  message: string;
+  resetToken: string;
+  success: string;
+};
+
+export type SetNewPassowrdResponse = {
+  message: string;
+  success: string;
+};

@@ -93,6 +93,7 @@ export const ForgotEmail = ({
 
         <button
           type="submit"
+          disabled={isLoading}
           className="w-full py-3.5 rounded-xl font-bold text-sm bg-[#00C950] text-white hover:bg-[#00b347] transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-[#00C950]/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2 mt-4"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >

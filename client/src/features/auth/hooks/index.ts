@@ -1,3 +1,3 @@
-export { useForgotPassword } from "./useForgotPassword";
-export { useLogin } from "./useLogin";
-export { useRegister } from "./useRegister";
+export { useForgotPassword } from "./forgot-password/useForgotPassword";
+export { useLogin } from "./login";
+export { useRegister } from "./register";

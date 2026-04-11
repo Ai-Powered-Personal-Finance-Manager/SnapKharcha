@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { CONFIG } from "@/src/core/config";
-import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import { Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { RegisterFormInterface } from "../../interface/registerInterface";
@@ -17,9 +17,9 @@ export const RegisterForm = ({
   form,
   handleSubmit,
   setShowPassword,
+  isLoading,
   showPassword,
 }: RegisterFormInterface) => {
-  console.log("showpassword", showPassword);
   return (
     <div>
       <div>
@@ -79,20 +79,24 @@ export const RegisterForm = ({
                   >
                     Full Name
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    maxLength={32}
-                    value={field.value}
-                    id="fullName"
-                    onBlur={(e) => {
-                      const value = e.target.value.trim();
-                      field.onChange(value);
-                      field.onBlur();
-                    }}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="John Doe"
-                  />
+                  <div className="relative">
+                    <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+
+                    <Input
+                      {...field}
+                      maxLength={32}
+                      value={field.value}
+                      id="fullName"
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        field.onChange(value);
+                        field.onBlur();
+                      }}
+                      className="w-full px-4 py-3 pl-11 rounded-xl bg-gray-50 border  border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="John Doe"
+                    />
+                  </div>
                   {fieldState.invalid && (
                     <FieldError
                       className="text-red-500 -mt-2"
@@ -118,26 +122,30 @@ export const RegisterForm = ({
                   >
                     Email
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    maxLength={32}
-                    id="email"
-                    value={field.value || ""}
-                    onBlur={(e) => {
-                      const value = e.target.value.trim();
-                      field.onChange(value);
-                      field.onBlur();
-                    }}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="example@gmail.com"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError
-                      className="text-red-500 -mt-2"
-                      errors={[fieldState.error]}
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+
+                    <Input
+                      {...field}
+                      maxLength={32}
+                      id="email"
+                      value={field.value || ""}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        field.onChange(value);
+                        field.onBlur();
+                      }}
+                      className="w-full px-4  pl-11 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="example@gmail.com"
                     />
-                  )}
+                    {fieldState.invalid && (
+                      <FieldError
+                        className="text-red-500 -mt-2"
+                        errors={[fieldState.error]}
+                      />
+                    )}
+                  </div>
                 </Field>
               )}
             />
@@ -176,7 +184,6 @@ export const RegisterForm = ({
                     <button
                       type="button"
                       onClick={() => {
-                        console.log("clicked");
                         setShowPassword((prev) => !prev);
                       }}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -257,10 +264,36 @@ export const RegisterForm = ({
 
           <button
             type="submit"
-            className="w-full py-3.5 rounded-xl font-bold text-sm bg-[#00C950] text-white hover:bg-[#00b347] transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-[#00C950]/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100"
+            disabled={isLoading}
+            className="w-full mt-4 py-3.5 rounded-xl font-bold text-sm bg-[#00C950] text-white hover:bg-[#00b347] transition-all duration-200 hover:scale-[1.02] shadow-lg shadow-[#00C950]/25 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center gap-2"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
           >
-            Create Account →
+            {isLoading ? (
+              <>
+                <svg
+                  className="w-4 h-4 animate-spin"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
+                Creating your account...
+              </>
+            ) : (
+              "Create Account →"
+            )}
           </button>
         </form>
       </div>

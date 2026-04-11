@@ -13,6 +13,7 @@ export const RegisterView = () => {
 
       {/* ── Right Panel ── */}
       <RightPanel
+        isLoading={register.isLoading}
         setShowPassword={register.setShowPassword}
         handleSubmit={register.handleFormSubmit}
         form={register.form}

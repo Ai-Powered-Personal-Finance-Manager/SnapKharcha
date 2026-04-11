@@ -1,6 +1,17 @@
-import express from 'express'
-import passport from '../config/passport.js';
-import { login, register, forgotPassword, verifyOtp, resetForgotPassword, resetPassword, googleAuthCallback, refreshToken, logout } from '../controllers/authController.js';
+import express from "express";
+import passport from "../config/passport.js";
+import {
+  forgotPassword,
+  googleAuthCallback,
+  login,
+  logout,
+  me,
+  refreshToken,
+  register,
+  resetForgotPassword,
+  resetPassword,
+  verifyOtp,
+} from "../controllers/authController.js";
 
 const authRouter = express.Router();
 
@@ -38,7 +49,7 @@ const authRouter = express.Router();
  *       500:
  *         description: Server error
  */
-authRouter.post('/register', register)
+authRouter.post("/register", register);
 /**
  * @swagger
  * /api/auth/login:
@@ -78,7 +89,7 @@ authRouter.post('/register', register)
  *       500:
  *         description: Server error
  */
-authRouter.post('/login', login)
+authRouter.post("/login", login);
 // Forgot password flow (no auth needed)
 /**
  * @swagger
@@ -104,7 +115,7 @@ authRouter.post('/login', login)
  *       500:
  *         description: Server error
  */
-authRouter.post('/forgot-password', forgotPassword);
+authRouter.post("/forgot-password", forgotPassword);
 /**
  * @swagger
  * /api/auth/verify-otp:
@@ -142,7 +153,7 @@ authRouter.post('/forgot-password', forgotPassword);
  *       500:
  *         description: Server error
  */
-authRouter.post('/verify-otp', verifyOtp);
+authRouter.post("/verify-otp", verifyOtp);
 /**
  * @swagger
  * /api/auth/reset-forgot-password:
@@ -171,7 +182,7 @@ authRouter.post('/verify-otp', verifyOtp);
  *       500:
  *         description: Server error
  */
-authRouter.post('/reset-forgot-password', resetForgotPassword);
+authRouter.post("/reset-forgot-password", resetForgotPassword);
 
 // Reset password (must be logged in)
 /**
@@ -208,18 +219,25 @@ authRouter.post('/reset-forgot-password', resetForgotPassword);
  *       500:
  *         description: Server error
  */
-authRouter.post('/reset-password', resetPassword);
+authRouter.post("/reset-password", resetPassword);
 
 // OAuth routes
 // Step 1 — redirect user to Google
-authRouter.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-}));
+authRouter.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+  }),
+);
 
 // Step 2 — Google redirects back here after login
-authRouter.get('/google/callback',
-    passport.authenticate('google', { failureRedirect: '/login', session: false }),
-    googleAuthCallback
+authRouter.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    session: false,
+  }),
+  googleAuthCallback,
 );
 
 /**
@@ -243,7 +261,7 @@ authRouter.get('/google/callback',
  *       403:
  *         description: Invalid refresh token
  */
-authRouter.post('/refresh', refreshToken);
+authRouter.post("/refresh", refreshToken);
 /**
  * @swagger
  * /api/auth/logout:
@@ -256,6 +274,8 @@ authRouter.post('/refresh', refreshToken);
  *       500:
  *         description: Server error
  */
-authRouter.post('/logout', logout);
+authRouter.post("/logout", logout);
+
+authRouter.get("/me", me);
 
 export default authRouter;

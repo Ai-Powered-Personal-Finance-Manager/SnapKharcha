@@ -18,7 +18,6 @@ export const ForgotPasswordView = () => {
       {/* ── Right Panel ── */}
       <RightPanel
         resendTimer={forgotPassword.resendTimer}
-        isLoading={forgotPassword.isLoading}
         handleResetOtp={forgotPassword.handleResetOtp}
         setStep={forgotPassword.setStep}
         handleOtpSubmit={forgotPassword.handleOtpSubmit}
@@ -26,14 +25,16 @@ export const ForgotPasswordView = () => {
         emailForm={forgotPassword.forgotEmailForm}
         otpForm={forgotPassword.otpForm}
         setNewPasswordForm={forgotPassword.setNewPasswordForm}
-        // isEmailSubmitLoading={forgotPassword.isLoading}
-        // isVerifyOTPLoading={forgotPassword.isLoading}
         handleSetNewPassword={forgotPassword.handleSetNewPassword}
         step={forgotPassword.step}
+        email={forgotPassword.email}
         toggleShowConfirmPassword={forgotPassword.toggleShowConfirmPassword}
         toggleShowNewPassword={forgotPassword.toggleShowNewPassword}
         showConfirmPassword={forgotPassword.showConfirmPassword}
         showNewPassword={forgotPassword.showNewPassword}
+        isForgotEmailLoading={forgotPassword.isForgotEmailLoading}
+        isVerifyOTPLoading={forgotPassword.isVerifyOtpLoading}
+        isSetNewPasswordLoading={forgotPassword.isSetNewPasswordLoading}
       />
     </div>
   );
