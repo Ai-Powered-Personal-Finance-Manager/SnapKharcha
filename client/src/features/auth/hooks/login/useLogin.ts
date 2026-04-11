@@ -4,6 +4,7 @@ import { CONFIG } from "@/src/core/config";
 
 import { localStorageUtil } from "@/src/core/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -12,6 +13,7 @@ import { LoginFormValues, loginFormSchema } from "../../schemas";
 import { useLoginAction } from "./useLoginAction";
 
 export const useLogin = () => {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<LoginFormValues>({
     defaultValues: {
@@ -58,11 +60,14 @@ export const useLogin = () => {
   const handleSubmit = (data: LoginFormValues) => {
     const payload = handleRememeberMe(data);
 
-    console.log("login payload", payload);
-
     login(payload, {
       onSuccess: (res) => {
         toast.success(res?.success);
+        localStorageUtil.set(
+          CONFIG.LOCALSTORAGE.ACCESS_TOKEN,
+          res?.accessToken,
+        );
+        router.replace(CONFIG.ROUTES.DASHBOARD);
       },
       onError: (err: any) => {
         toast.error(err?.response?.data?.message || "Problem during login.");

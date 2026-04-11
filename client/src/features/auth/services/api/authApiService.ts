@@ -1,4 +1,4 @@
-import { clientAPI } from "@/src/lib/api/client";
+import { clientAPI } from "@/src/lib/api/api";
 
 export class AuthAPIService {
   async login(data: { email: string; password: string }) {
@@ -33,6 +33,11 @@ export class AuthAPIService {
 
   async setNewPassword(data: { password: string }) {
     const res = await clientAPI.post("/auth/reset-forgot-password", data);
+    return res?.data;
+  }
+
+  async verifyUser() {
+    const res = await clientAPI.get("/auth/me");
     return res?.data;
   }
 }
