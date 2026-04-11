@@ -1,31 +1,13 @@
-import { CONFIG } from "@/src/core/config";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 import { authService } from "../../services/api/authApiService";
-
-type RegisterResponse = {
-  success: string;
-  email: string;
-};
+import { RegisterResponse } from "../../interface/registerInterface";
 
 export function useRegisterAction() {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation<
+  return useMutation<
     RegisterResponse,
     Error,
     { name: string; email: string; password: string }
   >({
     mutationFn: (data) => authService.create(data),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: [CONFIG.REVALIDATE.REGISTER] });
-      toast.success(data.success);
-    },
-    onError: (error: any) => {
-      console.log(error?.response?.data?.message);
-      toast.error(error?.response?.data?.message);
-    },
   });
-
-  return mutation;
 }

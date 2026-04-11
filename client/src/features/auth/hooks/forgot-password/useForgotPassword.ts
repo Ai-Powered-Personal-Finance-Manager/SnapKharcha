@@ -3,7 +3,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Step } from "../../interface/forgotPasswordInterface";
+import { toast } from "sonner";
+import {
+  ForgotEmailResponse,
+  SetNewPassowrdResponse,
+  Step,
+  VerifyOTPResponse,
+} from "../../interface/forgotPasswordInterface";
 import {
   ForgotEmailDefault,
   forgotEmailSchema,
@@ -13,25 +19,32 @@ import {
   verifyEmailSchema,
   VerifyEmailValues,
 } from "../../schemas/forgotPasswordSchema";
-import { useForgotPasswordAction } from "./useForgotPasswordAction";
+import {
+  useForgotPasswordAction,
+  useSetPassword,
+  useVerifyOTP,
+} from "./useForgotPasswordAction";
 
 const RESET_TIMER = 30;
 
 export const useForgotPassword = () => {
   const [step, setStep] = useState<Step>("email");
+  const [email, setEmail] = useState<string>("");
+  const [resetToken, setResetToken] = useState<string>("");
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // forgot-email
   const { mutate: forgotEmail, isPending: isForgotEmailLoading } =
     useForgotPasswordAction();
-
-  const [resendTimer, setResendTimer] = useState(RESET_TIMER);
-
   const forgotEmailForm = useForm<ForgotEmailValues>({
     resolver: zodResolver(forgotEmailSchema),
     defaultValues: ForgotEmailDefault,
   });
 
+  // verify-otp
+  const [resendTimer, setResendTimer] = useState(RESET_TIMER);
+  const { mutate: verifyOtp, isPending: isVerifyOtpLoading } = useVerifyOTP();
   const otpForm = useForm<VerifyEmailValues>({
     resolver: zodResolver(verifyEmailSchema),
     defaultValues: {
@@ -39,6 +52,9 @@ export const useForgotPassword = () => {
     },
   });
 
+  //set new-password
+  const { mutate: setNewPassword, isPending: isSetNewPasswordLoading } =
+    useSetPassword();
   const setNewPasswordForm = useForm<SetNewPasswordValues>({
     resolver: zodResolver(setNewPasswordSchema),
     defaultValues: {
@@ -55,6 +71,7 @@ export const useForgotPassword = () => {
     setShowConfirmPassword((prev) => !prev);
   };
 
+  // otp-timer
   useEffect(() => {
     if (step !== "otp") return;
     setResendTimer(RESET_TIMER);
@@ -71,29 +88,65 @@ export const useForgotPassword = () => {
     return () => clearInterval(interval);
   }, [step]);
 
-  // step 1
+  // step 1 - forgot-email
   const handleEmailSubmit = (data: ForgotEmailValues) => {
+    setEmail(data.email);
+
     forgotEmail(data, {
-      onSuccess: () => {
+      onSuccess: (res: ForgotEmailResponse) => {
+        toast.success(res?.message);
         setStep("otp");
+      },
+      onError: (err: any) => {
+        toast.error(err?.response?.data?.message || "Email submission failed");
       },
     });
   };
 
-  // step 2
+  // step 2 - verify-otp
   const handleOtpSubmit = (data: VerifyEmailValues) => {
-    console.log("new password", data);
+    const reqData = {
+      email: email,
+      otp: data.otp.trim(),
+    };
+    verifyOtp(reqData, {
+      onSuccess: (res: VerifyOTPResponse) => {
+        toast.success(res.message);
+        setResetToken(res.resetToken);
+        setStep("reset");
+      },
+      onError: (err: any) => {
+        toast.error(err?.response?.data?.message || "OTP verification failed");
+      },
+    });
   };
 
+  //need to have a dedicated route to handle resend-otp
   const handleResetOtp = () => {
+    const email = forgotEmailForm.getValues("email");
     otpForm.setValue("otp", "");
     setResendTimer(RESET_TIMER);
-    //handle api call later
+    handleEmailSubmit({ email });
   };
 
-  // step 3
+  // step 3 - set-new-password
   const handleSetNewPassword = (data: SetNewPasswordValues) => {
-    console.log("new password", data);
+    const password = data.confirmPassword;
+
+    setNewPassword(
+      { password },
+      {
+        onSuccess: (res: SetNewPassowrdResponse) => {
+          toast.success(res?.message);
+          setStep("success");
+        },
+        onError: (err: any) => {
+          toast.error(
+            err?.response?.data?.message || "Failed to change password",
+          );
+        },
+      },
+    );
   };
 
   const steps: Step[] = ["email", "otp", "reset"];
@@ -119,7 +172,10 @@ export const useForgotPassword = () => {
     steps,
     forgotEmailForm,
     otpForm,
+    email,
     isForgotEmailLoading,
+    isVerifyOtpLoading,
+    isSetNewPasswordLoading,
     handleEmailSubmit,
     handleOtpSubmit,
     handleResetOtp,

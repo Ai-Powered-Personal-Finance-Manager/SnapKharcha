@@ -6,6 +6,7 @@ import { localStorageUtil } from "@/src/core/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { recentActivity } from "../../data/login";
 import { LoginFormValues, loginFormSchema } from "../../schemas";
 import { useLoginAction } from "./useLoginAction";
@@ -61,7 +62,10 @@ export const useLogin = () => {
 
     login(payload, {
       onSuccess: (res) => {
-        console.log("Login success", res);
+        toast.success(res?.success);
+      },
+      onError: (err: any) => {
+        toast.error(err?.response?.data?.message || "Problem during login.");
       },
     });
   };

@@ -26,8 +26,13 @@ export class AuthAPIService {
     return res?.data;
   }
 
-  async verifyOTP(data: { otp: string }) {
+  async verifyOTP(data: { email: string; otp: string }) {
     const res = await clientAPI.post("/auth/verify-otp", data);
+    return res?.data;
+  }
+
+  async setNewPassword(data: { password: string }) {
+    const res = await clientAPI.post("/auth/reset-forgot-password", data);
     return res?.data;
   }
 }

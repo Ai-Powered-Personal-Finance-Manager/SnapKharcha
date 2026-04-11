@@ -89,7 +89,7 @@ export const SetNewPassword = ({
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                       htmlFor="newPassword"
                     >
-                      Password
+                      New Password
                     </FieldLabel>
                   </div>
                   <div className="relative">
@@ -144,7 +144,7 @@ export const SetNewPassword = ({
                       style={{ fontFamily: "'DM Sans', sans-serif" }}
                       htmlFor="confirmPassword"
                     >
-                      Password
+                      Confirm Password
                     </FieldLabel>
                   </div>
                   <div className="relative">

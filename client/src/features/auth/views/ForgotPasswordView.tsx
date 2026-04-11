@@ -27,13 +27,14 @@ export const ForgotPasswordView = () => {
         setNewPasswordForm={forgotPassword.setNewPasswordForm}
         handleSetNewPassword={forgotPassword.handleSetNewPassword}
         step={forgotPassword.step}
+        email={forgotPassword.email}
         toggleShowConfirmPassword={forgotPassword.toggleShowConfirmPassword}
         toggleShowNewPassword={forgotPassword.toggleShowNewPassword}
         showConfirmPassword={forgotPassword.showConfirmPassword}
         showNewPassword={forgotPassword.showNewPassword}
         isForgotEmailLoading={forgotPassword.isForgotEmailLoading}
-        isSetNewPasswordLoading
-        isVerifyOTPLoading
+        isVerifyOTPLoading={forgotPassword.isVerifyOtpLoading}
+        isSetNewPasswordLoading={forgotPassword.isSetNewPasswordLoading}
       />
     </div>
   );

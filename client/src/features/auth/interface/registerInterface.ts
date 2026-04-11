@@ -14,3 +14,8 @@ export interface RegisterFormInterface extends Pick<
   RightPanelInterface,
   "form" | "handleSubmit" | "showPassword" | "setShowPassword" | "isLoading"
 > {}
+
+export type RegisterResponse = {
+  success: string;
+  email: string;
+};

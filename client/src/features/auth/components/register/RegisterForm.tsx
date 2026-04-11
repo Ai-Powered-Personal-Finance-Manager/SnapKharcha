@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { CONFIG } from "@/src/core/config";
-import { Eye, EyeOff, LockKeyhole } from "lucide-react";
+import { Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { RegisterFormInterface } from "../../interface/registerInterface";
@@ -79,20 +79,24 @@ export const RegisterForm = ({
                   >
                     Full Name
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    maxLength={32}
-                    value={field.value}
-                    id="fullName"
-                    onBlur={(e) => {
-                      const value = e.target.value.trim();
-                      field.onChange(value);
-                      field.onBlur();
-                    }}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="John Doe"
-                  />
+                  <div className="relative">
+                    <User className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+
+                    <Input
+                      {...field}
+                      maxLength={32}
+                      value={field.value}
+                      id="fullName"
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        field.onChange(value);
+                        field.onBlur();
+                      }}
+                      className="w-full px-4 py-3 pl-11 rounded-xl bg-gray-50 border  border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="John Doe"
+                    />
+                  </div>
                   {fieldState.invalid && (
                     <FieldError
                       className="text-red-500 -mt-2"
@@ -118,26 +122,30 @@ export const RegisterForm = ({
                   >
                     Email
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    maxLength={32}
-                    id="email"
-                    value={field.value || ""}
-                    onBlur={(e) => {
-                      const value = e.target.value.trim();
-                      field.onChange(value);
-                      field.onBlur();
-                    }}
-                    className="w-full px-4 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="example@gmail.com"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError
-                      className="text-red-500 -mt-2"
-                      errors={[fieldState.error]}
+                  <div className="relative">
+                    <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+
+                    <Input
+                      {...field}
+                      maxLength={32}
+                      id="email"
+                      value={field.value || ""}
+                      onBlur={(e) => {
+                        const value = e.target.value.trim();
+                        field.onChange(value);
+                        field.onBlur();
+                      }}
+                      className="w-full px-4  pl-11 py-3 rounded-xl bg-gray-50 border border-gray-200 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 focus:bg-white transition-all duration-200"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="example@gmail.com"
                     />
-                  )}
+                    {fieldState.invalid && (
+                      <FieldError
+                        className="text-red-500 -mt-2"
+                        errors={[fieldState.error]}
+                      />
+                    )}
+                  </div>
                 </Field>
               )}
             />
