@@ -25,6 +25,7 @@ export default function SidebarNavItem({ item, collapsed, onClick }: Props) {
   return (
     <Link
       href={item.href}
+      // logout handler
       onClick={() => {
         if (item.isLogout && onClick) {
           onClick();

@@ -36,7 +36,7 @@ export class AuthAPIService {
     return res?.data;
   }
 
-  async verifyUser() {
+  async authMe() {
     const res = await clientAPI.get("/auth/me");
     return res?.data;
   }

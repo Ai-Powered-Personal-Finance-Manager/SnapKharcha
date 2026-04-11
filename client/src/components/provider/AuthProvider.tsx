@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const verifyUser = async () => {
       try {
-        await authService.verifyUser();
+        await authService.authMe();
         setIsChecking(false);
       } catch {
         localStorageUtil.remove("accessToken");
