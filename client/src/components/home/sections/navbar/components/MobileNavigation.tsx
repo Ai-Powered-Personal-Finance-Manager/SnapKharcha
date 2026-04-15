@@ -1,5 +1,5 @@
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
-
+import { Sheet, SheetContent, SheetTitle } from "@/src/components/ui/sheet";
+import { CONFIG } from "@/src/core/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { LinkButton, Logo } from "../../../shared";
@@ -8,7 +8,6 @@ import {
   MobileNavigationHamburgerInterface,
   MobileNavigationSheetInterface,
 } from "../interface";
-import { CONFIG } from "@/src/core/config";
 
 export const MobileNavigationHamburger = ({
   menuOpen,

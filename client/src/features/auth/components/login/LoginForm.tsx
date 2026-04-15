@@ -1,15 +1,16 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/src/components/ui/input";
+
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/src/components/ui/input";
-
+} from "@/src/components/ui/field";
 import { CONFIG } from "@/src/core/config";
 import { Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import Link from "next/link";
+
+import { Checkbox } from "@/src/components/ui/checkbox";
 import { Controller } from "react-hook-form";
 import { LoginFormInterface } from "../../interface/loginInterface";
 

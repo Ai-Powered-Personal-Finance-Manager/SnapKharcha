@@ -1,16 +1,16 @@
 "use client";
 
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { SetNewPasswordInterface } from "../../interface/forgotPasswordInterface";
 import PasswordStrength from "../../shared/PasswordStrength";
+import {
+  FieldGroup,
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@/src/components/ui/field";
+import { Input } from "@/src/components/ui/input";
 
 export const SetNewPassword = ({
   isLoading,
