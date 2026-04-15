@@ -1,6 +1,6 @@
 "use client";
 
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@/src/components/ui/checkbox";
 import { cn } from "@/src/lib/utils";
 import { CheckboxFieldInterface } from "../interface/checkboxFieldInterface";
 

@@ -1,15 +1,15 @@
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { CONFIG } from "@/src/core/config";
 import { Mail } from "lucide-react";
 import Link from "next/link";
 import { Controller } from "react-hook-form";
 import { ForgotEmailInterface } from "../../interface/forgotPasswordInterface";
+import {
+  FieldGroup,
+  Field,
+  FieldLabel,
+  FieldError,
+} from "@/src/components/ui/field";
+import { Input } from "@/src/components/ui/input";
 
 export const ForgotEmail = ({
   form,

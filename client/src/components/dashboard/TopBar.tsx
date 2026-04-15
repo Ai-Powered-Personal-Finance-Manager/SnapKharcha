@@ -1,6 +1,12 @@
 "use client";
 
-import { Search, Bell, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import {
+  Bell,
+  Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Search,
+} from "lucide-react";
 
 type Props = {
   onMobileMenuToggle: () => void;

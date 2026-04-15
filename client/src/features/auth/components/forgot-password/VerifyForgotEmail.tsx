@@ -3,12 +3,12 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
+} from "@/src/components/ui/field";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp";
+} from "@/src/components/ui/input-otp";
 import { cn } from "@/src/lib/utils";
 import { Controller } from "react-hook-form";
 import { VerifyForgotEmailInterface } from "../../interface/forgotPasswordInterface";
