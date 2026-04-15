@@ -2,6 +2,7 @@
 
 import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
 import { useState } from "react";
+import { Loading } from "../Loading";
 import MobileSidebar from "./MobileSidebar";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
@@ -17,15 +18,18 @@ export default function DashboardShell({ children, greeting }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const data = useUser();
+  const { user, isLoading } = useUser();
 
-  const user: UserInterface = data?.userData?.data?.user;
+  if (isLoading) return <Loading />;
+
+  const typedUser: UserInterface = user?.user;
 
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {/* Desktop sidebar */}
       <div className="hidden lg:flex lg:flex-col lg:shrink-0">
         <Sidebar
+          user={typedUser}
           collapsed={collapsed}
           onToggle={() => setCollapsed((c) => !c)}
         />
@@ -37,8 +41,9 @@ export default function DashboardShell({ children, greeting }: Props) {
       {/* Main area */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <TopBar
+          avatarText={typedUser?.name?.slice(0, 1)}
           onMobileMenuToggle={() => setMobileOpen(true)}
-          greeting={`Hello ${CapitalizeFirst(user?.name)}!`}
+          greeting={`Hello ${CapitalizeFirst(typedUser?.name)}!`}
           collapsed={collapsed}
           onToggle={() => setCollapsed((c) => !c)}
         />

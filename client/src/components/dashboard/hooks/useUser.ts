@@ -1,9 +1,10 @@
 import { useUserAction } from "./useUserAction";
 
 export const useUser = () => {
-  const userData = useUserAction();
+  const { data: user, isPending: isLoading } = useUserAction();
 
   return {
-    userData,
+    user,
+    isLoading,
   };
 };

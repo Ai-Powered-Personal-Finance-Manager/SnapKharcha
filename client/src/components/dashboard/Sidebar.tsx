@@ -4,13 +4,15 @@ import { cn } from "@/src/lib/utils";
 import SidebarFooter from "./SidebarFooter";
 import SidebarLogo from "./SidebarLogo";
 import SidebarNav from "./SidebarNav";
+import { UserInterface } from "./interface/userInterface";
 
 type Props = {
   collapsed: boolean;
   onToggle: () => void;
+  user: UserInterface;
 };
 
-export default function Sidebar({ collapsed, onToggle }: Props) {
+export default function Sidebar({ collapsed, onToggle, user }: Props) {
   return (
     <aside
       className={cn(
@@ -25,7 +27,7 @@ export default function Sidebar({ collapsed, onToggle }: Props) {
       <div className="relative flex flex-col h-full z-10">
         <SidebarLogo collapsed={collapsed} />
         <SidebarNav collapsed={collapsed} />
-        <SidebarFooter collapsed={collapsed} />
+        <SidebarFooter user={user} collapsed={collapsed} />
       </div>
     </aside>
   );

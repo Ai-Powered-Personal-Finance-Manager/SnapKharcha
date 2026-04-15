@@ -7,12 +7,14 @@ import {
   PanelLeftOpen,
   Search,
 } from "lucide-react";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 
 type Props = {
   onMobileMenuToggle: () => void;
   greeting?: string;
   collapsed: boolean;
   onToggle: () => void;
+  avatarText: string;
 };
 
 export default function TopBar({
@@ -20,6 +22,7 @@ export default function TopBar({
   greeting = "Welcome, Rohan !",
   collapsed,
   onToggle,
+  avatarText,
 }: Props) {
   return (
     <header className="h-[60px] shrink-0 flex items-center justify-between px-5 border-b border-gray-100 bg-white/80 backdrop-blur-md sticky top-0 z-30">
@@ -84,9 +87,11 @@ export default function TopBar({
         </button>
 
         {/* Avatar */}
-        <button className="w-8 h-8 rounded-full bg-[#00C950] border-2 border-gray-200 flex items-center justify-center shadow-sm shadow-[#00C950]/20 hover:shadow-md hover:shadow-[#00C950]/30 transition-all cursor-pointer">
-          <span className="text-[11px] font-bold text-white">RS</span>
-        </button>
+        <Avatar className="w-8 h-8 rounded-full bg-[#00C950] border-2 border-gray-200 flex items-center justify-center shadow-sm shadow-[#00C950]/20 hover:shadow-md hover:shadow-[#00C950]/30 transition-all cursor-pointer">
+          <AvatarFallback className="text-[11px] uppercase font-bold text-white">
+            {avatarText}
+          </AvatarFallback>
+        </Avatar>
       </div>
     </header>
   );
