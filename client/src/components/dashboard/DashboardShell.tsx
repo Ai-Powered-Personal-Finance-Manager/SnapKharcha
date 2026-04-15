@@ -36,7 +36,11 @@ export default function DashboardShell({ children, greeting }: Props) {
       </div>
 
       {/* Mobile sidebar */}
-      <MobileSidebar open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileSidebar
+        user={typedUser}
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+      />
 
       {/* Main area */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
