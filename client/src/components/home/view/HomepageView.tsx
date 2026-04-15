@@ -1,5 +1,5 @@
 "use client";
-import LenisProvider from "../../provider/LenisProvider";
+import LenisProvider from "../../../providers/LenisProvider";
 import { useHomepageView } from "../hooks";
 import {
   BusinessSection,

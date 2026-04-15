@@ -1,5 +1,5 @@
 import DashboardShell from "@/src/components/dashboard/DashboardShell";
-import { AuthProvider } from "@/src/components/provider/AuthProvider";
+import { AuthProvider } from "@/src/providers/AuthProvider";
 
 export default function DashboardLayout({
   children,
