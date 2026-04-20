@@ -4,14 +4,14 @@ import "dotenv/config";
 import express from "express";
 import session from "express-session";
 import helmet from "helmet";
+import { createRequire } from "module";
 import morgan from "morgan";
 import swaggerUi from "swagger-ui-express";
 import passport from "./config/passport.js";
 import prisma from "./config/prisma.js";
-import authRouter from "./routes/authRoutes.js";
-// import swaggerSpec from './config/swagger.js';
-import { createRequire } from "module";
 import errorHandler from "./middleware/errorHandler.js";
+import authRouter from "./routes/authRoutes.js";
+import budgetRouter from "./routes/budgetRoutes.js";
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -59,6 +59,8 @@ app.get("/", (req, res) => {
 
 //routes
 app.use("/api/auth", authRouter);
+
+app.use("/api/budget", budgetRouter);
 
 // must be after all routes
 app.use(errorHandler);
