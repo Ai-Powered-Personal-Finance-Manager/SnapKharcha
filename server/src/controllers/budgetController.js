@@ -1,95 +1,92 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../config/prisma.js";
 
 // ─────────────────────────────────────────
 // CREATE BUDGET
 // ─────────────────────────────────────────
-
 export const createBudget = async (req, res, next) => {
   try {
     const { amount, month, year, categoryId } = req.body;
+    const userId = req.user.id;
 
-    // 1. basic validation (no falsy bugs)
     if (amount == null || month == null || year == null) {
       return res.status(400).json({
+        success: false,
         message: "amount, month, and year are required",
       });
     }
 
-    const userId = req.user.id;
-
-    // 2. decide category (fallback to Overall)
-    let finalCategoryId = categoryId;
-
-    if (!finalCategoryId) {
-      const overallCategory = await prisma.category.findFirst({
-        where: {
-          userId,
-          name: "Overall",
-        },
+    if (!categoryId) {
+      return res.status(400).json({
+        success: false,
+        message: "categoryId is required",
       });
-
-      if (!overallCategory) {
-        return res.status(500).json({
-          message: "Default category (Overall) not found",
-        });
-      }
-
-      finalCategoryId = overallCategory.id;
-    } else {
-      // 3. validate category belongs to user
-      const category = await prisma.category.findFirst({
-        where: {
-          id: finalCategoryId,
-          userId,
-        },
-      });
-
-      if (!category) {
-        return res.status(404).json({
-          message: "Invalid category",
-        });
-      }
     }
 
-    const existingBudget = await prisma.budget.findFirst({
-      where: {
-        userId,
-        categoryId: finalCategoryId,
-        month,
-        year,
+    const data = {
+      amount,
+      month,
+      year,
+      userId,
+    };
+
+    if (categoryId) {
+      data.categoryId = categoryId;
+    }
+
+    const budget = await prisma.budget.create({ data });
+
+    return res.status(201).json({
+      success: true,
+      message: "Budget created successfully",
+      data: budget,
+    });
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      return res.status(409).json({
+        success: false,
+        message: "Budget already exists",
+      });
+    }
+    next(error);
+  }
+};
+
+// ─────────────────────────────────────────
+// GET BUDGETS
+// ─────────────────────────────────────────
+export const getBudgets = async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+
+    const budgets = await prisma.budget.findMany({
+      where: { userId },
+      include: {
+        category: true,
+      },
+      orderBy: {
+        year: "desc",
       },
     });
 
-    // 4. upsert budget
-    const budget = await prisma.budget.upsert({
-      where: {
-        userId_categoryId_month_year: {
-          userId,
-          categoryId: finalCategoryId,
-          month,
-          year,
-        },
-      },
-      update: {
-        amount,
-      },
-      create: {
-        amount,
-        month,
-        year,
-        userId,
-        categoryId: finalCategoryId,
-      },
-    });
-
-    const message = existingBudget
-      ? "Budget updated successfully"
-      : "Budget created successfully";
+    // handle soft deleted categories
+    const formatted = budgets.map((b) => ({
+      ...b,
+      category: b.category?.deletedAt
+        ? {
+            id: b.category.id,
+            name: "Deleted Category",
+            deleted: true,
+          }
+        : b.category,
+    }));
 
     return res.status(200).json({
       success: true,
-      message: message,
-      data: budget,
+      data: formatted,
     });
   } catch (error) {
     next(error);
@@ -97,46 +94,119 @@ export const createBudget = async (req, res, next) => {
 };
 
 // ─────────────────────────────────────────
-// PATCH(UPDATE) BUDGET
+// GET BUDGET BY ID
 // ─────────────────────────────────────────
-export const updateBudget = async (req, res, next) => {
+
+export const getBudgetById = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { categoryId } = req.body;
-
     const userId = req.user.id;
 
-    if (!categoryId) {
-      return res.status(400).json({
-        message: "categoryId is required",
-      });
-    }
-
-    // check budget belongs to user
     const budget = await prisma.budget.findFirst({
       where: {
         id,
         userId,
       },
+      include: {
+        category: true,
+      },
     });
 
     if (!budget) {
       return res.status(404).json({
+        success: false,
         message: "Budget not found",
       });
     }
 
-    // update category
-    const updatedBudget = await prisma.budget.update({
+    const formatted = {
+      ...budget,
+      category: budget.category?.deletedAt
+        ? {
+            id: budget.category.id,
+            name: "Deleted Category",
+            deleted: true,
+          }
+        : budget.category,
+    };
+
+    return res.status(200).json({
+      success: true,
+      data: formatted,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─────────────────────────────────────────
+// UPDATE BUDGET
+// ─────────────────────────────────────────
+
+export const updateBudget = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { amount, month, year, categoryId } = req.body;
+    const userId = req.user.id;
+
+    const existing = await prisma.budget.findFirst({
+      where: { id, userId },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "Budget not found",
+      });
+    }
+
+    const updated = await prisma.budget.update({
       where: { id },
       data: {
-        categoryId,
+        amount: amount ?? existing.amount,
+        month: month ?? existing.month,
+        year: year ?? existing.year,
+        categoryId: categoryId ?? existing.categoryId,
       },
     });
 
-    return res.json({
-      message: "Category added to budget",
-      data: updatedBudget,
+    return res.status(200).json({
+      success: true,
+      message: "Budget updated successfully",
+      data: updated,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─────────────────────────────────────────
+// DELETE BUDGET
+// ─────────────────────────────────────────
+
+export const deleteBudget = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const existing = await prisma.budget.findFirst({
+      where: { id, userId },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "Budget not found",
+      });
+    }
+
+    await prisma.budget.delete({
+      where: { id },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Budget deleted successfully",
     });
   } catch (error) {
     next(error);

@@ -1,4 +1,3 @@
-// src/swagger.js
 import swaggerAutogen from 'swagger-autogen';
 
 const doc = {
@@ -24,6 +23,6 @@ const doc = {
 };
 
 const outputFile = './swagger-output.json'; // auto generated file
-const routes = ['../src/routes/authRoutes.js'];
+const routes = ['./src/routes/*'];
 
 swaggerAutogen({ openapi: '3.0.0' })(outputFile, routes, doc);
