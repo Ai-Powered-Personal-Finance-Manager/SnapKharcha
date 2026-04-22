@@ -26,8 +26,10 @@ export default function SidebarNavItem({ item, collapsed, onClick }: Props) {
     <Link
       href={item.href}
       // logout handler
-      onClick={() => {
+      onClick={(e) => {
         if (item.isLogout && onClick) {
+          // e.preventDefault();
+          console.log("")
           onClick();
         }
       }}

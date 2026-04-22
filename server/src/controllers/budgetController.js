@@ -5,6 +5,7 @@ import prisma from "../config/prisma.js";
 // CREATE BUDGET
 // ─────────────────────────────────────────
 export const createBudget = async (req, res, next) => {
+  /* #swagger.tags = ['Budget'] */
   try {
     const { amount, month, year, categoryId } = req.body;
     const userId = req.user.id;
@@ -59,6 +60,7 @@ export const createBudget = async (req, res, next) => {
 // GET BUDGETS
 // ─────────────────────────────────────────
 export const getBudgets = async (req, res, next) => {
+  /* #swagger.tags = ['Budget'] */
   try {
     const userId = req.user.id;
 

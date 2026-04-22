@@ -3,10 +3,13 @@
 import { CONFIG } from "@/src/core/config";
 import { localStorageUtil } from "@/src/core/utils";
 import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
+import { LogoutResponse } from "@/src/features/auth/interface/loginInterface";
 import { bottomNavItems } from "@/src/lib/sidebarData";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import SidebarNavItem from "./SidebarNavItem";
+import { useLogoutAction } from "./hooks/useLogoutAction";
 import { UserInterface } from "./interface/userInterface";
 
 type Props = {
@@ -21,17 +24,41 @@ const mockUser = {
 
 export default function SidebarFooter({ collapsed, user }: Props) {
   const router = useRouter();
-  //later refactor useLogout
-  const useLogout = () => {
-    localStorageUtil.remove(CONFIG.LOCALSTORAGE.ACCESS_TOKEN);
-    router.replace(CONFIG.AUTH.HOME);
+
+  // const useLogoutHandler = () => {
+  //   localStorageUtil.remove(CONFIG.LOCALSTORAGE.ACCESS_TOKEN);
+  //   console.log(
+  //     "Token removed:",
+  //     localStorageUtil.get(CONFIG.LOCALSTORAGE.ACCESS_TOKEN),
+  //   );
+  //   logout.handleLogout();
+  //   console.log("first");
+  //   router.replace(CONFIG.AUTH.HOME);
+  // };
+  const useLogoutHandler = () => {
+    const { mutate: logout, isPending } = useLogoutAction();
+    const logoutUser = () => {
+      logout(undefined, {
+        onSuccess: (res: LogoutResponse) => {
+          localStorageUtil.remove(CONFIG.LOCALSTORAGE.ACCESS_TOKEN);
+          toast.success(res.message);
+          router.replace(CONFIG.AUTH.HOME);
+        },
+        onError: (error) => {
+          toast.error(error.message);
+        },
+      });
+    };
+
+    return { logoutUser };
   };
+
   return (
     <div className="border-t border-white/8 px-3 pt-3 pb-4 space-y-1 shrink-0">
       {/* Bottom nav items */}
       {bottomNavItems.map((item) => (
         <SidebarNavItem
-          onClick={useLogout}
+          onClick={useLogoutHandler}
           key={item.href}
           item={item}
           collapsed={collapsed}
