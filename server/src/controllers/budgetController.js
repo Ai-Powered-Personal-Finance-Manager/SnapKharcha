@@ -195,9 +195,20 @@ export const getBudgetById = async (req, res, next) => {
 export const updateBudget = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { amount, month, year, categoryId } = req.body;
+    const {
+      amount,
+      startingDate,
+      expireDate,
+      categoryId,
+      note,
+      alert,
+      alertLimit,
+      spendAmount,
+    } = req.body;
+
     const userId = req.user.id;
 
+    // check ownership
     const existing = await prisma.budget.findFirst({
       where: { id, userId },
     });
@@ -209,13 +220,44 @@ export const updateBudget = async (req, res, next) => {
       });
     }
 
+    // validate dates if provided
+    let start = existing.startingDate;
+    let end = existing.expireDate;
+
+    if (startingDate) {
+      start = new Date(startingDate);
+      if (isNaN(start.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid startingDate",
+        });
+      }
+    }
+
+    if (expireDate) {
+      end = new Date(expireDate);
+      if (isNaN(end.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid expireDate",
+        });
+      }
+    }
+
     const updated = await prisma.budget.update({
       where: { id },
       data: {
-        amount: amount ?? existing.amount,
-        month: month ?? existing.month,
-        year: year ?? existing.year,
+        amount: amount !== undefined ? Number(amount) : existing.amount,
+        startingDate: start,
+        expireDate: end,
         categoryId: categoryId ?? existing.categoryId,
+        note: note ?? existing.note,
+        alert: alert ?? existing.alert,
+        alertLimit: alertLimit !== undefined ? alertLimit : existing.alertLimit,
+        spendAmount:
+          spendAmount !== undefined
+            ? Number(spendAmount)
+            : existing.spendAmount,
       },
     });
 
@@ -225,6 +267,19 @@ export const updateBudget = async (req, res, next) => {
       data: updated,
     });
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      const target = error.meta?.target;
+
+      return res.status(409).json({
+        success: false,
+        message: target
+          ? `${target.join(", ")} already exists`
+          : "Duplicate entry detected",
+      });
+    }
     next(error);
   }
 };
