@@ -310,13 +310,22 @@
                   "amount": {
                     "example": "any"
                   },
-                  "month": {
+                  "startingDate": {
                     "example": "any"
                   },
-                  "year": {
+                  "expireDate": {
                     "example": "any"
                   },
                   "categoryId": {
+                    "example": "any"
+                  },
+                  "note": {
+                    "example": "any"
+                  },
+                  "alert": {
+                    "example": "any"
+                  },
+                  "alertLimit": {
                     "example": "any"
                   }
                 }
