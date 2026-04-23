@@ -59,13 +59,13 @@ app.get("/", (req, res) => {
 });
 
 //routes
-app.use("/api/auth", authRouter);
+app.use("/api/auth", authRouter); /* #swagger.tags = ['Auth'] */
 
 //budget
-app.use("/api/budget", budgetRouter);
+app.use("/api/budget", budgetRouter); /* #swagger.tags = ['Budget'] */
 
 //category
-app.use("/api/category", categoryRouter);
+app.use("/api/category", categoryRouter); /* #swagger.tags = ['Category'] */
 
 // must be after all routes
 app.use(errorHandler);

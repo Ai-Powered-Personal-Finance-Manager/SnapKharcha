@@ -5,14 +5,25 @@ import prisma from "../config/prisma.js";
 // CREATE BUDGET
 // ─────────────────────────────────────────
 export const createBudget = async (req, res, next) => {
+  /* #swagger.tags = ['Budget'] */
   try {
-    const { amount, month, year, categoryId } = req.body;
+    const {
+      amount,
+      startingDate,
+      expireDate,
+      categoryId,
+      note,
+      alert,
+      alertLimit,
+    } = req.body;
+
     const userId = req.user.id;
 
-    if (amount == null || month == null || year == null) {
+    // Required fields validation
+    if (!amount || !startingDate || !expireDate) {
       return res.status(400).json({
         success: false,
-        message: "amount, month, and year are required",
+        message: "amount, startingDate, and expireDate are required",
       });
     }
 
@@ -23,16 +34,30 @@ export const createBudget = async (req, res, next) => {
       });
     }
 
+    // Validate dates BEFORE converting
+    const start = new Date(startingDate);
+    const end = new Date(expireDate);
+
+    if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date format",
+      });
+    }
+
     const data = {
-      amount,
-      month,
-      year,
+      amount: Number(amount),
+      startingDate: start,
+      expireDate: end,
       userId,
+      categoryId,
+      spendAmount: 0,
     };
 
-    if (categoryId) {
-      data.categoryId = categoryId;
-    }
+    // Optional fields
+    if (note) data.note = note;
+    if (typeof alert !== "undefined") data.alert = alert;
+    if (alertLimit != null) data.alertLimit = alertLimit;
 
     const budget = await prisma.budget.create({ data });
 
@@ -48,7 +73,7 @@ export const createBudget = async (req, res, next) => {
     ) {
       return res.status(409).json({
         success: false,
-        message: "Budget already exists",
+        message: "Budget already exists for this user and category",
       });
     }
     next(error);
@@ -59,6 +84,7 @@ export const createBudget = async (req, res, next) => {
 // GET BUDGETS
 // ─────────────────────────────────────────
 export const getBudgets = async (req, res, next) => {
+  /* #swagger.tags = ['Budget'] */
   try {
     const userId = req.user.id;
 
@@ -68,11 +94,25 @@ export const getBudgets = async (req, res, next) => {
         category: true,
       },
       orderBy: {
-        year: "desc",
+        createdAt: "desc",
       },
     });
 
-    // handle soft deleted categories
+    // total budget
+    const totalBudget = budgets.reduce((sum, b) => sum + Number(b.amount), 0);
+
+    // total spent
+    const totalSpent = budgets.reduce(
+      (sum, b) => sum + Number(b.spendAmount || 0),
+      0,
+    );
+
+    const remaining = totalBudget - totalSpent;
+
+    const overallPercentage =
+      totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
+
+    // format budgets
     const formatted = budgets.map((b) => ({
       ...b,
       category: b.category?.deletedAt
@@ -86,7 +126,16 @@ export const getBudgets = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      data: formatted,
+      data: {
+        budget: formatted,
+
+        summary: {
+          totalBudget: totalBudget,
+          totalSpent: totalSpent,
+          remaining: remaining,
+          overallPercentage: overallPercentage,
+        },
+      },
     });
   } catch (error) {
     next(error);
@@ -146,9 +195,20 @@ export const getBudgetById = async (req, res, next) => {
 export const updateBudget = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { amount, month, year, categoryId } = req.body;
+    const {
+      amount,
+      startingDate,
+      expireDate,
+      categoryId,
+      note,
+      alert,
+      alertLimit,
+      spendAmount,
+    } = req.body;
+
     const userId = req.user.id;
 
+    // check ownership
     const existing = await prisma.budget.findFirst({
       where: { id, userId },
     });
@@ -160,13 +220,44 @@ export const updateBudget = async (req, res, next) => {
       });
     }
 
+    // validate dates if provided
+    let start = existing.startingDate;
+    let end = existing.expireDate;
+
+    if (startingDate) {
+      start = new Date(startingDate);
+      if (isNaN(start.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid startingDate",
+        });
+      }
+    }
+
+    if (expireDate) {
+      end = new Date(expireDate);
+      if (isNaN(end.getTime())) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid expireDate",
+        });
+      }
+    }
+
     const updated = await prisma.budget.update({
       where: { id },
       data: {
-        amount: amount ?? existing.amount,
-        month: month ?? existing.month,
-        year: year ?? existing.year,
+        amount: amount !== undefined ? Number(amount) : existing.amount,
+        startingDate: start,
+        expireDate: end,
         categoryId: categoryId ?? existing.categoryId,
+        note: note ?? existing.note,
+        alert: alert ?? existing.alert,
+        alertLimit: alertLimit !== undefined ? alertLimit : existing.alertLimit,
+        spendAmount:
+          spendAmount !== undefined
+            ? Number(spendAmount)
+            : existing.spendAmount,
       },
     });
 
@@ -176,6 +267,19 @@ export const updateBudget = async (req, res, next) => {
       data: updated,
     });
   } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      const target = error.meta?.target;
+
+      return res.status(409).json({
+        success: false,
+        message: target
+          ? `${target.join(", ")} already exists`
+          : "Duplicate entry detected",
+      });
+    }
     next(error);
   }
 };
