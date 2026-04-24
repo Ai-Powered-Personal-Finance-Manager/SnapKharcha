@@ -12,6 +12,7 @@ import {
   resetPassword,
   verifyOtp,
 } from "../controllers/authController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
 
 const authRouter = express.Router();
 
@@ -182,7 +183,7 @@ authRouter.post("/verify-otp", verifyOtp);
  *       500:
  *         description: Server error
  */
-authRouter.post("/reset-forgot-password", resetForgotPassword);
+authRouter.post("/reset-forgot-password", authMiddleware, resetForgotPassword);
 
 // Reset password (must be logged in)
 /**
@@ -219,7 +220,7 @@ authRouter.post("/reset-forgot-password", resetForgotPassword);
  *       500:
  *         description: Server error
  */
-authRouter.post("/reset-password", resetPassword);
+authRouter.post("/reset-password", authMiddleware, resetPassword);
 
 // OAuth routes
 // Step 1 — redirect user to Google
@@ -275,8 +276,8 @@ authRouter.post("/refresh", refreshToken);
  *       500:
  *         description: Server error
  */
-authRouter.post("/logout", logout);
+authRouter.post("/logout", authMiddleware, logout);
 
-authRouter.get("/me", me);
+authRouter.get("/me", authMiddleware, me);
 
 export default authRouter;

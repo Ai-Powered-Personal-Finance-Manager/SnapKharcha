@@ -8,18 +8,73 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 model User {
-  id              String    @id @default(uuid())
-  name            String
-  email           String    @unique
-  password        String?   //optional since now we use oauth
-  googleId        String?   @unique
-  avatar          String?   // profile picture from Google
-  refreshToken    String? 
-  otp             String?
-  otpExpiresAt    DateTime?
-  createdAt       DateTime  @default(now())
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  password     String? //optional since now we use oauth
+  googleId     String?   @unique
+  avatar       String? // profile picture from Google
+  refreshToken String?
+  otp          String?
+  otpExpiresAt DateTime?
+  createdAt    DateTime  @default(now())
+
+  budgets    Budget[]
+  categories Category[]
+  expenses   Expense[]
+}
+
+model Category {
+  id        String    @id @default(uuid())
+  name      String
+  tags      String[]
+  icon      String?
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  deletedAt DateTime?
+
+  budgets  Budget[]
+  expenses Expense[]
+
+  @@unique([name, userId, deletedAt])
+}
+
+model Budget {
+  id           String   @id @default(uuid())
+  amount       Float
+  startingDate DateTime
+  expireDate   DateTime
+  spendAmount  Float?
+  note         String?
+  alert        Boolean?
+  alertLimit   Decimal?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, categoryId])
+}
+
+model Expense {
+  id     String   @id @default(uuid())
+  amount Float
+  note   String?
+  date   DateTime
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  createdAt DateTime @default(now())
 }
