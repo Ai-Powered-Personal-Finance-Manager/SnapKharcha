@@ -2,12 +2,12 @@
 
 import { CONFIG } from "@/src/core/config";
 import { localStorageUtil } from "@/src/core/utils";
-import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
-import { bottomNavItems } from "@/src/lib/sidebarData";
+import { bottomNavItems } from "@/src/core/constant/sidebarData";
 import { useRouter } from "next/navigation";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import SidebarNavItem from "./SidebarNavItem";
+import SidebarNavItem from "../dashboard-layout/SidebarNavItem";
 import { UserInterface } from "./interface/userInterface";
+import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
 
 type Props = {
   collapsed: boolean;

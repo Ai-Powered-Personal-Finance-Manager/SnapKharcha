@@ -10,7 +10,7 @@ export default function AppProvider({
 }) {
   return (
     <QueryProvider>
-      <Toaster richColors position="top-right" />
+      <Toaster richColors position="bottom-right" />
       {children}
     </QueryProvider>
   );

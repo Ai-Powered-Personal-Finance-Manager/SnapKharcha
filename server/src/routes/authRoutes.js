@@ -226,6 +226,7 @@ authRouter.post("/reset-password", resetPassword);
 authRouter.get(
   "/google",
   passport.authenticate("google", {
+    /* #swagger.tags = ['Auth'] */
     scope: ["profile", "email"],
   }),
 );

@@ -384,6 +384,7 @@ const generateTokens = (user) => {
 // REGISTER
 // ─────────────────────────────────────────
 export const register = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const { name, email, password } = req.body;
 
@@ -422,6 +423,7 @@ export const register = async (req, res, next) => {
 // LOGIN
 // ─────────────────────────────────────────
 export const login = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const { email, password } = req.body;
 
@@ -465,6 +467,7 @@ export const login = async (req, res, next) => {
 // FORGOT PASSWORD — Step 1: Send OTP
 // ─────────────────────────────────────────
 export const forgotPassword = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const { email } = req.body;
 
@@ -509,6 +512,7 @@ export const forgotPassword = async (req, res, next) => {
 // FORGOT PASSWORD — Step 2: Verify OTP
 // ─────────────────────────────────────────
 export const verifyOtp = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const { email, otp } = req.body;
 
@@ -553,6 +557,7 @@ export const verifyOtp = async (req, res, next) => {
 // FORGOT PASSWORD — Step 3: Set New Password
 // ─────────────────────────────────────────
 export const resetForgotPassword = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const { newPassword } = req.body;
 
@@ -602,6 +607,7 @@ export const resetForgotPassword = async (req, res, next) => {
 // RESET PASSWORD — User is logged in
 // ─────────────────────────────────────────
 export const resetPassword = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const { currentPassword, newPassword } = req.body;
 
@@ -658,6 +664,7 @@ export const resetPassword = async (req, res, next) => {
 // GOOGLE OAUTH CALLBACK
 // ─────────────────────────────────────────
 export const googleAuthCallback = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const user = req.user;
 
@@ -687,6 +694,7 @@ export const googleAuthCallback = async (req, res, next) => {
 // REFRESH TOKEN
 // ─────────────────────────────────────────
 export const refreshToken = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const token = req.cookies.refreshToken;
 
@@ -717,6 +725,7 @@ export const refreshToken = async (req, res, next) => {
 // LOGOUT
 // ─────────────────────────────────────────
 export const logout = async (req, res, next) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const token = req.cookies.refreshToken;
 
@@ -736,6 +745,7 @@ export const logout = async (req, res, next) => {
 
 // Me
 export const me = async (req, res) => {
+  /* #swagger.tags = ['Auth'] */
   try {
     const authHeader = req.headers.authorization;
 

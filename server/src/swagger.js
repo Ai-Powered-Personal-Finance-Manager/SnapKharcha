@@ -24,6 +24,8 @@ const doc = {
 };
 
 const outputFile = './swagger-output.json'; // auto generated file
-const routes = ['../src/routes/authRoutes.js'];
+const routes = [
+    './src/routes/authRoutes.js',
+];
 
 swaggerAutogen({ openapi: '3.0.0' })(outputFile, routes, doc);

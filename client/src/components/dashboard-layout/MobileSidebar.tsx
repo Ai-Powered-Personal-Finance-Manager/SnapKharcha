@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import SidebarFooter from "./SidebarFooter";
 import SidebarLogo from "./SidebarLogo";
 import SidebarNav from "./SidebarNav";
-import { UserInterface } from "./interface/userInterface";
+import { UserInterface } from "../dashboard-layout/interface/userInterface";
 
 type Props = {
   open: boolean;

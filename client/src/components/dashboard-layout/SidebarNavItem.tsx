@@ -1,6 +1,6 @@
 "use client";
 
-import type { NavItem } from "@/src/lib/sidebarData";
+import type { NavItem } from "@/src/core/constant/sidebarData";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
