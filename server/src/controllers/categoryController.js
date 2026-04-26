@@ -123,6 +123,7 @@ export const updateCategory = async (req, res, next) => {
     let { name, tags, icon, color } = req.body;
     const userId = req.user.id;
 
+    // check category exists and is NOT deleted
     const existing = await prisma.category.findFirst({
       where: {
         id,
