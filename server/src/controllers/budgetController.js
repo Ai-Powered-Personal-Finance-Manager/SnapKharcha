@@ -9,6 +9,7 @@ export const createBudget = async (req, res, next) => {
   try {
     const {
       amount,
+      name,
       startingDate,
       expireDate,
       categoryId,
@@ -20,21 +21,24 @@ export const createBudget = async (req, res, next) => {
     const userId = req.user.id;
 
     // Required fields validation
-    if (!amount || !startingDate || !expireDate) {
+    if (!amount || !name || !startingDate || !expireDate || !categoryId) {
       return res.status(400).json({
         success: false,
-        message: "amount, startingDate, and expireDate are required",
+        message:
+          "amount, name, startingDate, expireDate, and categoryId are required",
       });
     }
 
-    if (!categoryId) {
+    // Parse numbers safely
+    const parsedAmount = Number(amount);
+    if (isNaN(parsedAmount)) {
       return res.status(400).json({
         success: false,
-        message: "categoryId is required",
+        message: "amount must be a valid number",
       });
     }
 
-    // Validate dates BEFORE converting
+    // Date validation
     const start = new Date(startingDate);
     const end = new Date(expireDate);
 
@@ -45,21 +49,32 @@ export const createBudget = async (req, res, next) => {
       });
     }
 
+    // Boolean normalization (important!)
+    const parsedAlert =
+      typeof alert === "boolean" ? alert : alert === "true" || alert === "1";
+
     const data = {
-      amount: Number(amount),
+      name,
+      amount: parsedAmount,
       startingDate: start,
       expireDate: end,
       userId,
       categoryId,
       spendAmount: 0,
+      alert: parsedAlert,
     };
 
     // Optional fields
     if (note) data.note = note;
-    if (typeof alert !== "undefined") data.alert = alert;
-    if (alertLimit != null) data.alertLimit = alertLimit;
 
-    const budget = await prisma.budget.create({ data });
+    // Prisma Decimal safety (important for Postgres precision)
+    if (alertLimit != null && alertLimit !== "") {
+      data.alertLimit = new Prisma.Decimal(alertLimit);
+    }
+
+    const budget = await prisma.budget.create({
+      data,
+    });
 
     return res.status(201).json({
       success: true,
@@ -67,6 +82,7 @@ export const createBudget = async (req, res, next) => {
       data: budget,
     });
   } catch (error) {
+    // Unique constraint (userId + categoryId)
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
@@ -76,6 +92,7 @@ export const createBudget = async (req, res, next) => {
         message: "Budget already exists for this user and category",
       });
     }
+
     next(error);
   }
 };
@@ -196,6 +213,7 @@ export const updateBudget = async (req, res, next) => {
   try {
     const { id } = req.params;
     const {
+      name,
       amount,
       startingDate,
       expireDate,
@@ -247,6 +265,7 @@ export const updateBudget = async (req, res, next) => {
     const updated = await prisma.budget.update({
       where: { id },
       data: {
+        name: name ?? existing.name,
         amount: amount !== undefined ? Number(amount) : existing.amount,
         startingDate: start,
         expireDate: end,

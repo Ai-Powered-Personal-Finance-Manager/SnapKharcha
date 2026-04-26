@@ -18,6 +18,8 @@ export default function DashboardShell({ children, greeting }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  
+
   const { user, isLoading } = useUser();
 
   if (isLoading) return <Loading />;
