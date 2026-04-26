@@ -45,13 +45,77 @@ export const register = async (req, res, next) => {
     });
 
     // create default category
-    await prisma.category.create({
-      data: {
-        name: "Overall",
-        userId: user.id,
-      },
+    await prisma.category.createMany({
+      data: [
+        {
+          name: "Overall",
+          color: "#94a3b8",
+          userId: user.id,
+          tags: ["Default"],
+        },
+        {
+          name: "Food & Dining",
+          color: "#f97316",
+          userId: user.id,
+          tags: ["Restaurants", "cafés", "food delivery"],
+        },
+        {
+          name: "Groceries",
+          color: "#84cc16",
+          userId: user.id,
+          tags: ["Supermarket", "vegetables", "dairy"],
+        },
+        {
+          name: "Shopping",
+          color: "#f59e0b",
+          userId: user.id,
+          tags: ["Clothing", "electronics", "online"],
+        },
+        {
+          name: "Transport",
+          color: "#3b82f6",
+          userId: user.id,
+          tags: ["Cabs", "fuel", "auto", "metro"],
+        },
+        {
+          name: "Utilities",
+          color: "#8b5cf6",
+          userId: user.id,
+          tags: ["Electricity", "water", "gas"],
+        },
+        {
+          name: "Subscriptions",
+          color: "#ec4899",
+          userId: user.id,
+          tags: ["Netflix", "Spotify", "Amazon Prime"],
+        },
+        {
+          name: "Health & Medical",
+          color: "#14b8a6",
+          userId: user.id,
+          tags: ["Doctor", "pharmacy", "labs"],
+        },
+        {
+          name: "Education",
+          color: "#6366f1",
+          userId: user.id,
+          tags: ["Courses", "books", "tuition"],
+        },
+        {
+          name: "Gym & Fitness",
+          color: "#22c55e",
+          userId: user.id,
+          tags: ["Membership", "equipment", "classes"],
+        },
+        {
+          name: "Travel & Trips",
+          color: "#0ea5e9",
+          userId: user.id,
+          tags: ["Flights", "hotels", "sightseeing"],
+        },
+      ],
+      skipDuplicates: true,
     });
-
     sendWelcomeEmail(user.email, user.name).catch((err) =>
       console.error("Welcome email failed:", err),
     );

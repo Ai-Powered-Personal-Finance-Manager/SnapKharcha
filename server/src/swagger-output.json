@@ -343,6 +343,9 @@
                   "amount": {
                     "example": "any"
                   },
+                  "name": {
+                    "example": "any"
+                  },
                   "startingDate": {
                     "example": "any"
                   },
@@ -465,6 +468,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "name": {
+                    "example": "any"
+                  },
                   "amount": {
                     "example": "any"
                   },
