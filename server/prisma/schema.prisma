@@ -31,6 +31,7 @@ model User {
 model Category {
   id        String    @id @default(uuid())
   name      String
+  color     String?
   tags      String[]
   icon      String?
   userId    String
@@ -45,6 +46,7 @@ model Category {
 
 model Budget {
   id           String   @id @default(uuid())
+  name         String
   amount       Float
   startingDate DateTime
   expireDate   DateTime

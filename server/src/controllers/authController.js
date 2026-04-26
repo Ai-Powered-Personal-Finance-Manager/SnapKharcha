@@ -44,11 +44,20 @@ export const register = async (req, res, next) => {
     });
 
     // create default category
-    await prisma.category.create({
-      data: {
-        name: "Overall",
-        userId: user.id,
-      },
+    await prisma.category.createMany({
+      data: [
+        { name: "Overall", color: "#94a3b8", userId: user.id },
+        { name: "Food & Dining", color: "#f97316", userId: user.id },
+        { name: "Groceries", color: "#84cc16", userId: user.id },
+        { name: "Transport", color: "#3b82f6", userId: user.id },
+        { name: "Utilities", color: "#8b5cf6", userId: user.id },
+        { name: "Subscriptions", color: "#ec4899", userId: user.id },
+        { name: "Health & Medical", color: "#14b8a6", userId: user.id },
+        { name: "Education", color: "#6366f1", userId: user.id },
+        { name: "Gym & Fitness", color: "#22c55e", userId: user.id },
+        { name: "Travel & Trips", color: "#0ea5e9", userId: user.id },
+      ],
+      skipDuplicates: true,
     });
 
     sendWelcomeEmail(user.email, user.name).catch((err) =>
