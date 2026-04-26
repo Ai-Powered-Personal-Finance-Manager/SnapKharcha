@@ -23,6 +23,9 @@ build/
 # Coverage reports
 coverage/
 
+# swagger
+swagger-output.json
+
 # OS & editor files
 .DS_Store
 Thumbs.db
