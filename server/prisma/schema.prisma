@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,36 +7,32 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(uuid())
+  id           String     @id @default(uuid())
   name         String
-  email        String    @unique
-  password     String? //optional since now we use oauth
-  googleId     String?   @unique
-  avatar       String? // profile picture from Google
+  email        String     @unique
+  password     String?
+  googleId     String?    @unique
+  avatar       String?
   refreshToken String?
   otp          String?
   otpExpiresAt DateTime?
-  createdAt    DateTime  @default(now())
-
-  budgets    Budget[]
-  categories Category[]
-  expenses   Expense[]
+  createdAt    DateTime   @default(now())
+  budgets      Budget[]
+  categories   Category[]
+  expenses     Expense[]
 }
 
 model Category {
   id        String    @id @default(uuid())
   name      String
-  color     String?
-  tags      String[]
-  icon      String?
   userId    String
-  user      User      @relation(fields: [userId], references: [id])
   deletedAt DateTime?
-
-  budgets  Budget[]
-  expenses Expense[]
-
-  @@unique([name, userId, deletedAt])
+  icon      String?
+  tags      String[]
+  color     String?
+  budgets   Budget[]
+  user      User      @relation(fields: [userId], references: [id])
+  expenses  Expense[]
 }
 
 model Budget {
@@ -54,29 +45,23 @@ model Budget {
   note         String?
   alert        Boolean?
   alertLimit   Decimal?
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  createdAt DateTime @default(now())
+  userId       String
+  categoryId   String
+  createdAt    DateTime @default(now())
+  category     Category @relation(fields: [categoryId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 
   @@unique([userId, categoryId])
 }
 
 model Expense {
-  id     String   @id @default(uuid())
-  amount Float
-  note   String?
-  date   DateTime
-
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
+  id         String    @id @default(uuid())
+  amount     Float
+  note       String?
+  date       DateTime
+  userId     String
   categoryId String?
+  createdAt  DateTime  @default(now())
   category   Category? @relation(fields: [categoryId], references: [id])
-
-  createdAt DateTime @default(now())
+  user       User      @relation(fields: [userId], references: [id])
 }
