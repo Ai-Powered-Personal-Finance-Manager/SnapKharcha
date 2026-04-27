@@ -36,32 +36,39 @@ model Category {
 }
 
 model Budget {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   name         String
   amount       Float
   startingDate DateTime
   expireDate   DateTime
   spendAmount  Float?
   note         String?
-  alert        Boolean?
+  alert        Boolean   @default(false)
   alertLimit   Decimal?
   userId       String
   categoryId   String
-  createdAt    DateTime @default(now())
-  category     Category @relation(fields: [categoryId], references: [id])
-  user         User     @relation(fields: [userId], references: [id])
+  createdAt    DateTime  @default(now())
+  category     Category  @relation(fields: [categoryId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+  expenses     Expense[]
 
-  @@unique([userId, categoryId])
+  @@unique([userId, categoryId, startingDate])
+  @@index([userId])
 }
 
 model Expense {
-  id         String    @id @default(uuid())
+  id         String   @id @default(uuid())
   amount     Float
   note       String?
   date       DateTime
   userId     String
-  categoryId String?
-  createdAt  DateTime  @default(now())
-  category   Category? @relation(fields: [categoryId], references: [id])
-  user       User      @relation(fields: [userId], references: [id])
+  categoryId String
+  budgetId   String?
+  createdAt  DateTime @default(now())
+  category   Category @relation(fields: [categoryId], references: [id])
+  budget     Budget?  @relation(fields: [budgetId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([budgetId])
 }
