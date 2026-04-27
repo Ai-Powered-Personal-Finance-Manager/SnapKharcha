@@ -13,12 +13,25 @@ export const createBudget = async (req, res, next) => {
       startingDate,
       expireDate,
       categoryId,
+      spendAmount,
       note,
       alert,
       alertLimit,
     } = req.body;
 
     const userId = req.user.id;
+
+    // handle wrong categoryId
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid categoryId: category does not exist",
+      });
+    }
 
     // Required fields validation
     if (!amount || !name || !startingDate || !expireDate || !categoryId) {
@@ -53,6 +66,18 @@ export const createBudget = async (req, res, next) => {
     const parsedAlert =
       typeof alert === "boolean" ? alert : alert === "true" || alert === "1";
 
+    const parsedSpendAmount =
+      spendAmount === undefined || spendAmount === null || spendAmount === ""
+        ? null
+        : Number(spendAmount);
+
+    if (isNaN(parsedSpendAmount)) {
+      return res.status(400).json({
+        success: false,
+        message: "spendAmount must be a valid number",
+      });
+    }
+
     const data = {
       name,
       amount: parsedAmount,
@@ -60,7 +85,7 @@ export const createBudget = async (req, res, next) => {
       expireDate: end,
       userId,
       categoryId,
-      spendAmount: 0,
+      spendAmount: parsedSpendAmount,
       alert: parsedAlert,
     };
 
