@@ -4,8 +4,8 @@ import prisma from "../config/prisma.js";
 // ─────────────────────────────────────────
 // CREATE BUDGET
 // ─────────────────────────────────────────
+
 export const createBudget = async (req, res, next) => {
-  /* #swagger.tags = ['Budget'] */
   try {
     const {
       amount,
@@ -13,6 +13,7 @@ export const createBudget = async (req, res, next) => {
       startingDate,
       expireDate,
       categoryId,
+      spendAmount,
       note,
       alert,
       alertLimit,
@@ -20,7 +21,7 @@ export const createBudget = async (req, res, next) => {
 
     const userId = req.user.id;
 
-    // Required fields validation
+    // ───── Required fields ─────
     if (!amount || !name || !startingDate || !expireDate || !categoryId) {
       return res.status(400).json({
         success: false,
@@ -29,16 +30,29 @@ export const createBudget = async (req, res, next) => {
       });
     }
 
-    // Parse numbers safely
-    const parsedAmount = Number(amount);
-    if (isNaN(parsedAmount)) {
+    // ───── Validate category ─────
+    const category = await prisma.category.findUnique({
+      where: { id: categoryId, userId },
+    });
+
+    if (!category) {
       return res.status(400).json({
         success: false,
-        message: "amount must be a valid number",
+        message: "Invalid categoryId: category does not exist",
       });
     }
 
-    // Date validation
+    // ───── Parse amount ─────
+    const parsedAmount = Number(amount);
+
+    if (!Number.isInteger(parsedAmount) || parsedAmount < 0) {
+      return res.status(400).json({
+        success: false,
+        message: "amount must be a valid positive integer",
+      });
+    }
+
+    // ───── Validate dates ─────
     const start = new Date(startingDate);
     const end = new Date(expireDate);
 
@@ -49,10 +63,11 @@ export const createBudget = async (req, res, next) => {
       });
     }
 
-    // Boolean normalization (important!)
+    // ───── Boolean normalize ─────
     const parsedAlert =
       typeof alert === "boolean" ? alert : alert === "true" || alert === "1";
 
+    // ───── Build data ─────
     const data = {
       name,
       amount: parsedAmount,
@@ -60,18 +75,20 @@ export const createBudget = async (req, res, next) => {
       expireDate: end,
       userId,
       categoryId,
+
       spendAmount: 0,
+
       alert: parsedAlert,
     };
 
-    // Optional fields
     if (note) data.note = note;
 
-    // Prisma Decimal safety (important for Postgres precision)
-    if (alertLimit != null && alertLimit !== "") {
+    // alertLimit (Decimal safe)
+    if (alertLimit !== undefined && alertLimit !== null && alertLimit !== "") {
       data.alertLimit = new Prisma.Decimal(alertLimit);
     }
 
+    // ───── Create budget ─────
     const budget = await prisma.budget.create({
       data,
     });
@@ -82,17 +99,6 @@ export const createBudget = async (req, res, next) => {
       data: budget,
     });
   } catch (error) {
-    // Unique constraint (userId + categoryId)
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
-      return res.status(409).json({
-        success: false,
-        message: "Budget already exists for this user and category",
-      });
-    }
-
     next(error);
   }
 };
@@ -208,7 +214,6 @@ export const getBudgetById = async (req, res, next) => {
 // ─────────────────────────────────────────
 // UPDATE BUDGET
 // ─────────────────────────────────────────
-
 export const updateBudget = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -221,12 +226,11 @@ export const updateBudget = async (req, res, next) => {
       note,
       alert,
       alertLimit,
-      spendAmount,
     } = req.body;
 
     const userId = req.user.id;
 
-    // check ownership
+    // ───── Check ownership ─────
     const existing = await prisma.budget.findFirst({
       where: { id, userId },
     });
@@ -238,7 +242,7 @@ export const updateBudget = async (req, res, next) => {
       });
     }
 
-    // validate dates if provided
+    // ───── Validate dates ─────
     let start = existing.startingDate;
     let end = existing.expireDate;
 
@@ -262,22 +266,45 @@ export const updateBudget = async (req, res, next) => {
       }
     }
 
+    // ───── Validate amount ─────
+    let parsedAmount = existing.amount;
+
+    if (amount !== undefined) {
+      parsedAmount = Number(amount);
+
+      if (!Number.isInteger(parsedAmount) || parsedAmount < 0) {
+        return res.status(400).json({
+          success: false,
+          message: "amount must be a valid positive integer",
+        });
+      }
+    }
+
+    // ───── Build update object ─────
+    const data = {
+      name: name ?? existing.name,
+      amount: parsedAmount,
+      startingDate: start,
+      expireDate: end,
+      categoryId: categoryId ?? existing.categoryId,
+      note: note ?? existing.note,
+      alert: alert ?? existing.alert,
+    };
+
+    // ───── alertLimit safe update ─────
+    if (alertLimit !== undefined) {
+      data.alertLimit =
+        alertLimit === null || alertLimit === ""
+          ? null
+          : new Prisma.Decimal(alertLimit);
+    }
+
+    // spendAmount intentionally NOT included
+
+    // ───── Update budget ─────
     const updated = await prisma.budget.update({
       where: { id },
-      data: {
-        name: name ?? existing.name,
-        amount: amount !== undefined ? Number(amount) : existing.amount,
-        startingDate: start,
-        expireDate: end,
-        categoryId: categoryId ?? existing.categoryId,
-        note: note ?? existing.note,
-        alert: alert ?? existing.alert,
-        alertLimit: alertLimit !== undefined ? alertLimit : existing.alertLimit,
-        spendAmount:
-          spendAmount !== undefined
-            ? Number(spendAmount)
-            : existing.spendAmount,
-      },
+      data,
     });
 
     return res.status(200).json({
@@ -290,15 +317,12 @@ export const updateBudget = async (req, res, next) => {
       error instanceof Prisma.PrismaClientKnownRequestError &&
       error.code === "P2002"
     ) {
-      const target = error.meta?.target;
-
       return res.status(409).json({
         success: false,
-        message: target
-          ? `${target.join(", ")} already exists`
-          : "Duplicate entry detected",
+        message: "Duplicate entry detected",
       });
     }
+
     next(error);
   }
 };
