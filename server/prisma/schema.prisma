@@ -38,10 +38,10 @@ model Category {
 model Budget {
   id           String    @id @default(uuid())
   name         String
-  amount       Float
+  amount       Int
   startingDate DateTime
   expireDate   DateTime
-  spendAmount  Float?
+  spendAmount  Int?
   note         String?
   alert        Boolean   @default(false)
   alertLimit   Decimal?
@@ -58,15 +58,14 @@ model Budget {
 
 model Expense {
   id         String   @id @default(uuid())
-  amount     Float
+  amount     Int
   note       String?
-  date       DateTime
   userId     String
   categoryId String
-  budgetId   String?
   createdAt  DateTime @default(now())
+  budgetId   String
+  budget     Budget  @relation(fields: [budgetId], references: [id])
   category   Category @relation(fields: [categoryId], references: [id])
-  budget     Budget?  @relation(fields: [budgetId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
 
   @@index([userId])
