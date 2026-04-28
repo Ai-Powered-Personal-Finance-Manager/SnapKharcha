@@ -66,6 +66,7 @@ export interface BudgetApiCategory {
     icon: string | null;
     userId?: string;
     deletedAt: string | null;
+    color: string;
 }
 
 export interface ExpenseData {

@@ -5,7 +5,7 @@ import { BudgetCardsGrid } from "@/src/components/budgets/BudgetCardsGrid";
 import { ErrorFallback } from "@/src/components/ErrorFallback";
 import { BudgetSkeletonLoading } from "@/src/components/BudgetSkeletonLoading";
 import { PageHeader } from "@/src/components/PageHeader";
-import { useGetBudgets } from "@/src/hooks/budgets/useGetBudgets";
+import { useGetBudgets } from "@/src/hooks/budgets/useBudgets";
 import { Plus, TrendingDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
