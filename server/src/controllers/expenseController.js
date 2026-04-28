@@ -9,10 +9,10 @@ export const createExpense = async (req, res, next) => {
     const userId = req.user.id;
 
     // ───── Validation ─────
-    if (amount === undefined || !budgetId) {
+    if (amount === undefined || !budgetId || !note) {
       return res.status(400).json({
         success: false,
-        message: "amount and budgetId are required",
+        message: "amount, note and budgetId are required",
       });
     }
 

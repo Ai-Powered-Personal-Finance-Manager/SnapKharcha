@@ -59,7 +59,7 @@ model Budget {
 model Expense {
   id         String   @id @default(uuid())
   amount     Int
-  note       String?
+  note       String
   userId     String
   categoryId String
   createdAt  DateTime @default(now())
