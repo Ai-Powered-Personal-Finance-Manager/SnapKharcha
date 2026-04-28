@@ -71,3 +71,12 @@ model Expense {
   @@index([userId])
   @@index([budgetId])
 }
+
+// need to add in expense
+// date, vendor/merchant?, paymentMethod
+
+// add query isUsed on getCAtegory
+
+// loan
+// name, lenderName, interestRate, timePeriod, amount, emiAmount, note?, status = "active" || "paid", paidAmount,
+// give remainingAmount in response
