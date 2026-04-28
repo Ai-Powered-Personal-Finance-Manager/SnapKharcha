@@ -11,13 +11,13 @@ export const BudgetCard = ({ budgetData }: { budgetData: BudgetApiItem }) => {
             {/* Top row */}
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-green-200`}>
+                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center bg-green-100`}>
                         {/* <Icon size={18} className={budgetData.iconColor} /> */}
-                        <PiggyBank size={18} className={"text-gray-500"} />
+                        <PiggyBank size={18} className={"text-green-500"} />
                     </div>
                     <div>
                         <p className="text-gray-800 text-sm font-semibold">{budgetData.name}</p>
-                        <p className="text-gray-400 text-[11px]">{budgetData.expenses.length} transactions</p>
+                        <p className="text-gray-400 text-[11px]">0 transactions</p>
                     </div>
                 </div>
                 <button className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-300 hover:text-gray-500">

@@ -1,10 +1,10 @@
 import { Plus } from "lucide-react";
 import { BudgetCard } from "./BudgetCard";
-import { Budget, BudgetApiData, BudgetApiItem } from "@/src/types/budget";
+import { BudgetApiItem } from "@/src/types/budget";
 import { useRouter } from "next/navigation";
 
 interface gridProps {
-    budgets: BudgetApiItem[];
+    budgets?: BudgetApiItem[];
 }
 
 export const BudgetCardsGrid = ({ 
@@ -13,7 +13,7 @@ export const BudgetCardsGrid = ({
     const router = useRouter();
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-            {budgets.map((budget) => (
+            {budgets?.map((budget) => (
                 <BudgetCard key={budget.id} budgetData={budget} />
             ))}
 

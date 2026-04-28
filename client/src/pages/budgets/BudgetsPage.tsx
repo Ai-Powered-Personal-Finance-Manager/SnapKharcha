@@ -2,14 +2,11 @@
 
 import { BudgetBanner } from "@/src/components/budgets/BudgetBanner";
 import { BudgetCardsGrid } from "@/src/components/budgets/BudgetCardsGrid";
+import { ErrorFallback } from "@/src/components/ErrorFallback";
+import { BudgetSkeletonLoading } from "@/src/components/BudgetSkeletonLoading";
 import { PageHeader } from "@/src/components/PageHeader";
-import { useBudgets } from "@/src/hooks/budgets/useBudgets";
-import type { Budget } from "@/src/types/budget";
-import {
-    Plus, MoreHorizontal, AlertTriangle,
-    Utensils, ShoppingBag, Car, Zap, Wifi,
-    Heart, Plane, BookOpen, TrendingDown,
-} from "lucide-react";
+import { useGetBudgets } from "@/src/hooks/budgets/useGetBudgets";
+import { Plus, TrendingDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 // const budgets: Budget[] = [
@@ -57,27 +54,19 @@ import { useRouter } from "next/navigation";
 // const totalBudget = budgets.reduce((a, b) => a + b.total, 0);
 // const totalSpent  = budgets.reduce((a, b) => a + b.spent, 0);
 // const overallPct  = Math.round((totalSpent / totalBudget) * 100);
-
 export function BudgetsPage() {
     const router = useRouter();
-
-    const { data: budgets, isLoading, isError } = useBudgets();
-    const budgetsData = budgets?.budget || [];
-
+    
+    const { data: budgets, isLoading, isError, refetch } = useGetBudgets();
+    const budgetsData = budgets?.data?.budget;
+    const summaryData = budgets?.data?.summary;
+    
     if (isLoading) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <p className="text-gray-500">Loading budgets...</p>
-            </div>
-        );
+        return <BudgetSkeletonLoading />; 
     }
 
     if (isError || !budgets) {
-        return (
-            <div className="flex items-center justify-center h-64">
-                <p className="text-red-500">Failed to load budgets. Please try again.</p>
-            </div>
-        );
+        return <ErrorFallback resetErrorBoundary={refetch} />;
     }
 
     return (
@@ -97,7 +86,7 @@ export function BudgetsPage() {
             />
 
             {/* Overview banner */}
-            <BudgetBanner totalBudget={budgets.summary.totalBudget} totalSpent={budgets.summary.totalSpent} overallPct={budgets.summary.overallPercentage} />
+            <BudgetBanner totalBudget={summaryData?.totalBudget} totalSpent={summaryData?.totalSpent} overallPct={summaryData?.overallPercentage} />
 
             {/* Alert strip — near-limit budgets */}
             {/* {budgets.some((b) => (b.spent / b.total) >= 0.9) && (

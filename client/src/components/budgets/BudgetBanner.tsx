@@ -1,7 +1,7 @@
 interface BudgetBannerProps {
-    totalBudget: number;
-    totalSpent: number;
-    overallPct: number;
+    totalBudget?: number;
+    totalSpent?: number;
+    overallPct?: number;
 }
 
 export const BudgetBanner = ({
@@ -19,19 +19,19 @@ export const BudgetBanner = ({
             <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6">
                 <div>
                     <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Total Budget</p>
-                    <p className="text-white text-xl font-bold font-mono">Rs.{totalBudget.toLocaleString()}</p>
+                    <p className="text-white text-xl font-bold font-mono">Rs.{totalBudget?.toLocaleString()}</p>
                 </div>
                 <div>
                     <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Spent</p>
-                    <p className="text-white text-xl font-bold font-mono">Rs.{totalSpent.toLocaleString()}</p>
+                    <p className="text-white text-xl font-bold font-mono">Rs.{totalSpent?.toLocaleString()}</p>
                 </div>
                 <div>
                     <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Remaining</p>
-                    <p className="text-[#00C950] text-xl font-bold font-mono">Rs.{(totalBudget - totalSpent).toLocaleString()}</p>
+                    <p className="text-[#00C950] text-xl font-bold font-mono">Rs.{totalBudget && totalSpent ? (totalBudget - totalSpent).toLocaleString() : '0'}</p>
                 </div>
                 <div>
                     <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Overall Used</p>
-                    <p className="text-white text-xl font-bold font-mono">{overallPct}%</p>
+                    <p className="text-white text-xl font-bold font-mono">{overallPct?.toFixed(1)}%</p>
                 </div>
             </div>
 
