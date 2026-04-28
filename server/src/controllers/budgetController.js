@@ -13,6 +13,7 @@ export const createBudget = async (req, res, next) => {
       startingDate,
       expireDate,
       categoryId,
+      spendAmount,
       note,
       alert,
       alertLimit,
