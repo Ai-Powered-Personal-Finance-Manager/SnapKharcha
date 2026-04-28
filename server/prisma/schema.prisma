@@ -29,45 +29,39 @@ model Category {
   deletedAt DateTime?
   icon      String?
   tags      String[]
-  color     String?
   budgets   Budget[]
   user      User      @relation(fields: [userId], references: [id])
   expenses  Expense[]
+
+  @@unique([name, userId, deletedAt])
 }
 
 model Budget {
-  id           String    @id @default(uuid())
-  name         String
-  amount       Int
-  startingDate DateTime
-  expireDate   DateTime
-  spendAmount  Int?
-  note         String?
-  alert        Boolean   @default(false)
-  alertLimit   Decimal?
+  id           String   @id @default(uuid())
+  amount       Float
   userId       String
   categoryId   String
-  createdAt    DateTime  @default(now())
-  category     Category  @relation(fields: [categoryId], references: [id])
-  user         User      @relation(fields: [userId], references: [id])
-  Expense      Expense[]
+  createdAt    DateTime @default(now())
+  alert        Boolean?
+  alertLimit   Decimal?
+  expireDate   DateTime
+  note         String?
+  spendAmount  Float?
+  startingDate DateTime
+  category     Category @relation(fields: [categoryId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, categoryId, startingDate])
-  @@index([userId])
+  @@unique([userId, categoryId])
 }
 
 model Expense {
-  id         String   @id @default(uuid())
-  amount     Int
-  note       String
+  id         String    @id @default(uuid())
+  amount     Float
+  note       String?
+  date       DateTime
   userId     String
-  categoryId String
-  createdAt  DateTime @default(now())
-  budgetId   String
-  Budget     Budget   @relation(fields: [budgetId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
-
-  @@index([budgetId])
-  @@index([userId])
+  categoryId String?
+  createdAt  DateTime  @default(now())
+  category   Category? @relation(fields: [categoryId], references: [id])
+  user       User      @relation(fields: [userId], references: [id])
 }
