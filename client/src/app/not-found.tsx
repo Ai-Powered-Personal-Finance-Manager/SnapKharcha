@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 export default function NotFoundPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -20,11 +20,22 @@ export default function NotFoundPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
     resize();
     window.addEventListener("resize", resize);
 
-    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number; color: string }[] = [];
+    const particles: {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      opacity: number;
+      color: string;
+    }[] = [];
     const colors = ["#00C950", "#00b347", "#34d399", "#00C950", "#bbf7d0"];
     for (let i = 0; i < 70; i++) {
       particles.push({
@@ -42,14 +53,19 @@ export default function NotFoundPage() {
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach((p) => {
-        p.x += p.vx; p.y += p.vy;
+        p.x += p.vx;
+        p.y += p.vy;
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
         if (p.y > canvas.height) p.y = 0;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = p.color + Math.floor(p.opacity * 255).toString(16).padStart(2, "0");
+        ctx.fillStyle =
+          p.color +
+          Math.floor(p.opacity * 255)
+            .toString(16)
+            .padStart(2, "0");
         ctx.fill();
       });
 
@@ -72,25 +88,63 @@ export default function NotFoundPage() {
       animId = requestAnimationFrame(draw);
     };
     draw();
-    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize); };
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
+    };
   }, []);
 
   const quickLinks = [
-    { label: "Go Home", href: "/", icon: "🏠", color: "#00C950", bg: "#f0fdf4", border: "#bbf7d0" },
-    { label: "Sign In", href: "/login", icon: "🔑", color: "#0284c7", bg: "#f0f9ff", border: "#bae6fd" },
-    { label: "Sign Up", href: "/register", icon: "✨", color: "#7c3aed", bg: "#faf5ff", border: "#ddd6fe" },
-    { label: "Features", href: "/#features", icon: "⚡", color: "#d97706", bg: "#fffbeb", border: "#fde68a" },
+    {
+      label: "Go Home",
+      href: "/",
+      icon: "🏠",
+      color: "#00C950",
+      bg: "#f0fdf4",
+      border: "#bbf7d0",
+    },
+    {
+      label: "Sign In",
+      href: "/login",
+      icon: "🔑",
+      color: "#0284c7",
+      bg: "#f0f9ff",
+      border: "#bae6fd",
+    },
+    {
+      label: "Sign Up",
+      href: "/register",
+      icon: "✨",
+      color: "#7c3aed",
+      bg: "#faf5ff",
+      border: "#ddd6fe",
+    },
+    {
+      label: "Features",
+      href: "/#features",
+      icon: "⚡",
+      color: "#d97706",
+      bg: "#fffbeb",
+      border: "#fde68a",
+    },
   ];
 
   return (
     <div className="relative min-h-screen bg-white flex flex-col items-center justify-center overflow-hidden px-6 py-10">
       {/* Particle canvas */}
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" />
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none"
+      />
 
       {/* Light dot grid */}
       <div
         className="absolute inset-0 pointer-events-none opacity-[0.4]"
-        style={{ backgroundImage: "radial-gradient(circle, #d1d5db 1px, transparent 1px)", backgroundSize: "28px 28px" }}
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #d1d5db 1px, transparent 1px)",
+          backgroundSize: "28px 28px",
+        }}
       />
 
       {/* Green glow blobs */}
@@ -102,15 +156,23 @@ export default function NotFoundPage() {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center text-center max-w-xl w-full">
-
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 mb-14 group">
           <div className="w-9 h-9 rounded-xl bg-[#00C950] flex items-center justify-center shadow-lg shadow-[#00C950]/25 group-hover:shadow-[#00C950]/40 transition-all duration-300">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
-          <span className="text-gray-900 font-bold text-xl" style={{ fontFamily: "'Syne', sans-serif" }}>
+          <span
+            className="text-gray-900 font-bold text-xl"
+            style={{ fontFamily: "'Syne', sans-serif" }}
+          >
             Snap<span className="text-[#00C950]">Kharcha</span>
           </span>
         </Link>
@@ -138,12 +200,17 @@ export default function NotFoundPage() {
               fontFamily: "'Syne', sans-serif",
               color: "transparent",
               WebkitTextStroke: "2px rgba(0,201,80,0.25)",
-              backgroundImage: "linear-gradient(135deg, #01271E 0%, #00C950 50%, #01271E 100%)",
+              backgroundImage:
+                "linear-gradient(135deg, #01271E 0%, #00C950 50%, #01271E 100%)",
               WebkitBackgroundClip: "text",
               backgroundClip: "text",
               WebkitTextFillColor: "transparent",
-              filter: glitching ? "drop-shadow(3px 0 0 #00C950) drop-shadow(-3px 0 0 #01271E)" : "none",
-              transform: glitching ? `translate(${Math.random() * 4 - 2}px, 0)` : "none",
+              filter: glitching
+                ? "drop-shadow(3px 0 0 #00C950) drop-shadow(-3px 0 0 #01271E)"
+                : "none",
+              transform: glitching
+                ? `translate(${Math.random() * 4 - 2}px, 0)`
+                : "none",
             }}
           >
             404
@@ -152,12 +219,28 @@ export default function NotFoundPage() {
           {/* Glitch slice overlays */}
           {glitching && (
             <>
-              <p className="absolute inset-0 text-[9rem] sm:text-[12rem] font-extrabold leading-none pointer-events-none overflow-hidden"
-                style={{ fontFamily: "'Syne', sans-serif", color: "#00C950", opacity: 0.25, clipPath: "polygon(0 28%, 100% 28%, 100% 42%, 0 42%)", transform: "translate(-5px, 0)" }}>
+              <p
+                className="absolute inset-0 text-[9rem] sm:text-[12rem] font-extrabold leading-none pointer-events-none overflow-hidden"
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  color: "#00C950",
+                  opacity: 0.25,
+                  clipPath: "polygon(0 28%, 100% 28%, 100% 42%, 0 42%)",
+                  transform: "translate(-5px, 0)",
+                }}
+              >
                 404
               </p>
-              <p className="absolute inset-0 text-[9rem] sm:text-[12rem] font-extrabold leading-none pointer-events-none overflow-hidden"
-                style={{ fontFamily: "'Syne', sans-serif", color: "#01271E", opacity: 0.2, clipPath: "polygon(0 58%, 100% 58%, 100% 70%, 0 70%)", transform: "translate(5px, 0)" }}>
+              <p
+                className="absolute inset-0 text-[9rem] sm:text-[12rem] font-extrabold leading-none pointer-events-none overflow-hidden"
+                style={{
+                  fontFamily: "'Syne', sans-serif",
+                  color: "#01271E",
+                  opacity: 0.2,
+                  clipPath: "polygon(0 58%, 100% 58%, 100% 70%, 0 70%)",
+                  transform: "translate(5px, 0)",
+                }}
+              >
                 404
               </p>
             </>
@@ -186,8 +269,8 @@ export default function NotFoundPage() {
           className="text-gray-500 text-base leading-relaxed mb-10 max-w-md"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          The page you're looking for doesn't exist, was moved, or maybe you mistyped the URL.
-          Either way — we've got plenty of other places to be.
+          The page you're looking for doesn't exist, was moved, or maybe you
+          mistyped the URL. Either way — we've got plenty of other places to be.
         </p>
 
         {/* Quick links */}
@@ -230,8 +313,18 @@ export default function NotFoundPage() {
           className="group inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-[#00C950] text-white font-bold text-sm hover:bg-[#00b347] transition-all duration-200 hover:scale-105 shadow-xl shadow-[#00C950]/25 hover:shadow-[#00C950]/35"
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
-          <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          <svg
+            className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2.5}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
           </svg>
           Goto Home
         </Link>
@@ -242,10 +335,13 @@ export default function NotFoundPage() {
           style={{ fontFamily: "'DM Sans', sans-serif" }}
         >
           Still lost?{" "}
-          <a href="mailto:support@snapkharcha.com" className="text-[#00C950] hover:underline font-medium">
+          <a
+            href="mailto:support@snapkharcha.com"
+            className="text-[#00C950] hover:underline font-medium"
+          >
             Contact support
-          </a>
-          {" "}· Error code: 404
+          </a>{" "}
+          · Error code: 404
         </p>
       </div>
     </div>

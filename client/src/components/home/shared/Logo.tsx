@@ -3,20 +3,26 @@
 @description: Reusable Logo component
 */
 
+import { CONFIG } from "@/src/core/config";
 import { cn } from "@/src/lib/utils";
 import Link from "next/link";
 import { LogoInterface } from "../interface";
 
-export const Logo = ({ showIcon, isFooter, navigation }: LogoInterface) => {
+export const Logo = ({
+  showIcon,
+  isFooter,
+  navigation,
+  className,
+}: LogoInterface) => {
   const handleRefNavigation = navigation;
   return (
     <Link
-      href="/"
-      onClick={(e) => {
-        e.preventDefault();
-        if (navigation) handleRefNavigation("/");
+      href={CONFIG.AUTH.HOME}
+      onClick={() => {
+        // e.preventDefault();
+        if (navigation) handleRefNavigation(CONFIG.AUTH.HOME);
       }}
-      className="flex items-center gap-2 group"
+      className={cn(" flex items-center gap-2 group", className)}
     >
       {showIcon && (
         <div className="w-9 h-9 rounded-xl bg-green-500 flex items-center justify-center shadow-lg shadow-[#0099ff]/20 group-hover:shadow-[#0099ff]/40 transition-all duration-300">

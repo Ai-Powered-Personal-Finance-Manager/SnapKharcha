@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AI-Powered Personal Finance Manager",
+  title: "SnapKharcha",
   description: "Smart Expense & AI Powered Finance Tracking System",
 };
 
