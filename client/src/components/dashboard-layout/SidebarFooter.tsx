@@ -67,7 +67,7 @@ export default function SidebarFooter({ collapsed, user }: Props) {
 
       {/* User card */}
       <div
-        className={`mt-3 flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 border border-white/8 ${
+        className={`mt-3 flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 border border-white/8 cursor-pointer ${
           collapsed ? "justify-center" : ""
         }`}
       >

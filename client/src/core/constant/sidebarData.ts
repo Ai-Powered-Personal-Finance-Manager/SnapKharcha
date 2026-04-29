@@ -128,20 +128,20 @@ export const mainNavSections: NavSection[] = [
 ];
 
 export const bottomNavItems: NavItem[] = [
-    {
-        label: "Profile",
-        href: "/profile",
-        icon: CircleUser,
-    },
-    {
-        label: "Help & Support",
-        href: "/help",
-        icon: HelpCircle,
-    },
-    {
-        label: "Logout",
-        href: CONFIG.AUTH.HOME,
-        icon: LogOut,
-        isLogout: true,
-    },
+    // {
+    //     label: "Profile",
+    //     href: "/profile",
+    //     icon: CircleUser,
+    // },
+    // {
+    //     label: "Help & Support",
+    //     href: "/help",
+    //     icon: HelpCircle,
+    // },
+    // {
+    //     label: "Logout",
+    //     href: CONFIG.AUTH.HOME,
+    //     icon: LogOut,
+    //     isLogout: true,
+    // },
 ];

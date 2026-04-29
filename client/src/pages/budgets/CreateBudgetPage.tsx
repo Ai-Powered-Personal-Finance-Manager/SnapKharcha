@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import type { BudgetApiItem } from "@/src/types/budget";
 import type { CategoryItem } from "@/src/hooks/budgets/useCategories";
-import { useGetCategories } from "@/src/hooks/budgets/useCategories";
+import { useCreateCategory, useGetCategories } from "@/src/hooks/budgets/useCategories";
 import { useCreateBudget, useGetBudgets } from "@/src/hooks/budgets/useBudgets";
 import {
   ArrowLeft,
+  Plus,
   Utensils,
   ShoppingBag,
   Car,
@@ -30,19 +32,20 @@ import {
   Baby,
   PawPrint,
   Wrench,
-  AlertTriangle,
   Bell,
   CheckCircle2,
   ChevronRight,
   Info,
   Sparkles,
   Calendar,
+  Tag,
+  X,
 } from "lucide-react";
 
 // ─── Icon mapping for categories ──────────────────────────────
 const iconMap: Record<
   string,
-  React.FC<{ size?: number; className?: string }>
+  React.FC<{ size?: number; className?: string; style?: React.CSSProperties }>
 > = {
   food: Utensils,
   groceries: ShoppingCart,
@@ -98,7 +101,9 @@ const colorPalette: Record<string, { hex: string; bg: string; text: string }> =
 const periods = [
   { id: "monthly", label: "Monthly", desc: "Resets on the 1st of every month" },
   { id: "custom", label: "Custom", desc: "Set your own start & end date" },
-];
+] as const;
+
+type BudgetPeriod = (typeof periods)[number]["id"];
 
 // ─── Alert threshold options ──────────────────────────────────
 const alertOptions = [50, 75, 90, 95];
@@ -121,11 +126,25 @@ const parseDate = (dateStr: string): Date => {
   return new Date(dateStr + "T00:00:00");
 };
 
+const getInitialCustomDateRange = () => {
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
+  return {
+    startDate: formatDate(new Date(currentYear, currentMonth, 1)),
+    endDate: formatDate(
+      new Date(currentYear, currentMonth, getLastDayOfMonth(today)),
+    ),
+  };
+};
+
 // ─── Component ─────────────────────────────────────────────────
 export function CreateBudgetPage() {
   const router = useRouter();
-  const { data: categoriesData, isLoading: catsLoading } = useGetCategories();
-  const { data: budgetsData, isLoading: budgetsLoading } = useGetBudgets();
+  const { data: categoriesData } = useGetCategories();
+  const { data: budgetsData } = useGetBudgets();
+  const { mutate: createCategory, isPending: isCreatingCategory } = useCreateCategory();
   const createBudgetMutation = useCreateBudget();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
@@ -133,29 +152,22 @@ export function CreateBudgetPage() {
   );
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
-  const [period, setPeriod] = useState("monthly");
-  const [customStartDate, setCustomStartDate] = useState("");
-  const [customEndDate, setCustomEndDate] = useState("");
+  const [period, setPeriod] = useState<BudgetPeriod>("monthly");
+  const [customStartDate, setCustomStartDate] = useState(
+    () => getInitialCustomDateRange().startDate,
+  );
+  const [customEndDate, setCustomEndDate] = useState(
+    () => getInitialCustomDateRange().endDate,
+  );
   const [alertAt, setAlertAt] = useState(80);
   const [alertEnabled, setAlert] = useState(true);
   const [searchCat, setSearchCat] = useState("");
   const [note, setNote] = useState("");
-  const [dateError, setDateError] = useState("");
-
-  // Initialize custom dates with current month
-  useEffect(() => {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const currentMonth = today.getMonth();
-    const firstDay = formatDate(new Date(currentYear, currentMonth, 1));
-    const lastDay = getLastDayOfMonth(today);
-    const lastDayFormatted = formatDate(
-      new Date(currentYear, currentMonth, lastDay),
-    );
-
-    setCustomStartDate(firstDay);
-    setCustomEndDate(lastDayFormatted);
-  }, []);
+  const [showCustomCategoryForm, setShowCustomCategoryForm] = useState(false);
+  const [customCategoryName, setCustomCategoryName] = useState("");
+  const [customCategoryTagInput, setCustomCategoryTagInput] = useState("");
+  const [customCategoryTags, setCustomCategoryTags] = useState<string[]>([]);
+  const [customCategoryColor, setCustomCategoryColor] = useState("#00C950");
 
   // Process categories and budgets
   const categoryMap = useMemo(() => {
@@ -170,9 +182,8 @@ export function CreateBudgetPage() {
   }, [categoriesData]);
 
   const usedCategoryIds = useMemo(() => {
-    if (!budgetsData?.data || !Array.isArray(budgetsData.data))
-      return new Set();
-    return new Set(budgetsData.data.map((b: any) => b.categoryId));
+    const budgets = budgetsData?.data?.budget ?? [];
+    return new Set(budgets.map((budget: BudgetApiItem) => budget.categoryId));
   }, [budgetsData]);
 
   const allCategories = useMemo(() => {
@@ -201,21 +212,85 @@ export function CreateBudgetPage() {
     ? allCategories.find((c) => c.id === selectedCategoryId)
     : null;
 
+  const addCustomCategoryTag = (tagValue: string) => {
+    const nextTag = tagValue.trim();
+
+    if (!nextTag) {
+      return;
+    }
+
+    setCustomCategoryTags((currentTags) => {
+      if (currentTags.some((tag) => tag.toLowerCase() === nextTag.toLowerCase())) {
+        return currentTags;
+      }
+
+      return [...currentTags, nextTag];
+    });
+    setCustomCategoryTagInput("");
+  };
+
+  const removeCustomCategoryTag = (tagToRemove: string) => {
+    setCustomCategoryTags((currentTags) =>
+      currentTags.filter((tag) => tag !== tagToRemove),
+    );
+  };
+
+  const handleCustomCategoryTagKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
+    if (event.key !== "Enter") {
+      return;
+    }
+
+    event.preventDefault();
+    addCustomCategoryTag(customCategoryTagInput);
+  };
+
+  const handleCreateCustomCategory = () => {
+    const trimmedName = customCategoryName.trim();
+
+    if (!trimmedName || !customCategoryColor) {
+      return;
+    }
+
+    createCategory(
+      {
+        name: trimmedName,
+        tags: customCategoryTags,
+        color: customCategoryColor,
+        icon: null,
+      },
+      {
+        onSuccess: (response) => {
+          setSelectedCategoryId(response.data?.id ?? null);
+          setShowCustomCategoryForm(false);
+          setCustomCategoryName("");
+          setCustomCategoryTagInput("");
+          setCustomCategoryTags([]);
+          setCustomCategoryColor("#00C950");
+        },
+      },
+    );
+  };
+
+  const canCreateCustomCategory =
+    customCategoryName.trim().length > 0 &&
+    customCategoryColor.trim().length > 0 &&
+    !isCreatingCategory;
+
   const alertAmount = amount
     ? Math.round((Number(amount) * alertAt) / 100)
     : null;
 
-  // Validate dates
-  useEffect(() => {
-    if (period === "custom" && customStartDate && customEndDate) {
-      const startDate = parseDate(customStartDate);
-      const endDate = parseDate(customEndDate);
-      if (endDate < startDate) {
-        setDateError("End date cannot be before start date");
-      } else {
-        setDateError("");
-      }
+  const dateError = useMemo(() => {
+    if (period !== "custom" || !customStartDate || !customEndDate) {
+      return "";
     }
+
+    const startDate = parseDate(customStartDate);
+    const endDate = parseDate(customEndDate);
+
+    return endDate < startDate ? "End date cannot be before start date" : "";
   }, [period, customStartDate, customEndDate]);
 
   const canSubmit =
@@ -248,7 +323,7 @@ export function CreateBudgetPage() {
       note: note || undefined,
       alert: alertEnabled,
       alertLimit: alertEnabled
-        ? Math.round((Number(amount) * alertAt) / 100)
+        ? alertAt
         : null,
     };
 
@@ -299,6 +374,7 @@ export function CreateBudgetPage() {
           <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-50">
               <div className="flex items-center gap-2">
+                <Tag size={13} className="text-gray-400 shrink-0" />
                 <span className="w-6 h-6 rounded-lg bg-[#00C950] text-white text-[11px] font-bold flex items-center justify-center">
                   1
                 </span>
@@ -307,9 +383,13 @@ export function CreateBudgetPage() {
                 </h3>
                 {selectedCategory && (
                   <div
-                    className={`ml-auto flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold ${selectedCategory.bg} ${selectedCategory.text}`}
+                    className="ml-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+                    style={{
+                      backgroundColor: `${selectedCategory.hex}18`,
+                      color: selectedCategory.hex,
+                    }}
                   >
-                    <selectedCategory.icon size={11} />
+                    <selectedCategory.icon size={11} style={{ color: selectedCategory.hex }} />
                     {selectedCategory.label}
                     <button
                       onClick={() => setSelectedCategoryId(null)}
@@ -369,9 +449,10 @@ export function CreateBudgetPage() {
                           }`}
                         >
                           <div
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${c.bg}`}
+                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                            style={{ backgroundColor: `${c.hex}18` }}
                           >
-                            <Icon size={16} className={c.text} />
+                            <Icon size={16} style={{ color: c.hex }} />
                           </div>
                           <div className="min-w-0">
                             <p
@@ -411,9 +492,10 @@ export function CreateBudgetPage() {
                           className="flex items-start gap-3 p-3.5 rounded-xl border-2 border-gray-100 opacity-40 cursor-not-allowed"
                         >
                           <div
-                            className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${c.bg}`}
+                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                            style={{ backgroundColor: `${c.hex}18` }}
                           >
-                            <Icon size={16} className={c.text} />
+                            <Icon size={16} style={{ color: c.hex }} />
                           </div>
                           <div className="min-w-0">
                             <p className="text-xs font-semibold text-gray-500 leading-tight">
@@ -432,10 +514,131 @@ export function CreateBudgetPage() {
 
               {filteredCats.length === 0 && (
                 <div className="text-center py-8 text-gray-400 text-sm">
-                  No categories match "
-                  <span className="font-medium">{searchCat}</span>"
+                  No categories match <span className="font-medium">{searchCat}</span>
                 </div>
               )}
+
+              <div className="mt-5 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 p-4">
+                <div className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Create your own category</p>
+                    <p className="text-[11px] text-gray-400">
+                      Add a custom category with tags and a hex color.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowCustomCategoryForm((current) => !current)}
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#00C950] px-3 py-2 text-xs font-semibold text-white shadow-sm shadow-[#00C950]/20 transition-colors hover:bg-[#00b347]"
+                  >
+                    <Plus size={13} />
+                    {showCustomCategoryForm ? "Close" : "Add"}
+                  </button>
+                </div>
+
+                {showCustomCategoryForm && (
+                  <div className="mt-4 space-y-4 rounded-2xl border border-gray-100 bg-white p-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                        Category name
+                      </label>
+                      <input
+                        type="text"
+                        value={customCategoryName}
+                        onChange={(event) => setCustomCategoryName(event.target.value)}
+                        placeholder="e.g. Gaming"
+                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none transition-colors placeholder:text-gray-300 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/10"
+                      />
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                        Tags
+                      </label>
+                      <div className="flex min-h-12 flex-wrap gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5">
+                        {customCategoryTags.map((tagValue) => (
+                          <span
+                            key={tagValue}
+                            className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-600 shadow-sm border border-gray-200"
+                          >
+                            {tagValue}
+                            <button
+                              type="button"
+                              onClick={() => removeCustomCategoryTag(tagValue)}
+                              className="rounded-full text-gray-400 transition-colors hover:text-gray-700"
+                              aria-label={`Remove tag ${tagValue}`}
+                            >
+                              <X size={12} />
+                            </button>
+                          </span>
+                        ))}
+                        <input
+                          type="text"
+                          value={customCategoryTagInput}
+                          onChange={(event) => setCustomCategoryTagInput(event.target.value)}
+                          onKeyDown={handleCustomCategoryTagKeyDown}
+                          placeholder="Type a tag and press Enter"
+                          className="min-w-40 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-300"
+                        />
+                      </div>
+                      <p className="text-[11px] text-gray-400">
+                        Press Enter to add tags like gaming or play.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                        Color
+                      </label>
+                      <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
+                        <input
+                          type="color"
+                          value={customCategoryColor}
+                          onChange={(event) => setCustomCategoryColor(event.target.value)}
+                          className="h-11 w-14 rounded-lg border border-gray-200 bg-white p-1"
+                          aria-label="Category color"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                            Selected hex
+                          </p>
+                          <p className="font-mono text-sm text-gray-700">
+                            {customCategoryColor.toUpperCase()}
+                          </p>
+                        </div>
+                        <div
+                          className="h-10 w-10 rounded-xl border border-gray-200"
+                          style={{ backgroundColor: customCategoryColor }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowCustomCategoryForm(false);
+                          setCustomCategoryName("");
+                          setCustomCategoryTagInput("");
+                          setCustomCategoryTags([]);
+                          setCustomCategoryColor("#00C950");
+                        }}
+                        className="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-500 transition-colors hover:bg-gray-50"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCreateCustomCategory}
+                        disabled={!canCreateCustomCategory}
+                        className="rounded-xl bg-[#00C950] px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-[#00C950]/20 transition-colors hover:bg-[#00b347] disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        {isCreatingCategory ? "Saving..." : "Save category"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -529,7 +732,7 @@ export function CreateBudgetPage() {
                   {periods.map((p) => (
                     <button
                       key={p.id}
-                      onClick={() => setPeriod(p.id as any)}
+                      onClick={() => setPeriod(p.id)}
                       className={`flex flex-col items-start p-3.5 rounded-xl border-2 text-left transition-all ${period === p.id ? "border-[#00C950] bg-[#00C950]/5" : "border-gray-200 hover:border-gray-300"}`}
                     >
                       <p
@@ -613,7 +816,7 @@ export function CreateBudgetPage() {
             {alertEnabled && (
               <div className="p-6 space-y-4">
                 <p className="text-gray-500 text-xs">
-                  Notify me when I've used this much of my budget:
+                  Notify me when I&apos;ve used this much of my budget:
                 </p>
                 <div className="flex gap-3">
                   {alertOptions.map((v) => (
@@ -630,11 +833,11 @@ export function CreateBudgetPage() {
                   <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 border border-amber-100">
                     <Bell size={14} className="text-amber-500 shrink-0" />
                     <p className="text-amber-700 text-xs">
-                      You'll be notified when spending reaches{" "}
+                      You&apos;ll be notified when spending reaches{" "}
                       <span className="font-bold font-mono">
-                        ₹{alertAmount.toLocaleString()}
+                        Rs. {alertAmount.toLocaleString()}
                       </span>{" "}
-                      ({alertAt}% of ₹{Number(amount).toLocaleString()})
+                      ({alertAt}% of Rs. {Number(amount).toLocaleString()})
                     </p>
                   </div>
                 )}
@@ -718,11 +921,12 @@ export function CreateBudgetPage() {
                   {selectedCategory ? (
                     <>
                       <div
-                        className={`w-10 h-10 rounded-xl flex items-center justify-center ${selectedCategory.bg}`}
+                        className="w-10 h-10 rounded-xl flex items-center justify-center"
+                        style={{ backgroundColor: `${selectedCategory.hex}18` }}
                       >
                         <selectedCategory.icon
                           size={18}
-                          className={selectedCategory.text}
+                          style={{ color: selectedCategory.hex }}
                         />
                       </div>
                       <div>
@@ -793,7 +997,7 @@ export function CreateBudgetPage() {
                 {/* Meta chips */}
                 <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-50">
                   <span
-                    className={`text-[10px] font-semibold px-2 py-1 rounded-lg ${period === "monthly" ? "bg-blue-50 text-blue-500" : period === "weekly" ? "bg-purple-50 text-purple-500" : "bg-amber-50 text-amber-600"}`}
+                    className={`text-[10px] font-semibold px-2 py-1 rounded-lg ${period === "monthly" ? "bg-blue-50 text-blue-500" : "bg-amber-50 text-amber-600"}`}
                   >
                     {periods.find((p) => p.id === period)?.label}
                   </span>
@@ -845,28 +1049,33 @@ export function CreateBudgetPage() {
                 Your Active Budgets
               </p>
               <div className="space-y-2">
-                {Array.isArray(budgetsData?.data) &&
-                  budgetsData.data.slice(0, 5).map((budget: any) => {
-                    const category = categoryMap[budget.categoryId];
-                    if (!category) return null;
-                    const cat = allCategories.find(
-                      (c) => c.id === budget.categoryId,
-                    );
-                    const Icon = cat?.icon || Sparkles;
-                    return (
-                      <div key={budget.id} className="flex items-center gap-2">
-                        <div
-                          className={`w-5 h-5 rounded-md flex items-center justify-center ${cat?.bg}`}
-                        >
-                          <Icon size={11} className={cat?.text} />
-                        </div>
-                        <span className="text-gray-600 text-xs flex-1">
-                          {category.name}
-                        </span>
-                        <ChevronRight size={12} className="text-gray-300" />
+                {(budgetsData?.data?.budget ?? []).slice(0, 5).map((budget: BudgetApiItem) => {
+                  if (!budget.categoryId) {
+                    return null;
+                  }
+
+                  const category = categoryMap[budget.categoryId];
+                  if (!category) return null;
+                  const cat = allCategories.find(
+                    (c) => c.id === budget.categoryId,
+                  );
+                  const Icon = cat?.icon || Sparkles;
+                  const accentHex = cat?.hex || "#94a3b8";
+                  return (
+                    <div key={budget.id} className="flex items-center gap-2">
+                      <div
+                        className="w-5 h-5 rounded-md flex items-center justify-center"
+                        style={{ backgroundColor: `${accentHex}18` }}
+                      >
+                        <Icon size={11} style={{ color: accentHex }} />
                       </div>
-                    );
-                  })}
+                      <span className="text-gray-600 text-xs flex-1">
+                        {category.name}
+                      </span>
+                      <ChevronRight size={12} className="text-gray-300" />
+                    </div>
+                  );
+                })}
                 <Link
                   href="/budgets"
                   className="flex items-center gap-1 text-[#00C950] text-xs font-semibold pt-1 hover:underline"
