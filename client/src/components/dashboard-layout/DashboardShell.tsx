@@ -1,20 +1,18 @@
 "use client";
 
-import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
 import { useState } from "react";
 import { Loading } from "../Loading";
 import MobileSidebar from "./MobileSidebar";
 import Sidebar from "./Sidebar";
 import TopBar from "./TopBar";
-import { useUser } from "./hooks/useUser";
-import { UserInterface } from "./interface/userInterface";
+import { useUser } from "../dashboard-layout/hooks/useUser";
+import { UserInterface } from "../dashboard-layout/interface/userInterface";
 
 type Props = {
   children: React.ReactNode;
-  greeting?: string;
 };
 
-export default function DashboardShell({ children, greeting }: Props) {
+export default function DashboardShell({ children }: Props) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -49,7 +47,6 @@ export default function DashboardShell({ children, greeting }: Props) {
         <TopBar
           avatarText={typedUser?.name?.slice(0, 1)}
           onMobileMenuToggle={() => setMobileOpen(true)}
-          greeting={`Hello ${CapitalizeFirst(typedUser?.name)}!`}
           collapsed={collapsed}
           onToggle={() => setCollapsed((c) => !c)}
         />

@@ -1,6 +1,6 @@
 "use client";
 
-import { mainNavSections } from "@/src/lib/sidebarData";
+import { mainNavSections } from "@/src/core/constant/sidebarData";
 import SidebarNavItem from "./SidebarNavItem";
 
 type Props = {

@@ -22,7 +22,7 @@ export const HeroDashboardPreview = () => {
           </div>
         </div>
         <Image
-          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80&auto=format&fit=crop"
+          src="/dashboard.png"
           alt="Finova AI Dashboard Preview"
           height={1000}
           width={1000}
