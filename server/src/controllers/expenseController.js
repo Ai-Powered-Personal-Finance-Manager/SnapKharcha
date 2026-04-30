@@ -5,14 +5,37 @@ import prisma from "../config/prisma.js";
 // ─────────────────────────────────────────
 export const createExpense = async (req, res, next) => {
   try {
-    const { amount, note, budgetId } = req.body;
+    const { amount, note, budgetId, paymentMethod, date, merchant } = req.body;
     const userId = req.user.id;
 
     // ───── Validation ─────
-    if (amount === undefined || !budgetId || !note) {
+    if (
+      amount === undefined ||
+      !budgetId ||
+      !note ||
+      !paymentMethod ||
+      !date ||
+      !merchant
+    ) {
       return res.status(400).json({
         success: false,
-        message: "amount, note and budgetId are required",
+        message:
+          "amount, note, budgetId, paymentMethod, date, and merchant are required",
+      });
+    }
+
+    const validPaymentMethods = ["CASH", "WALLET", "BANK"];
+    if (!validPaymentMethods.includes(paymentMethod)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid paymentMethod. Valid options are: ${validPaymentMethods.join(", ")}`,
+      });
+    }
+
+    if (isNaN(Date.parse(date))) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date format",
       });
     }
 
@@ -25,9 +48,7 @@ export const createExpense = async (req, res, next) => {
       });
     }
 
-    // ───── Transaction (FULL SAFETY) ─────
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Fetch budget inside transaction (important)
       const budget = await tx.budget.findFirst({
         where: { id: budgetId, userId },
       });
@@ -39,25 +60,25 @@ export const createExpense = async (req, res, next) => {
       const spend = budget.spendAmount ?? 0;
       const available = budget.amount - spend;
 
-      // 2. Check balance safely inside transaction
       if (parsedAmount > available) {
         throw new Error(
           `Cannot exceed budget. Remaining amount is ${available}`,
         );
       }
 
-      // 3. Create expense
       const expense = await tx.expense.create({
         data: {
           amount: parsedAmount,
           note: note || null,
+          paymentMethod: paymentMethod,
+          date: new Date(date),
+          merchant: merchant,
           userId,
           budgetId,
           categoryId: budget.categoryId,
         },
       });
 
-      // 4. Update budget safely
       const updatedBudget = await tx.budget.update({
         where: { id: budgetId },
         data: {
@@ -67,7 +88,6 @@ export const createExpense = async (req, res, next) => {
         },
       });
 
-      // 5. return category (optional)
       const category = await tx.category.findUnique({
         where: { id: budget.categoryId },
       });
@@ -85,7 +105,6 @@ export const createExpense = async (req, res, next) => {
       data: result,
     });
   } catch (error) {
-    // clean error handling
     if (error.message.includes("Cannot exceed budget")) {
       return res.status(400).json({
         success: false,
@@ -174,11 +193,36 @@ export const getExpenseById = async (req, res, next) => {
 export const updateExpense = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { amount, note, budgetId } = req.body;
+    const { amount, note, budgetId, paymentMethod, date, merchant } = req.body;
     const userId = req.user.id;
 
-    const parsedAmount = amount !== undefined ? Number(amount) : undefined;
+    if (
+      paymentMethod === undefined ||
+      date === undefined ||
+      merchant === undefined
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "paymentMethod, date, and merchant are required",
+      });
+    }
 
+    const validPaymentMethods = ["CASH", "WALLET", "BANK"];
+    if (!validPaymentMethods.includes(paymentMethod)) {
+      return res.status(400).json({
+        success: false,
+        message: `Invalid paymentMethod. Valid options are: ${validPaymentMethods.join(", ")}`,
+      });
+    }
+
+    if (isNaN(Date.parse(date))) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid date format",
+      });
+    }
+
+    const parsedAmount = amount !== undefined ? Number(amount) : undefined;
     if (parsedAmount !== undefined) {
       if (!Number.isInteger(parsedAmount) || parsedAmount <= 0) {
         return res.status(400).json({
@@ -189,7 +233,6 @@ export const updateExpense = async (req, res, next) => {
     }
 
     const result = await prisma.$transaction(async (tx) => {
-      // 1. Get existing expense
       const existingExpense = await tx.expense.findFirst({
         where: { id, userId },
       });
@@ -200,10 +243,11 @@ export const updateExpense = async (req, res, next) => {
 
       const oldBudgetId = existingExpense.budgetId;
       const oldAmount = existingExpense.amount;
+      const oldPaymentMethod = existingExpense.paymentMethod;
+      const oldMerchant = existingExpense.merchant;
+      const oldDate = existingExpense.date;
 
-      // 2. Determine new budget
       const newBudgetId = budgetId ?? oldBudgetId;
-
       const budget = await tx.budget.findFirst({
         where: { id: newBudgetId, userId },
       });
@@ -214,9 +258,7 @@ export const updateExpense = async (req, res, next) => {
 
       const finalAmount = parsedAmount !== undefined ? parsedAmount : oldAmount;
 
-      // 3. If budget changed → rollback old + apply new
       if (oldBudgetId !== newBudgetId) {
-        // rollback old budget
         await tx.budget.update({
           where: { id: oldBudgetId },
           data: {
@@ -226,7 +268,6 @@ export const updateExpense = async (req, res, next) => {
           },
         });
 
-        // check new budget availability
         const available = budget.amount - (budget.spendAmount ?? 0);
 
         if (finalAmount > available) {
@@ -235,7 +276,6 @@ export const updateExpense = async (req, res, next) => {
           );
         }
 
-        // apply new budget
         await tx.budget.update({
           where: { id: newBudgetId },
           data: {
@@ -245,7 +285,6 @@ export const updateExpense = async (req, res, next) => {
           },
         });
       } else {
-        // same budget → adjust diff
         const diff = finalAmount - oldAmount;
 
         const available = budget.amount - (budget.spendAmount ?? 0);
@@ -266,12 +305,14 @@ export const updateExpense = async (req, res, next) => {
         });
       }
 
-      // 4. Update expense
       const updatedExpense = await tx.expense.update({
         where: { id },
         data: {
           amount: finalAmount,
           note: note ?? existingExpense.note,
+          paymentMethod: paymentMethod || oldPaymentMethod,
+          date: new Date(date),
+          merchant: merchant || oldMerchant,
           budgetId: newBudgetId,
         },
         include: {

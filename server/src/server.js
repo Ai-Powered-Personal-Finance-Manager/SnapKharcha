@@ -14,6 +14,7 @@ import authRouter from "./routes/authRoutes.js";
 import budgetRouter from "./routes/budgetRoutes.js";
 import categoryRouter from "./routes/categoryRoutes.js";
 import expenseRoute from "./routes/expenseRoutes.js";
+import loanRoutes from "./routes/loanRoutes.js";
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -70,6 +71,9 @@ app.use("/api/category", categoryRouter); /* #swagger.tags = ['Category'] */
 
 //expense
 app.use("/api/expense", expenseRoute);
+
+//loan
+app.use("/api/loan", loanRoutes);
 
 // must be after all routes
 app.use(errorHandler);

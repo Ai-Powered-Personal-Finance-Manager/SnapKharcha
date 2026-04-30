@@ -20,6 +20,7 @@ model User {
   budgets      Budget[]
   categories   Category[]
   expenses     Expense[]
+  loan         Loan[]
 }
 
 model Category {
@@ -57,25 +58,55 @@ model Budget {
 }
 
 model Expense {
-  id         String   @id @default(uuid())
-  amount     Int
-  note       String
-  userId     String
-  categoryId String
-  createdAt  DateTime @default(now())
-  budgetId   String
-  budget     Budget   @relation(fields: [budgetId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  id            String        @id @default(uuid())
+  amount        Int
+  date          DateTime      @default(now())
+  merchant      String        @default("Unknown")
+  paymentMethod PaymentMethod @default(CASH)
+  note          String
+  userId        String
+  categoryId    String
+  createdAt     DateTime      @default(now())
+  budgetId      String
+  budget        Budget        @relation(fields: [budgetId], references: [id])
+  category      Category      @relation(fields: [categoryId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([budgetId])
 }
 
-// need to add in expense
-// date, vendor/merchant?, paymentMethod
+enum PaymentMethod {
+  CASH
+  WALLET
+  BANK
+}
 
-// add query isUsed on getCAtegory
+model Loan {
+  id           String  @id @default(uuid())
+  name         String
+  lenderName   String
+  interestRate Decimal @db.Decimal(5, 2)
+
+  timeValue Int
+  timeUnit  TimeUnit
+
+  amount     Int
+  emiAmount  Int
+  paidAmount Int     @default(0)
+  note       String?
+  status     String
+  userId     String
+  user       User    @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum TimeUnit {
+  MONTH
+  YEAR
+}
 
 // loan
 // name, lenderName, interestRate, timePeriod, amount, emiAmount, note?, status = "active" || "paid", paidAmount,
