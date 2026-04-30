@@ -4,7 +4,7 @@ import { cn } from "@/src/lib/utils";
 import SidebarFooter from "./SidebarFooter";
 import SidebarLogo from "./SidebarLogo";
 import SidebarNav from "./SidebarNav";
-import { UserInterface } from "./interface/userInterface";
+import { UserInterface } from "../dashboard-layout/interface/userInterface";
 
 type Props = {
   collapsed: boolean;

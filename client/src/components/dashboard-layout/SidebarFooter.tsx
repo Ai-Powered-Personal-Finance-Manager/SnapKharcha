@@ -4,7 +4,7 @@ import { CONFIG } from "@/src/core/config";
 import { localStorageUtil } from "@/src/core/utils";
 import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
 import { LogoutResponse } from "@/src/features/auth/interface/loginInterface";
-import { bottomNavItems } from "@/src/lib/sidebarData";
+import { bottomNavItems } from "@/src/core/constant/sidebarData";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -67,7 +67,7 @@ export default function SidebarFooter({ collapsed, user }: Props) {
 
       {/* User card */}
       <div
-        className={`mt-3 flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 border border-white/8 ${
+        className={`mt-3 flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 border border-white/8 cursor-pointer ${
           collapsed ? "justify-center" : ""
         }`}
       >
