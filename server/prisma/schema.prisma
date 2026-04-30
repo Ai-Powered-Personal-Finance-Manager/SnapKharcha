@@ -20,6 +20,7 @@ model User {
   budgets      Budget[]
   categories   Category[]
   expenses     Expense[]
+  loan         Loan[]
 }
 
 model Category {
@@ -57,17 +58,54 @@ model Budget {
 }
 
 model Expense {
-  id         String   @id @default(uuid())
-  amount     Int
-  note       String
-  userId     String
-  categoryId String
-  createdAt  DateTime @default(now())
-  budgetId   String
-  budget     Budget   @relation(fields: [budgetId], references: [id])
-  category   Category @relation(fields: [categoryId], references: [id])
-  user       User     @relation(fields: [userId], references: [id])
+  id            String        @id @default(uuid())
+  amount        Int
+  note          String
+  userId        String
+  categoryId    String
+  createdAt     DateTime      @default(now())
+  budgetId      String
+  date          DateTime      @default(now())
+  merchant      String        @default("Unknown")
+  paymentMethod PaymentMethod @default(CASH)
+  budget        Budget        @relation(fields: [budgetId], references: [id])
+  category      Category      @relation(fields: [categoryId], references: [id])
+  user          User          @relation(fields: [userId], references: [id])
 
   @@index([userId])
   @@index([budgetId])
+}
+
+model Loan {
+  id           String     @id @default(uuid())
+  name         String
+  lenderName   String
+  interestRate Decimal    @db.Decimal(5, 2)
+  amount       Int
+  emiAmount    Int
+  paidAmount   Int        @default(0)
+  note         String?
+  userId       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  timeUnit     TimeUnit
+  timeValue    Int
+  status       StatusType
+  user         User       @relation(fields: [userId], references: [id])
+}
+
+enum PaymentMethod {
+  CASH
+  WALLET
+  BANK
+}
+
+enum TimeUnit {
+  MONTH
+  YEAR
+}
+
+enum StatusType {
+  ACTIVE
+  PAID
 }
