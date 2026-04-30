@@ -95,7 +95,7 @@ model Loan {
   emiAmount  Int
   paidAmount Int     @default(0)
   note       String?
-  status     String
+  status     StatusType
   userId     String
   user       User    @relation(fields: [userId], references: [id])
 
@@ -108,6 +108,10 @@ enum TimeUnit {
   YEAR
 }
 
+enum StatusType {
+  ACTIVE
+  PAID
+}
 // loan
 // name, lenderName, interestRate, timePeriod, amount, emiAmount, note?, status = "active" || "paid", paidAmount,
 // give remainingAmount in response
