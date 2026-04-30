@@ -27,13 +27,13 @@ export const createLoan = async (req, res, next) => {
       interestRate === undefined ||
       timeValue === undefined ||
       !timeUnit ||
-      !amount ||
-      !emiAmount
+      amount === undefined ||
+      emiAmount === undefined
     ) {
       return res.status(400).json({
         success: false,
         message:
-          "name, lenderName, interestRate, timeValue, timeUnit, amount, and emiAmount are required",
+          "name, lenderName, interestRate, timeValue, timeUnit, amount and emiAmount are required",
       });
     }
 
@@ -69,15 +69,25 @@ export const createLoan = async (req, res, next) => {
 
     // ───── Validate timeUnit ─────
     const validTimeUnits = ["MONTH", "YEAR"];
-    if (!validTimeUnits.includes(timeUnit)) {
+    const normalizedTimeUnit = timeUnit?.toUpperCase();
+
+    if (!validTimeUnits.includes(normalizedTimeUnit)) {
       return res.status(400).json({
         success: false,
         message: "timeUnit must be either 'MONTH' or 'YEAR'",
       });
     }
 
-    // ───── Normalize loan status ─────
-    const loanStatus = status === "paid" ? "paid" : "active";
+    // ───── Validate & normalize status ─────
+    const validStatuses = ["ACTIVE", "PAID"];
+    const normalizedStatus = status?.toUpperCase() || "ACTIVE";
+
+    if (!validStatuses.includes(normalizedStatus)) {
+      return res.status(400).json({
+        success: false,
+        message: "status must be either 'ACTIVE' or 'PAID'",
+      });
+    }
 
     // ───── Prepare data object ─────
     const data = {
@@ -85,11 +95,11 @@ export const createLoan = async (req, res, next) => {
       lenderName,
       interestRate: new Prisma.Decimal(parsedInterestRate),
       timeValue: parsedTimeValue,
-      timeUnit,
+      timeUnit: normalizedTimeUnit,
       amount: parsedAmount,
       emiAmount: parsedEmi,
       note: note || null,
-      status: loanStatus,
+      status: normalizedStatus,
       userId,
     };
 
@@ -198,6 +208,7 @@ export const getLoanById = async (req, res, next) => {
 // ─────────────────────────────────────────
 // UPDATE LOAN
 // ─────────────────────────────────────────
+
 export const updateLoan = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -215,15 +226,11 @@ export const updateLoan = async (req, res, next) => {
 
     const userId = req.user.id;
 
-    // ───── Check if the loan exists and belongs to the user ─────
+    // ───── Check ownership ─────
     const existingLoan = await prisma.loan.findFirst({
-      where: {
-        id,
-        userId, // Ensure the user can only update their own loans
-      },
+      where: { id, userId },
     });
 
-    // ───── If loan does not exist, return 404 ─────
     if (!existingLoan) {
       return res.status(404).json({
         success: false,
@@ -232,22 +239,26 @@ export const updateLoan = async (req, res, next) => {
       });
     }
 
-    // ───── Validate the input values ─────
-    const parsedInterestRate = interestRate
-      ? Number(interestRate)
-      : existingLoan.interestRate;
+    // ───── Parse values safely ─────
+    const parsedInterestRate =
+      interestRate !== undefined
+        ? Number(interestRate)
+        : Number(existingLoan.interestRate);
+
     const parsedTimeValue =
       timeValue !== undefined ? Number(timeValue) : existingLoan.timeValue;
+
     const parsedAmount =
       amount !== undefined ? Number(amount) : existingLoan.amount;
+
     const parsedEmi =
       emiAmount !== undefined ? Number(emiAmount) : existingLoan.emiAmount;
 
+    // ───── Validate numbers ─────
     if (
-      isNaN(parsedInterestRate) ||
-      isNaN(parsedTimeValue) ||
-      isNaN(parsedAmount) ||
-      isNaN(parsedEmi)
+      [parsedInterestRate, parsedTimeValue, parsedAmount, parsedEmi].some(
+        (val) => isNaN(val),
+      )
     ) {
       return res.status(400).json({
         success: false,
@@ -276,25 +287,37 @@ export const updateLoan = async (req, res, next) => {
       });
     }
 
-    // ───── Normalize loan status ─────
-    const loanStatus = status === "paid" ? "paid" : "active";
+    // ───── Validate & normalize status ─────
+    let normalizedStatus = existingLoan.status;
 
-    // ───── Prepare data object for update ─────
+    if (status) {
+      const upperStatus = status.toUpperCase();
+      const validStatuses = ["ACTIVE", "PAID"];
+
+      if (!validStatuses.includes(upperStatus)) {
+        return res.status(400).json({
+          success: false,
+          message: "status must be either 'ACTIVE' or 'PAID'",
+        });
+      }
+
+      normalizedStatus = upperStatus;
+    }
+
+    // ───── Prepare update data ─────
     const updatedData = {
       name: name ?? existingLoan.name,
       lenderName: lenderName ?? existingLoan.lenderName,
-      interestRate: interestRate
-        ? new Prisma.Decimal(parsedInterestRate)
-        : existingLoan.interestRate,
-      timeValue: timeValue ?? existingLoan.timeValue,
+      interestRate: new Prisma.Decimal(parsedInterestRate),
+      timeValue: parsedTimeValue,
       timeUnit: timeUnit ?? existingLoan.timeUnit,
-      amount: amount ?? existingLoan.amount,
-      emiAmount: emiAmount ?? existingLoan.emiAmount,
+      amount: parsedAmount,
+      emiAmount: parsedEmi,
       note: note ?? existingLoan.note,
-      status: status ?? existingLoan.status,
+      status: normalizedStatus,
     };
 
-    // ───── Update the loan record ─────
+    // ───── Update ─────
     const updatedLoan = await prisma.loan.update({
       where: { id },
       data: updatedData,

@@ -16,7 +16,7 @@ loanRoutes.get("/", authMiddleware, getLoans);
 
 loanRoutes.get("/:id", authMiddleware, getLoanById);
 
-loanRoutes.get("/:id", authMiddleware, updateLoan);
+loanRoutes.patch("/:id", authMiddleware, updateLoan);
 
 loanRoutes.delete("/:id", authMiddleware, deleteLoan);
 

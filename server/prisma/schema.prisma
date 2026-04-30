@@ -60,14 +60,14 @@ model Budget {
 model Expense {
   id            String        @id @default(uuid())
   amount        Int
-  date          DateTime      @default(now())
-  merchant      String        @default("Unknown")
-  paymentMethod PaymentMethod @default(CASH)
   note          String
   userId        String
   categoryId    String
   createdAt     DateTime      @default(now())
   budgetId      String
+  date          DateTime      @default(now())
+  merchant      String        @default("Unknown")
+  paymentMethod PaymentMethod @default(CASH)
   budget        Budget        @relation(fields: [budgetId], references: [id])
   category      Category      @relation(fields: [categoryId], references: [id])
   user          User          @relation(fields: [userId], references: [id])
@@ -76,31 +76,28 @@ model Expense {
   @@index([budgetId])
 }
 
+model Loan {
+  id           String     @id @default(uuid())
+  name         String
+  lenderName   String
+  interestRate Decimal    @db.Decimal(5, 2)
+  amount       Int
+  emiAmount    Int
+  paidAmount   Int        @default(0)
+  note         String?
+  userId       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  timeUnit     TimeUnit
+  timeValue    Int
+  status       StatusType
+  user         User       @relation(fields: [userId], references: [id])
+}
+
 enum PaymentMethod {
   CASH
   WALLET
   BANK
-}
-
-model Loan {
-  id           String  @id @default(uuid())
-  name         String
-  lenderName   String
-  interestRate Decimal @db.Decimal(5, 2)
-
-  timeValue Int
-  timeUnit  TimeUnit
-
-  amount     Int
-  emiAmount  Int
-  paidAmount Int     @default(0)
-  note       String?
-  status     StatusType
-  userId     String
-  user       User    @relation(fields: [userId], references: [id])
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 enum TimeUnit {
@@ -112,6 +109,3 @@ enum StatusType {
   ACTIVE
   PAID
 }
-// loan
-// name, lenderName, interestRate, timePeriod, amount, emiAmount, note?, status = "active" || "paid", paidAmount,
-// give remainingAmount in response
