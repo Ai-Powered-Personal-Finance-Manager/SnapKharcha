@@ -149,7 +149,7 @@ export const getLoans = async (req, res, next) => {
 
     const formattedLoans = loans.map((loan) => ({
       ...loan,
-      status: loan.status === "active" ? "Active Loan" : "Paid Off",
+      status: loan.status === "ACTIVE" ? "ACTIVE" : "PAID",
     }));
 
     return res.status(200).json({
@@ -193,7 +193,7 @@ export const getLoanById = async (req, res, next) => {
 
     const formattedLoan = {
       ...loan,
-      status: loan.status === "active" ? "Active Loan" : "Paid Off",
+      status: loan.status === "ACTIVE" ? "ACTIVE" : "PAID",
     };
 
     return res.status(200).json({
