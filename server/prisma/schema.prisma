@@ -77,6 +77,13 @@ model Expense {
   @@index([budgetId])
 }
 
+enum PaymentMethod {
+  CASH
+  WALLET
+  BANK
+}
+
+
 model Loan {
   id           String     @id @default(uuid())
   name         String
@@ -95,12 +102,6 @@ model Loan {
   user         User       @relation(fields: [userId], references: [id])
 }
 
-enum PaymentMethod {
-  CASH
-  WALLET
-  BANK
-}
-
 enum TimeUnit {
   MONTH
   YEAR
@@ -113,15 +114,15 @@ enum StatusType {
 
 model Income {
   id       String     @id @default(uuid())
-  name     String
   amount   Int
   company  String
   position String
   source   String
   note     String?
-  status   String
+  status   IncomeStaus
   type     IncomeType
   userId   String
+  creditDay Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -135,7 +136,7 @@ enum IncomeType {
 
 enum IncomeStaus {
   ACTIVE
-  ENDED
+  PAUSED
 }
 
 // enum IncomeStatus {
