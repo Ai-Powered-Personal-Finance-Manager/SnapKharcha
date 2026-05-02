@@ -16,7 +16,7 @@ export const stats: statsInterface[] = [
     border: "#bae6fd",
   },
   {
-    value: "₹4.2Cr+",
+    value: "Rs.4.2Cr+",
     label: "Expenses Tracked",
     color: "#7c3aed",
     bg: "#faf5ff",

@@ -35,9 +35,9 @@ const recentReports: Report[] = [
         format: "pdf",
         size: "1.2 MB",
         highlights: [
-        { label: "Income",   value: "₹71,000",  up: true  },
-        { label: "Expenses", value: "₹38,000",  up: false },
-        { label: "Saved",    value: "₹33,000",  up: true  },
+        { label: "Income",   value: "Rs.71,000",  up: true  },
+        { label: "Expenses", value: "Rs.38,000",  up: false },
+        { label: "Saved",    value: "Rs.33,000",  up: true  },
         { label: "Rate",     value: "46%",       up: true  },
         ],
     },
@@ -51,10 +51,10 @@ const recentReports: Report[] = [
         format: "pdf",
         size: "3.4 MB",
         highlights: [
-        { label: "Income",   value: "₹1.89L",   up: true  },
-        { label: "Expenses", value: "₹1.01L",   up: false },
-        { label: "Saved",    value: "₹88,000",  up: true  },
-        { label: "NW Growth",value: "+₹14L",    up: true  },
+        { label: "Income",   value: "Rs.1.89L",   up: true  },
+        { label: "Expenses", value: "Rs.1.01L",   up: false },
+        { label: "Saved",    value: "Rs.88,000",  up: true  },
+        { label: "NW Growth",value: "+Rs.14L",    up: true  },
         ],
     },
     {
@@ -67,9 +67,9 @@ const recentReports: Report[] = [
         format: "csv",
         size: "48 KB",
         highlights: [
-        { label: "Income",   value: "₹60,000",  up: true  },
-        { label: "Expenses", value: "₹35,000",  up: false },
-        { label: "Saved",    value: "₹25,000",  up: false },
+        { label: "Income",   value: "Rs.60,000",  up: true  },
+        { label: "Expenses", value: "Rs.35,000",  up: false },
+        { label: "Saved",    value: "Rs.25,000",  up: false },
         { label: "Rate",     value: "42%",       up: false },
         ],
     },
@@ -83,10 +83,10 @@ const recentReports: Report[] = [
         format: "xlsx",
         size: "890 KB",
         highlights: [
-        { label: "Total Income",  value: "₹7.8L",  up: true  },
-        { label: "Total Expense", value: "₹4.2L",  up: false },
-        { label: "Tax Saved",     value: "₹46,500", up: true  },
-        { label: "Net Savings",   value: "₹3.6L",  up: true  },
+        { label: "Total Income",  value: "Rs.7.8L",  up: true  },
+        { label: "Total Expense", value: "Rs.4.2L",  up: false },
+        { label: "Tax Saved",     value: "Rs.46,500", up: true  },
+        { label: "Net Savings",   value: "Rs.3.6L",  up: true  },
         ],
     },
     {
@@ -99,9 +99,9 @@ const recentReports: Report[] = [
         format: "pdf",
         size: "—",
         highlights: [
-        { label: "Income",   value: "₹91,000 (so far)", up: true  },
-        { label: "Expenses", value: "₹18,430",          up: true  },
-        { label: "Saved",    value: "₹72,570",          up: true  },
+        { label: "Income",   value: "Rs.91,000 (so far)", up: true  },
+        { label: "Expenses", value: "Rs.18,430",          up: true  },
+        { label: "Saved",    value: "Rs.72,570",          up: true  },
         { label: "Rate",     value: "64% (so far)",      up: true  },
         ],
     },
@@ -240,7 +240,7 @@ export default function ReportsPage() {
                 </div>
                 <h3 className="text-white text-lg font-bold mb-1">April 2025 Snapshot</h3>
                 <p className="text-white/40 text-xs">
-                Apr 1–11, 2025 · Partial month · Income ₹91,000 · Spent ₹18,430 · Saved ₹72,570
+                Apr 1–11, 2025 · Partial month · Income Rs.91,000 · Spent Rs.18,430 · Saved Rs.72,570
                 </p>
             </div>
 

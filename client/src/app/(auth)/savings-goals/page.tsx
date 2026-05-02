@@ -31,28 +31,28 @@ type Goal = {
 const monthlyGoals: Goal[] = [
   {
     id: 1, icon: Flame, label: "No-Spend Weekend",
-    description: "Spend ₹0 on eating out every weekend this month",
+    description: "Spend Rs.0 on eating out every weekend this month",
     period: "monthly", target: 1, saved: 1,
     deadline: "Apr 30, 2025", color: "bg-orange-50", iconColor: "text-orange-500", accentHex: "#f97316",
     status: "met", streak: 3,
   },
   {
     id: 2, icon: Smartphone, label: "Gadget Fund",
-    description: "Save ₹5,000 this month for new earphones",
+    description: "Save Rs.5,000 this month for new earphones",
     period: "monthly", target: 5000, saved: 3200,
     deadline: "Apr 30, 2025", color: "bg-blue-50", iconColor: "text-blue-500", accentHex: "#3b82f6",
     status: "at-risk", streak: 1,
   },
   {
     id: 3, icon: Heart, label: "Health Buffer",
-    description: "Set aside ₹2,000/month for medical emergencies",
+    description: "Set aside Rs.2,000/month for medical emergencies",
     period: "monthly", target: 2000, saved: 2000,
     deadline: "Apr 30, 2025", color: "bg-red-50", iconColor: "text-red-500", accentHex: "#ef4444",
     status: "met", streak: 6,
   },
   {
     id: 4, icon: Umbrella, label: "Rainy Day Fund",
-    description: "Add ₹3,000 to emergency fund this month",
+    description: "Add Rs.3,000 to emergency fund this month",
     period: "monthly", target: 3000, saved: 800,
     deadline: "Apr 30, 2025", color: "bg-teal-50", iconColor: "text-teal-500", accentHex: "#14b8a6",
     status: "at-risk",
@@ -160,9 +160,9 @@ function GoalCard({ g }: { g: Goal }) {
         <div className="flex items-end justify-between mb-2">
           <div>
             <p className="text-gray-900 text-xl font-bold font-mono">
-              ₹{g.saved.toLocaleString()}
+              Rs.{g.saved.toLocaleString()}
             </p>
-            <p className="text-gray-400 text-[11px]">of ₹{g.target.toLocaleString()}</p>
+            <p className="text-gray-400 text-[11px]">of Rs.{g.target.toLocaleString()}</p>
           </div>
           <p className="text-2xl font-black font-mono" style={{ color: g.accentHex }}>{pct}%</p>
         </div>
@@ -191,7 +191,7 @@ function GoalCard({ g }: { g: Goal }) {
             {g.monthlyContribution && g.status !== "met" && (
               <div className="flex items-center gap-1.5 text-[11px] text-gray-500">
                 <TrendingUp size={11} className="text-[#00C950]" />
-                +₹{g.monthlyContribution.toLocaleString()}/mo target
+                +Rs.{g.monthlyContribution.toLocaleString()}/mo target
               </div>
             )}
             {g.streak && (
@@ -202,7 +202,7 @@ function GoalCard({ g }: { g: Goal }) {
             )}
             {remaining > 0 && g.status !== "met" && (
               <div className="ml-auto text-[11px] text-gray-400">
-                ₹{remaining.toLocaleString()} left
+                Rs.{remaining.toLocaleString()} left
               </div>
             )}
           </div>
@@ -237,7 +237,7 @@ export default function GoalsPage() {
         <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6 mb-5">
           <div>
             <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Total Saved</p>
-            <p className="text-white text-2xl font-bold font-mono">₹{(totalSaved / 100000).toFixed(1)}L</p>
+            <p className="text-white text-2xl font-bold font-mono">Rs.{(totalSaved / 100000).toFixed(1)}L</p>
             <p className="text-white/30 text-[11px] mt-1">across yearly goals</p>
           </div>
           <div>
@@ -265,7 +265,7 @@ export default function GoalsPage() {
           <div className="flex items-center justify-between mb-1.5">
             <p className="text-white/40 text-[11px]">Overall yearly goal progress</p>
             <p className="text-white/60 text-[11px] font-mono">
-              ₹{(totalSaved / 100000).toFixed(1)}L / ₹{(totalTargeted / 100000).toFixed(1)}L
+              Rs.{(totalSaved / 100000).toFixed(1)}L / Rs.{(totalTargeted / 100000).toFixed(1)}L
             </p>
           </div>
           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
@@ -281,8 +281,8 @@ export default function GoalsPage() {
           <Zap size={15} className="text-amber-500 shrink-0 mt-0.5" />
           <p className="text-amber-700 text-xs leading-relaxed">
             <span className="font-semibold">AI Suggestion: </span>
-            Your <span className="font-semibold">Europe Trip</span> goal is at risk — you're ₹94,000 behind schedule with only 2 months left.
-            Consider increasing your monthly contribution by ₹15,000 or extending the deadline.
+            Your <span className="font-semibold">Europe Trip</span> goal is at risk — you're Rs.94,000 behind schedule with only 2 months left.
+            Consider increasing your monthly contribution by Rs.15,000 or extending the deadline.
           </p>
         </div>
       )}
@@ -357,7 +357,7 @@ export default function GoalsPage() {
                 <p className="text-gray-400 text-[11px]">Completed {c.date} · {c.streak}-month streak</p>
               </div>
               <div className="text-right">
-                <p className="text-gray-800 text-sm font-semibold font-mono">₹{c.amount.toLocaleString()}</p>
+                <p className="text-gray-800 text-sm font-semibold font-mono">Rs.{c.amount.toLocaleString()}</p>
                 <div className="flex items-center gap-1 justify-end mt-0.5">
                   <CheckCircle2 size={11} className="text-[#00C950]" />
                   <span className="text-[#00C950] text-[11px] font-medium">Done</span>

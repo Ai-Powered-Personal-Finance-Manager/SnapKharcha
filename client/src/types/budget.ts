@@ -46,6 +46,7 @@
 
 
 import { LucideIcon } from "lucide-react";
+import type { ExpenseApiItem } from "./expense";
 
 export interface Budget {
     icon: LucideIcon;
@@ -69,15 +70,6 @@ export interface BudgetApiCategory {
     color: string;
 }
 
-export interface ExpenseData {
-    id: string;
-    amount: number;
-    date: string;
-    vendor: string;
-    note: string | null;
-    category: BudgetApiCategory;
-    categoryId?: string;
-}
 export interface BudgetApiItem {
     id: string;
     name: string;
@@ -91,7 +83,8 @@ export interface BudgetApiItem {
     createdAt: string;
     category: BudgetApiCategory;
     categoryId?: string;
-    expenses: ExpenseData[];
+    expenses: ExpenseApiItem[];
+    expenseCount?: number;
 }
 
 export interface BudgetSummary {

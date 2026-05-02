@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, ElementType, SetStateAction } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { LoginFormValues } from "../schemas";
 
 export interface RecentActivityInterface {
-  icon: string;
+  icon: string | ElementType;
   label: string;
   amount: string;
   time: string;

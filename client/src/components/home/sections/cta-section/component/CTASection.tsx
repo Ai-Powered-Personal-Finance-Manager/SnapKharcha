@@ -14,8 +14,8 @@ export const CTASection = () => {
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <PillBadge
           text=" Start Your Financial Journey Today"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/30 bg-white/10 text-white text-xs font-semibold mb-8 backdrop-blur-sm"
-          spanClassName="w-2 h-2 rounded-full bg-white animate-pulse"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00C950] bg-[#00C950]/10 text-[#00C950] text-xs font-semibold mb-8 backdrop-blur-sm"
+          spanClassName="w-2 h-2 rounded-full bg-[#00C950] animate-pulse"
         />
 
         <h2

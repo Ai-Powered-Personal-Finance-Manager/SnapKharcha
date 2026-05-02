@@ -19,7 +19,7 @@ export const FeatureHeader = () => {
         className="text-gray-400 text-lg max-w-2xl mx-auto"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        From snapping bills to deep financial forecasting — SnapKharcha brings
+        From snapping bills to deep financial forecasting, SnapKharcha brings
         together the tools that actually make a difference in your financial
         life.
       </p>

@@ -20,7 +20,7 @@ export const HowItWorksHeader = () => {
         className="text-gray-500 text-lg max-w-xl mx-auto"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        A clean, intuitive journey — start in minutes, gain meaningful insights
+        A clean, intuitive journey start in minutes, gain meaningful insights
         within days.
       </p>
     </div>
