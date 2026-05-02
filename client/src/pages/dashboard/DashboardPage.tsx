@@ -41,8 +41,8 @@ const stats: StatItem[] = [
     {
         label: "Total Balance",
         icon: <Wallet />,
-        value: "₹1,24,350",
-        change: "+₹3,200",
+        value: "Rs.1,24,350",
+        change: "+Rs.3,200",
         trend: "up",
         sub: "across all accounts",
         color: "green",
@@ -50,17 +50,17 @@ const stats: StatItem[] = [
     {
         label: "Monthly Spending",
         icon: <ArrowDownRight />,
-        value: "₹18,430",
+        value: "Rs.18,430",
         change: "+12% vs last month",
         trend: "up",
-        sub: "of ₹25,000 budget",
+        sub: "of Rs.25,000 budget",
         color: "red",
     },
     {
         label: "Monthly Income",
         icon: <ArrowUpRight />,
-        value: "₹52,000",
-        change: "+₹2,000",
+        value: "Rs.52,000",
+        change: "+Rs.2,000",
         trend: "up",
         sub: "salary + freelance",
         color: "green",
@@ -71,18 +71,18 @@ const stats: StatItem[] = [
         value: "64.6%",
         change: "+4.2%",
         trend: "up",
-        sub: "₹33,570 saved",
+        sub: "Rs.33,570 saved",
         color: "green",
     },
 ];
 
 const transactions = [
-    { icon: Utensils,   label: "Zomato Order",       category: "Food",          amount: "-₹340",   time: "2h ago",   color: "orange" },
-    { icon: ShoppingCart, label: "Amazon Purchase",  category: "Shopping",      amount: "-₹1,299", time: "5h ago",   color: "blue"   },
-    { icon: Zap,        label: "Electricity Bill",   category: "Utilities",     amount: "-₹890",   time: "Yesterday",color: "yellow" },
-    { icon: Car,        label: "Ola Ride",           category: "Transport",     amount: "-₹220",   time: "Yesterday",color: "green"  },
-    { icon: Coffee,     label: "Starbucks",          category: "Food",          amount: "-₹380",   time: "2 days ago",color: "amber" },
-    { icon: ShoppingBag,label: "Salary Credit",      category: "Income",        amount: "+₹50,000",time: "3 days ago",color: "green" },
+    { icon: Utensils,   label: "Zomato Order",       category: "Food",          amount: "-Rs.340",   time: "2h ago",   color: "orange" },
+    { icon: ShoppingCart, label: "Amazon Purchase",  category: "Shopping",      amount: "-Rs.1,299", time: "5h ago",   color: "blue"   },
+    { icon: Zap,        label: "Electricity Bill",   category: "Utilities",     amount: "-Rs.890",   time: "Yesterday",color: "yellow" },
+    { icon: Car,        label: "Ola Ride",           category: "Transport",     amount: "-Rs.220",   time: "Yesterday",color: "green"  },
+    { icon: Coffee,     label: "Starbucks",          category: "Food",          amount: "-Rs.380",   time: "2 days ago",color: "amber" },
+    { icon: ShoppingBag,label: "Salary Credit",      category: "Income",        amount: "+Rs.50,000",time: "3 days ago",color: "green" },
 ];
 
 const budgets = [
@@ -210,7 +210,7 @@ export default function DashboardPage() {
                         <div className="flex items-center justify-between mb-1.5">
                         <span className="text-gray-700 text-xs font-medium">{b.label}</span>
                         <span className={`text-xs font-mono font-semibold ${over ? "text-red-500" : "text-gray-500"}`}>
-                            ₹{b.spent.toLocaleString()} / ₹{b.total.toLocaleString()}
+                            Rs.{b.spent.toLocaleString()} / Rs.{b.total.toLocaleString()}
                         </span>
                         </div>
                         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -248,11 +248,11 @@ export default function DashboardPage() {
                 <div className="space-y-1.5">
                     <div>
                     <p className="text-[10px] text-gray-400">Saved so far</p>
-                    <p className="text-sm font-bold font-mono text-gray-900">₹1,44,000</p>
+                    <p className="text-sm font-bold font-mono text-gray-900">Rs.1,44,000</p>
                     </div>
                     <div>
                     <p className="text-[10px] text-gray-400">Remaining</p>
-                    <p className="text-sm font-bold font-mono text-gray-500">₹56,000</p>
+                    <p className="text-sm font-bold font-mono text-gray-500">Rs.56,000</p>
                     </div>
                 </div>
                 </div>
@@ -273,7 +273,7 @@ export default function DashboardPage() {
                     <p className="text-white/60 text-[11px] font-semibold uppercase tracking-wider">AI Insight</p>
                 </div>
                 <p className="text-white text-sm leading-relaxed">
-                    You spend <span className="text-[#00C950] font-semibold">34% more</span> on food on weekends. Cooking at home 2 days could save you <span className="text-[#00C950] font-semibold">₹1,200/month</span>.
+                    You spend <span className="text-[#00C950] font-semibold">34% more</span> on food on weekends. Cooking at home 2 days could save you <span className="text-[#00C950] font-semibold">Rs.1,200/month</span>.
                 </p>
                 </div>
             </div>

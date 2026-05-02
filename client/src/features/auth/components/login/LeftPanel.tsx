@@ -73,7 +73,7 @@ const MiniDashboard = () => {
             className="text-white text-3xl font-extrabold"
             style={{ fontFamily: "'Syne', sans-serif" }}
           >
-            ₹14,230
+            Rs.14,230
           </p>
         </div>
         <div className="text-right">
@@ -87,7 +87,7 @@ const MiniDashboard = () => {
             className="text-[#00C950] text-xl font-bold"
             style={{ fontFamily: "'Syne', sans-serif" }}
           >
-            ₹5,770
+            Rs.5,770
           </p>
         </div>
       </div>
@@ -98,7 +98,7 @@ const MiniDashboard = () => {
         className="text-gray-500 text-xs"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        71% of ₹20,000 budget used
+        71% of Rs.20,000 budget used
       </p>
     </div>
   );

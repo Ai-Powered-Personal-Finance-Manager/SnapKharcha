@@ -15,7 +15,7 @@ import { useRouter } from "next/navigation";
 import { PageHeader } from "@/src/components/PageHeader";
 import ExpenseSkeletonLoading from "@/src/components/loading-skeletons/ExpenseSkeletonLoading";
 
-const formatCurrency = (value: number) => `₹${value.toLocaleString()}`;
+const formatCurrency = (value: number) => `Rs.${value.toLocaleString()}`;
 
 export function ExpensesPage() {
     const router = useRouter();

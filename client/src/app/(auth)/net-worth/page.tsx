@@ -50,10 +50,10 @@ const assets: Asset[] = [
 ];
 
 const liabilities: Liability[] = [
-  { id: 1, icon: Home,       label: "Home Loan",          description: "SBI Housing · ₹45L outstanding",value: 4500000, category: "loan",   iconBg: "bg-red-50",   iconColor: "text-red-500"  },
-  { id: 2, icon: Car,        label: "Car Loan",           description: "HDFC Auto · ₹1.8L outstanding", value: 180000,  category: "loan",   iconBg: "bg-red-50",   iconColor: "text-red-500"  },
+  { id: 1, icon: Home,       label: "Home Loan",          description: "SBI Housing · Rs.45L outstanding",value: 4500000, category: "loan",   iconBg: "bg-red-50",   iconColor: "text-red-500"  },
+  { id: 2, icon: Car,        label: "Car Loan",           description: "HDFC Auto · Rs.1.8L outstanding", value: 180000,  category: "loan",   iconBg: "bg-red-50",   iconColor: "text-red-500"  },
   { id: 3, icon: CreditCard, label: "Credit Card",        description: "ICICI Coral · current balance",  value: 12400,   category: "credit", iconBg: "bg-pink-50",  iconColor: "text-pink-500" },
-  { id: 4, icon: Banknote,   label: "Personal Loan",      description: "Bajaj Finance · ₹80K left",      value: 80000,   category: "other",  iconBg: "bg-orange-50",iconColor: "text-orange-500"},
+  { id: 4, icon: Banknote,   label: "Personal Loan",      description: "Bajaj Finance · Rs.80K left",      value: 80000,   category: "other",  iconBg: "bg-orange-50",iconColor: "text-orange-500"},
 ];
 
 // ─── Computed ─────────────────────────────────────────────────
@@ -94,7 +94,7 @@ function AssetRow({ a }: { a: Asset }) {
         </div>
       )}
       <p className="text-gray-900 text-sm font-semibold font-mono shrink-0 w-28 text-right">
-        ₹{a.value >= 100000 ? `${(a.value / 100000).toFixed(2)}L` : a.value.toLocaleString()}
+        Rs.{a.value >= 100000 ? `${(a.value / 100000).toFixed(2)}L` : a.value.toLocaleString()}
       </p>
       <button className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-300 hover:text-gray-500 shrink-0">
         <Pencil size={13} />
@@ -115,7 +115,7 @@ function LiabilityRow({ l }: { l: Liability }) {
         <p className="text-gray-400 text-[11px]">{l.description}</p>
       </div>
       <p className="text-red-500 text-sm font-semibold font-mono shrink-0 w-28 text-right">
-        −₹{l.value >= 100000 ? `${(l.value / 100000).toFixed(2)}L` : l.value.toLocaleString()}
+        −Rs.{l.value >= 100000 ? `${(l.value / 100000).toFixed(2)}L` : l.value.toLocaleString()}
       </p>
       <button className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-300 hover:text-gray-500 shrink-0">
         <Pencil size={13} />
@@ -158,23 +158,23 @@ export default function NetWorthPage() {
           <div className="md:col-span-1">
             <p className="text-white/40 text-[11px] uppercase tracking-wider mb-2">Net Worth</p>
             <p className="text-white text-3xl font-black font-mono">
-              ₹{(netWorth / 100000).toFixed(1)}<span className="text-white/50 text-xl font-bold">L</span>
+              Rs.{(netWorth / 100000).toFixed(1)}<span className="text-white/50 text-xl font-bold">L</span>
             </p>
             <div className={`flex items-center gap-1.5 mt-2 text-xs font-semibold ${Number(nwChangePct) >= 0 ? "text-[#00C950]" : "text-red-400"}`}>
               {Number(nwChangePct) >= 0 ? <TrendingUp size={13} /> : <TrendingDown size={13} />}
-              +₹{(nwChange / 1000).toFixed(0)}K ({nwChangePct}%) vs last month
+              +Rs.{(nwChange / 1000).toFixed(0)}K ({nwChangePct}%) vs last month
             </div>
           </div>
 
           {/* Assets / Liabilities */}
           <div>
             <p className="text-white/40 text-[11px] uppercase tracking-wider mb-2">Total Assets</p>
-            <p className="text-[#00C950] text-2xl font-bold font-mono">₹{(totalAssets / 100000).toFixed(1)}L</p>
+            <p className="text-[#00C950] text-2xl font-bold font-mono">Rs.{(totalAssets / 100000).toFixed(1)}L</p>
             <p className="text-white/30 text-[11px] mt-1">{assets.length} items tracked</p>
           </div>
           <div>
             <p className="text-white/40 text-[11px] uppercase tracking-wider mb-2">Total Liabilities</p>
-            <p className="text-red-400 text-2xl font-bold font-mono">−₹{(totalLiabilities / 100000).toFixed(1)}L</p>
+            <p className="text-red-400 text-2xl font-bold font-mono">−Rs.{(totalLiabilities / 100000).toFixed(1)}L</p>
             <p className="text-white/30 text-[11px] mt-1">{liabilities.length} outstanding debts</p>
           </div>
         </div>
@@ -216,7 +216,7 @@ export default function NetWorthPage() {
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: categoryMeta[cat].hex }} />
               </div>
               <p className="text-gray-900 text-lg font-bold font-mono">
-                ₹{total >= 100000 ? `${(total / 100000).toFixed(1)}L` : total.toLocaleString()}
+                Rs.{total >= 100000 ? `${(total / 100000).toFixed(1)}L` : total.toLocaleString()}
               </p>
               <p className="text-gray-400 text-[11px] mt-1">{items.length} {items.length === 1 ? "item" : "items"}</p>
               <div className="mt-3 h-1 bg-gray-100 rounded-full overflow-hidden">
@@ -247,7 +247,7 @@ export default function NetWorthPage() {
               <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: categoryMeta[cat].hex }} />
               <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">{categoryMeta[cat].label}</p>
               <span className="ml-auto font-mono text-[11px] text-gray-500">
-                ₹{catTotal(cat) >= 100000 ? `${(catTotal(cat) / 100000).toFixed(2)}L` : catTotal(cat).toLocaleString()}
+                Rs.{catTotal(cat) >= 100000 ? `${(catTotal(cat) / 100000).toFixed(2)}L` : catTotal(cat).toLocaleString()}
               </span>
             </div>
             <div className="divide-y divide-gray-50">
@@ -288,7 +288,7 @@ export default function NetWorthPage() {
         <div className="flex items-center justify-between px-5 py-3.5 bg-red-50/40 border-t border-red-50">
           <p className="text-gray-600 text-sm font-semibold">Total Liabilities</p>
           <p className="text-red-500 text-sm font-bold font-mono">
-            −₹{(totalLiabilities / 100000).toFixed(2)}L
+            −Rs.{(totalLiabilities / 100000).toFixed(2)}L
           </p>
         </div>
       </div>
@@ -319,10 +319,10 @@ export default function NetWorthPage() {
             })}
           </div>
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
-            <p className="text-gray-400 text-[11px]">May 2024 — ₹42L</p>
+            <p className="text-gray-400 text-[11px]">May 2024 — Rs.42L</p>
             <div className="flex items-center gap-1.5 text-[#00C950] text-[11px] font-semibold">
               <TrendingUp size={12} />
-              +₹25L (+59.5%) in 12 months
+              +Rs.25L (+59.5%) in 12 months
             </div>
           </div>
         </div>

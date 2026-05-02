@@ -40,7 +40,7 @@ const accounts: BankAccount[] = [
   },
   {
     id: 2,
-    bankName: "State Bank of India", bankShort: "SBI", bankColor: "text-[#22409A]", bankBg: "bg-indigo-50",
+    bankName: "State Bank of Nepal", bankShort: "SBI", bankColor: "text-[#22409A]", bankBg: "bg-indigo-50",
     accountType: "savings",   accountNumber: "•••• •••• 7890",  ifsc: "SBIN0012345",
     balance: 200000,          lastSynced: "1 hour ago",          syncStatus: "synced",
     isPrimary: false,
@@ -142,10 +142,10 @@ function BankCard({ acc }: { acc: BankAccount }) {
           </div>
           {balanceVisible ? (
             <p className={`text-2xl font-black font-mono ${isCredit ? "text-red-500" : "text-gray-900"}`}>
-              {isCredit ? "−" : ""}₹{Math.abs(acc.balance).toLocaleString()}
+              {isCredit ? "−" : ""}Rs.{Math.abs(acc.balance).toLocaleString()}
             </p>
           ) : (
-            <p className="text-2xl font-black text-gray-200 tracking-widest">₹•••••</p>
+            <p className="text-2xl font-black text-gray-200 tracking-widest">Rs.•••••</p>
           )}
         </div>
 
@@ -237,7 +237,7 @@ export default function BanksPage() {
         <div className="relative grid grid-cols-2 md:grid-cols-4 gap-6">
           <div>
             <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Total Balance</p>
-            <p className="text-white text-2xl font-black font-mono">₹{(totalBalance / 100000).toFixed(2)}L</p>
+            <p className="text-white text-2xl font-black font-mono">Rs.{(totalBalance / 100000).toFixed(2)}L</p>
             <p className="text-white/30 text-[11px] mt-1">across {accounts.filter(a => a.accountType !== "credit").length} accounts</p>
           </div>
           <div>
@@ -254,7 +254,7 @@ export default function BanksPage() {
           </div>
           <div>
             <p className="text-white/40 text-[11px] uppercase tracking-wider mb-1">Credit Outstanding</p>
-            <p className="text-red-400 text-2xl font-black font-mono">₹12,400</p>
+            <p className="text-red-400 text-2xl font-black font-mono">Rs.12,400</p>
             <p className="text-white/30 text-[11px] mt-1">ICICI credit card</p>
           </div>
         </div>

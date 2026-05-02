@@ -1,64 +1,37 @@
 import type { ElementType } from "react";
 
+export type IncomeSourceType = "FIXED" | "VARIABLE";
 export type IncomeFormType = "fixed" | "variable";
 export type IncomeFormStatus = "active" | "pause";
-export type IncomeSourceType = "FIXED" | "VARIABLE";
 
-export interface IncomeApiEntry {
-    id: string;
-    amount: number;
-    note: string | null;
-    date: string;
-    sourceId: string;
-    userId: string;
-    createdAt?: string;
-    updatedAt?: string;
-}
+// ─── API Models ───────────────────────────────────────────────────────────────
 
 export interface IncomeApiSource {
     id: string;
-    name: string;
-    description: string | null;
-    sourceType: IncomeSourceType;
-    amount: number | null;
-    creditDay: number | null;
-    active: boolean;
+    source: string;
+    company: string;
+    position: string;
+    note?: string | null;
+    status: "ACTIVE" | "PAUSED";
+    type: IncomeSourceType;
+    amount: number;
+    creditDay?: number | null;
     userId: string;
     createdAt: string;
-    updatedAt?: string;
-    entries: IncomeApiEntry[];
-    thisMonth?: number;
-    lastMonth?: number;
-    entryCount?: number;
-}
-
-export interface IncomeSummary {
-    totalMonthlyIncome: number;
-    fixedIncome: number;
-    variableIncome: number;
-    lastMonthIncome: number;
-    delta: number;
-    deltaPositive: boolean;
-    fixedActiveCount: number;
-    fixedPausedCount: number;
-    variableSourceCount: number;
-    entryCount: number;
-}
-
-export interface IncomeHistoryPoint {
-    key: string;
-    label: string;
-    total: number;
-    fixed: number;
-    variable: number;
-    isCurrent: boolean;
+    updatedAt: string;
 }
 
 export interface IncomeApiListData {
-    fixedSources: IncomeApiSource[];
-    variableSources: IncomeApiSource[];
+    incomes: IncomeApiSource[];
     summary: IncomeSummary;
-    history: IncomeHistoryPoint[];
+}
+
+export interface IncomeSummary {
+    totalIncome: number;
+    fixedIncome: number;
+    variableIncome: number;
+    activeIncome: number;
+    endedIncome: number;
 }
 
 export interface IncomeApiListResponse {
@@ -73,16 +46,27 @@ export interface IncomeSourceMutationResponse {
     data?: IncomeApiSource;
 }
 
-export interface IncomeEntryMutationResponse {
-    success: boolean;
-    message: string;
-    data?: IncomeApiEntry;
-}
-
 export interface DeleteIncomeResponse {
     success: boolean;
     message: string;
 }
+
+// ─── Payloads ─────────────────────────────────────────────────────────────────
+
+export type CreateIncomeSourcePayload = {
+    source: string;
+    company: string;
+    position: string;
+    note?: string;
+    status: "ACTIVE" | "PAUSED";
+    type: IncomeSourceType;
+    amount: number;
+    creditDay?: number | null;
+};
+
+export type UpdateIncomeSourcePayload = Partial<CreateIncomeSourcePayload>;
+
+// ─── Form Values ──────────────────────────────────────────────────────────────
 
 export type IncomeSourceFormValues = {
     type: IncomeFormType;
@@ -95,49 +79,16 @@ export type IncomeSourceFormValues = {
     creditDay: string;
 };
 
-export type IncomeEntryFormValues = {
-    amount: string;
-    note: string;
-    date: string;
-};
-
-export type CreateIncomeSourcePayload = {
-    name: string;
-    description?: string;
-    sourceType: IncomeSourceType;
-    amount?: number | null;
-    creditDay?: number | null;
-    active: boolean;
-};
-
-export type UpdateIncomeSourcePayload = Partial<CreateIncomeSourcePayload>;
-
-export type CreateIncomeEntryPayload = {
-    sourceId: string;
-    amount: number;
-    note?: string;
-    date: string;
-};
-
-export type UpdateIncomeEntryPayload = Partial<Omit<CreateIncomeEntryPayload, "sourceId">>;
-
-export interface IncomeDisplayEntry extends IncomeApiEntry {
-    displayDate: string;
-}
+// ─── Display Models ───────────────────────────────────────────────────────────
 
 export interface IncomeDisplaySource extends IncomeApiSource {
     formType: IncomeFormType;
-    status: IncomeFormStatus;
-    company: string;
-    position: string;
-    sourceNote: string;
+    formStatus: IncomeFormStatus;
     icon: ElementType;
     iconBg: string;
     iconColor: string;
     accentHex: string;
-    currentMonthAmount: number;
-    previousMonthAmount: number;
     statusLabel: string;
     typeLabel: string;
-    latestEntries: IncomeDisplayEntry[];
+    creditDayLabel: string;
 }

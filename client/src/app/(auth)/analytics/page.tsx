@@ -72,10 +72,10 @@ const savingRate = [
 
 // AI insights
 const insights = [
-    { tag: "Overspend",  color: "text-red-500",    bg: "bg-red-50",       text: "Weekend food delivery spend is 3× your weekday average. Cooking at home 2 Saturdays could save ₹1,800/month." },
+    { tag: "Overspend",  color: "text-red-500",    bg: "bg-red-50",       text: "Weekend food delivery spend is 3× your weekday average. Cooking at home 2 Saturdays could save Rs.1,800/month." },
     { tag: "Trend",      color: "text-amber-600",  bg: "bg-amber-50",     text: "Shopping spend has risen 3 months in a row — up 34% since January. Your Amazon orders are the main driver." },
     { tag: "Win 🎉",     color: "text-[#00C950]",  bg: "bg-[#00C950]/8",  text: "Your savings rate this month is 64% — the highest in 6 months. Keep it up through May!" },
-    { tag: "Tip",        color: "text-blue-500",   bg: "bg-blue-50",      text: "You have 5 active subscriptions totalling ₹649/month. Review if you're using all of them." },
+    { tag: "Tip",        color: "text-blue-500",   bg: "bg-blue-50",      text: "You have 5 active subscriptions totalling Rs.649/month. Review if you're using all of them." },
 ];
 
 // ─── Mini bar chart helper ─────────────────────────────────────
@@ -96,7 +96,7 @@ function MiniBar({ value, max, color, label, subLabel }: {
             </div>
         </div>
         <span className="text-gray-700 text-xs font-semibold font-mono w-20 text-right shrink-0">
-            ₹{value.toLocaleString()}
+            Rs.{value.toLocaleString()}
         </span>
         </div>
     );
@@ -166,10 +166,10 @@ export default function AnalyticsPage() {
         {/* KPI strip */}
         <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
             {[
-            { label: "Total Spent",     value: `₹${totalExpense.toLocaleString()}`,  sub: "this month",          trend: "+12% vs Mar",   up: false, color: "text-gray-900" },
-            { label: "Total Income",    value: `₹${totalIncome.toLocaleString()}`,   sub: "this month",          trend: "+28% vs Mar",   up: true,  color: "text-gray-900" },
-            { label: "Saved",           value: `₹${savedThisMonth.toLocaleString()}`,sub: "net savings",         trend: "+18% vs Mar",   up: true,  color: "text-[#00C950]"},
-            { label: "Avg Daily Spend", value: "₹614",                              sub: "per day this month",  trend: "−8% vs Mar",    up: true,  color: "text-gray-900" },
+            { label: "Total Spent",     value: `Rs.${totalExpense.toLocaleString()}`,  sub: "this month",          trend: "+12% vs Mar",   up: false, color: "text-gray-900" },
+            { label: "Total Income",    value: `Rs.${totalIncome.toLocaleString()}`,   sub: "this month",          trend: "+28% vs Mar",   up: true,  color: "text-gray-900" },
+            { label: "Saved",           value: `Rs.${savedThisMonth.toLocaleString()}`,sub: "net savings",         trend: "+18% vs Mar",   up: true,  color: "text-[#00C950]"},
+            { label: "Avg Daily Spend", value: "Rs.614",                              sub: "per day this month",  trend: "−8% vs Mar",    up: true,  color: "text-gray-900" },
             ].map((k) => (
             <div key={k.label} className="bg-white rounded-2xl border border-gray-100 p-5">
                 <p className="text-gray-400 text-xs">{k.label}</p>
@@ -213,14 +213,14 @@ export default function AnalyticsPage() {
                         <div className="flex-1 rounded-t-md transition-all duration-700 group relative"
                         style={{ height: `${incH * 1.6}px`, backgroundColor: isCurrent ? "#00C950" : "#d1fae5" }}>
                         <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-10">
-                            ₹{(d.income / 1000).toFixed(0)}k
+                            Rs.{(d.income / 1000).toFixed(0)}k
                         </div>
                         </div>
                         {/* Expense bar */}
                         <div className="flex-1 rounded-t-md transition-all duration-700 group relative"
                         style={{ height: `${expH * 1.6}px`, backgroundColor: isCurrent ? "#fca5a5" : "#f3f4f6" }}>
                         <div className="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-10">
-                            ₹{(d.expense / 1000).toFixed(0)}k
+                            Rs.{(d.expense / 1000).toFixed(0)}k
                         </div>
                         </div>
                     </div>
@@ -245,7 +245,7 @@ export default function AnalyticsPage() {
                 <div className="relative">
                 <DonutChart />
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <p className="text-gray-900 text-sm font-bold font-mono">₹18.4k</p>
+                    <p className="text-gray-900 text-sm font-bold font-mono">Rs.18.4k</p>
                     <p className="text-gray-400 text-[10px]">total</p>
                 </div>
                 </div>
@@ -280,7 +280,7 @@ export default function AnalyticsPage() {
             <div className="flex items-center justify-between mb-5">
                 <div>
                 <h3 className="text-gray-900 font-semibold text-sm">Daily Spending</h3>
-                <p className="text-gray-400 text-[11px] mt-0.5">Last 14 days · avg ₹614/day</p>
+                <p className="text-gray-400 text-[11px] mt-0.5">Last 14 days · avg Rs.614/day</p>
                 </div>
                 <div className="flex items-center gap-1.5 text-[11px] text-[#00C950] font-semibold bg-[#00C950]/8 px-2.5 py-1 rounded-full">
                 <TrendingDown size={11} /> −8% vs last period
@@ -295,7 +295,7 @@ export default function AnalyticsPage() {
                     <div key={i} className="flex-1 flex flex-col items-center gap-1.5 group relative">
                     {/* Tooltip */}
                     <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-10">
-                        ₹{v.toLocaleString()}
+                        Rs.{v.toLocaleString()}
                     </div>
                     <div
                         className={`w-full rounded-t-md transition-all duration-500 cursor-pointer hover:opacity-80 ${v === 0 ? "bg-gray-100 rounded-md" : isHigh ? "bg-red-400" : "bg-[#00C950]"}`}
@@ -315,7 +315,7 @@ export default function AnalyticsPage() {
             <div className="mt-4 flex items-center gap-2 px-3 py-2.5 bg-red-50 rounded-xl">
                 <div className="w-2 h-2 rounded-full bg-red-400 shrink-0" />
                 <p className="text-red-600 text-[11px]">
-                Highest spend: <span className="font-semibold">₹3,200</span> on Apr 14 · Shopping spree
+                Highest spend: <span className="font-semibold">Rs.3,200</span> on Apr 14 · Shopping spree
                 </p>
             </div>
             </div>
@@ -340,7 +340,7 @@ export default function AnalyticsPage() {
                 return (
                     <div key={d.day} className="flex-1 flex flex-col items-center gap-2 group relative">
                     <div className="absolute -top-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap z-10">
-                        ₹{d.avg}
+                        Rs.{d.avg}
                     </div>
                     <div className="w-full flex flex-col justify-end" style={{ height: "120px" }}>
                         <div
@@ -390,9 +390,9 @@ export default function AnalyticsPage() {
                         </div>
                         <div className="flex items-center gap-2">
                         <span className={`text-xs font-semibold font-mono ${overBudget ? "text-red-500" : "text-gray-700"}`}>
-                            ₹{c.amount.toLocaleString()}
+                            Rs.{c.amount.toLocaleString()}
                         </span>
-                        <span className="text-gray-300 text-[11px]">/ ₹{budget.toLocaleString()}</span>
+                        <span className="text-gray-300 text-[11px]">/ Rs.{budget.toLocaleString()}</span>
                         </div>
                     </div>
                     {/* Dual bar: budget (grey) behind, spent in front */}
@@ -502,7 +502,7 @@ export default function AnalyticsPage() {
 
                     {/* Amount */}
                     <p className="text-gray-800 text-sm font-semibold font-mono shrink-0 w-20 text-right">
-                    ₹{m.amount.toLocaleString()}
+                    Rs.{m.amount.toLocaleString()}
                     </p>
                 </div>
                 );

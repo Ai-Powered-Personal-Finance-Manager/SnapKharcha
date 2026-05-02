@@ -162,7 +162,7 @@ export const ExpenseFormModal = ({
                                     <p className="text-sm font-semibold text-gray-800">{selectedBudget.name}</p>
                                     <p className="text-[11px] text-gray-400">{selectedBudget.category.name}</p>
                                     <p className="text-[11px] text-gray-400">
-                                        ₹{Math.max(selectedBudget.amount - (selectedBudget.spendAmount ?? 0), 0).toLocaleString()} remaining of ₹{selectedBudget.amount.toLocaleString()}
+                                        Rs.{Math.max(selectedBudget.amount - (selectedBudget.spendAmount ?? 0), 0).toLocaleString()} remaining of Rs.{selectedBudget.amount.toLocaleString()}
                                     </p>
                                 </div>
                                 <CheckCircle2 size={16} className="shrink-0 text-[#00C950]" />
@@ -199,7 +199,7 @@ export const ExpenseFormModal = ({
                                                     <p className="truncate text-xs font-semibold text-gray-700">{budget.name}</p>
                                                     <p className="truncate text-[10px] text-gray-400">{budget.category.name}</p>
                                                     <p className={`mt-0.5 text-[10px] font-mono ${isFull ? "text-red-400" : "text-gray-400"}`}>
-                                                        {isFull ? "Budget full" : `₹${budgetRemaining.toLocaleString()} left`}
+                                                        {isFull ? "Budget full" : `Rs.${budgetRemaining.toLocaleString()} left`}
                                                     </p>
                                                     <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-gray-100">
                                                         <div
@@ -236,7 +236,7 @@ export const ExpenseFormModal = ({
                                             : "border-gray-200 focus-within:border-[#00C950] focus-within:bg-[#00C950]/2"
                                     }`}
                                 >
-                                    <span className="text-sm font-semibold text-gray-500">₹</span>
+                                    <span className="text-sm font-semibold text-gray-500">Rs.</span>
                                     <input
                                         type="number"
                                         placeholder="0"
@@ -251,11 +251,11 @@ export const ExpenseFormModal = ({
                                     <div className={`mt-1.5 flex items-center gap-1.5 text-[11px] ${wouldExceed ? "text-red-500" : "text-gray-400"}`}>
                                         {wouldExceed ? (
                                             <>
-                                                <AlertTriangle size={11} /> Exceeds remaining budget of ₹{remaining.toLocaleString()}
+                                                <AlertTriangle size={11} /> Exceeds remaining budget of Rs.{remaining.toLocaleString()}
                                             </>
                                         ) : (
                                             <>
-                                                <Wallet size={11} /> ₹{remaining.toLocaleString()} available in {selectedBudget.name}
+                                                <Wallet size={11} /> Rs.{remaining.toLocaleString()} available in {selectedBudget.name}
                                             </>
                                         )}
                                     </div>

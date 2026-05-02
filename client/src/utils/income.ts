@@ -4,7 +4,6 @@ import {
     Building2,
     CheckCircle2,
     Clock,
-    Code2,
     Home,
     ShoppingBag,
     TrendingDown,
@@ -12,20 +11,14 @@ import {
     Youtube,
 } from "lucide-react";
 import type {
-    CreateIncomeEntryPayload,
     CreateIncomeSourcePayload,
-    IncomeApiEntry,
     IncomeApiSource,
-    IncomeDisplayEntry,
     IncomeDisplaySource,
     IncomeFormStatus,
     IncomeFormType,
     IncomeSourceFormValues,
-    IncomeSourceType,
-    IncomeEntryFormValues,
-    UpdateIncomeSourcePayload,
 } from "@/src/types/income";
-import { ElementType } from "react";
+import type { ElementType } from "react";
 
 const incomeThemes = [
     {
@@ -65,234 +58,121 @@ const incomeThemes = [
     },
 ] as const;
 
-const paymentFallbackIcon = Banknote;
+// ─── Formatters ───────────────────────────────────────────────────────────────
 
-export const formatIncomeAmount = (value: number) => `₹${value.toLocaleString()}`;
+export const formatIncomeAmount = (value: number) =>
+    `Rs.${value.toLocaleString("en-IN")}`;
 
 export const formatIncomeDelta = (value: number) => {
     const prefix = value >= 0 ? "+" : "-";
-    return `${prefix}₹${Math.abs(value).toLocaleString()}`;
+    return `${prefix}Rs.${Math.abs(value).toLocaleString("en-IN")}`;
 };
 
 export const formatCreditDay = (value?: number | null) => {
-    if (!value) {
-        return "—";
-    }
-
-    const suffix = value % 10 === 1 && value % 100 !== 11 ? "st" : value % 10 === 2 && value % 100 !== 12 ? "nd" : value % 10 === 3 && value % 100 !== 13 ? "rd" : "th";
+    if (!value) return "—";
+    const suffix =
+        value % 10 === 1 && value % 100 !== 11 ? "st" :
+        value % 10 === 2 && value % 100 !== 12 ? "nd" :
+        value % 10 === 3 && value % 100 !== 13 ? "rd" : "th";
     return `${value}${suffix}`;
 };
 
 export const formatIncomeDate = (value?: string | null) => {
-    if (!value) {
-        return "—";
-    }
-
+    if (!value) return "—";
     const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return "—";
-    }
-
+    if (Number.isNaN(date.getTime())) return "—";
     return date.toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
+        day: "numeric", month: "short", year: "numeric",
     });
 };
 
 export const formatIncomeDateInput = (value?: string | null) => {
-    if (!value) {
-        return "";
-    }
-
+    if (!value) return "";
     const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) {
-        return "";
-    }
-
+    if (Number.isNaN(date.getTime())) return "";
     return date.toISOString().slice(0, 10);
 };
 
-export const formatIncomeShortDate = (value?: string | null) => {
-    if (!value) {
-        return "—";
-    }
+// ─── Normalizers ──────────────────────────────────────────────────────────────
 
-    const date = new Date(value);
+export const toFormType = (type: string): IncomeFormType =>
+    type === "VARIABLE" ? "variable" : "fixed";
 
-    if (Number.isNaN(date.getTime())) {
-        return "—";
-    }
+export const toFormStatus = (status: string): IncomeFormStatus =>
+    status === "ACTIVE" ? "active" : "pause";
 
-    return date.toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "short",
-    });
-};
+export const toApiStatus = (status: IncomeFormStatus): "ACTIVE" | "PAUSED" =>
+    status === "active" ? "ACTIVE" : "PAUSED";
 
-export const normalizeIncomeFormType = (value?: string | null): IncomeFormType => {
-    return value?.toUpperCase() === "VARIABLE" ? "variable" : "fixed";
-};
+// ─── Form Builder ─────────────────────────────────────────────────────────────
 
-export const normalizeIncomeSourceType = (value?: string | null): IncomeSourceType => {
-    return value?.toUpperCase() === "VARIABLE" ? "VARIABLE" : "FIXED";
-};
+export const buildIncomeSourceFormValues = (
+    source?: IncomeApiSource | null,
+    defaultType: IncomeFormType = "fixed",
+): IncomeSourceFormValues => ({
+    type: source ? toFormType(source.type) : defaultType,
+    source: source?.source ?? "",
+    company: source?.company ?? "",
+    position: source?.position ?? "",
+    amount: source ? String(source.amount ?? "") : "",
+    status: source ? toFormStatus(source.status) : "active",
+    note: source?.note ?? "",
+    creditDay: source?.creditDay ? String(source.creditDay) : "",
+});
 
-export const normalizeIncomeStatus = (active?: boolean | null): IncomeFormStatus => {
-    return active === false ? "pause" : "active";
-};
-
-export const splitIncomeDescription = (description?: string | null) => {
-    if (!description) {
-        return {
-            company: "",
-            position: "",
-            note: "",
-        };
-    }
-
-    const parts = description
-        .split(/\s*(?:\u00b7|\|)\s*/)
-        .map((part) => part.trim())
-        .filter(Boolean);
-
-    return {
-        company: parts[0] ?? "",
-        position: parts[1] ?? "",
-        note: parts.slice(2).join(" · "),
-    };
-};
-
-export const composeIncomeDescription = (company: string, position: string, note: string) => {
-    return [company.trim(), position.trim(), note.trim()].filter(Boolean).join(" · ");
-};
-
-export const buildIncomeSourceFormValues = (source?: IncomeApiSource | null, defaultType: IncomeFormType = "fixed"): IncomeSourceFormValues => {
-    const type = source ? normalizeIncomeFormType(source.sourceType) : defaultType;
-    const descriptionParts = splitIncomeDescription(source?.description);
-
-    return {
-        type,
-        source: source?.name ?? "",
-        company: descriptionParts.company,
-        position: descriptionParts.position,
-        amount: source?.sourceType === "FIXED" ? String(source.amount ?? "") : "",
-        status: normalizeIncomeStatus(source?.active),
-        note: descriptionParts.note,
-        creditDay: source?.sourceType === "FIXED" ? String(source.creditDay ?? 1) : "",
-    };
-};
-
-export const buildIncomeEntryFormValues = (entry?: IncomeApiEntry | null): IncomeEntryFormValues => {
-    return {
-        amount: entry ? String(entry.amount) : "",
-        note: entry?.note ?? "",
-        date: formatIncomeDateInput(entry?.date ?? null),
-    };
-};
+// ─── Payload Builder ──────────────────────────────────────────────────────────
 
 export const toIncomeSourcePayload = (values: IncomeSourceFormValues): CreateIncomeSourcePayload => {
     const isFixed = values.type === "fixed";
-    const description = composeIncomeDescription(values.company, values.position, values.note);
 
     return {
-        name: values.source.trim(),
-        description: description ? description : undefined,
-        sourceType: isFixed ? "FIXED" : "VARIABLE",
-        amount: isFixed ? Number(values.amount) : null,
-        creditDay: isFixed ? Number(values.creditDay) : null,
-        active: values.status === "active",
+        source: values.source.trim(),
+        company: values.company.trim(),
+        position: values.position.trim(),
+        status: toApiStatus(values.status),
+        type: isFixed ? "FIXED" : "VARIABLE",
+        amount: Number(values.amount) || 0,
+        ...(values.note.trim() && { note: values.note.trim() }),
+        ...(isFixed && { creditDay: Number(values.creditDay) }),
     };
 };
 
-export const toIncomeSourceUpdatePayload = (values: IncomeSourceFormValues): UpdateIncomeSourcePayload => {
-    return toIncomeSourcePayload(values);
+// ─── Theme ────────────────────────────────────────────────────────────────────
+
+const getIncomeTheme = (source: string, company: string, type: string) => {
+    const text = `${source} ${company}`.toLowerCase();
+    const preset = incomeThemes.find((t) => t.match.some((kw) => text.includes(kw)));
+
+    if (preset) return preset;
+
+    return type === "VARIABLE"
+        ? { icon: Banknote, iconBg: "bg-amber-50", iconColor: "text-amber-600", accentHex: "#f59e0b" }
+        : { icon: Banknote, iconBg: "bg-gray-100", iconColor: "text-gray-500", accentHex: "#94a3b8" };
 };
 
-export const toIncomeEntryPayload = (
-    values: IncomeEntryFormValues,
-    sourceId: string,
-): CreateIncomeEntryPayload => {
-    return {
-        sourceId,
-        amount: Number(values.amount),
-        note: values.note.trim() ? values.note.trim() : undefined,
-        date: new Date(`${values.date}T00:00:00`).toISOString(),
-    };
-};
-
-const getIncomeTheme = (name: string, description: string | null, sourceType: IncomeSourceType) => {
-    const normalizedText = `${name} ${description ?? ""}`.toLowerCase();
-    const preset = incomeThemes.find((theme) => theme.match.some((keyword) => normalizedText.includes(keyword)));
-
-    if (preset) {
-        return preset;
-    }
-
-    if (sourceType === "VARIABLE") {
-        return {
-            icon: paymentFallbackIcon,
-            iconBg: "bg-amber-50",
-            iconColor: "text-amber-600",
-            accentHex: "#f59e0b",
-        };
-    }
-
-    return {
-        icon: paymentFallbackIcon,
-        iconBg: "bg-gray-100",
-        iconColor: "text-gray-500",
-        accentHex: "#94a3b8",
-    };
-};
-
-export const toIncomeDisplayEntry = (entry: IncomeApiEntry): IncomeDisplayEntry => {
-    return {
-        ...entry,
-        note: entry.note ?? null,
-        displayDate: formatIncomeShortDate(entry.date),
-    };
-};
+// ─── Display Mapper ───────────────────────────────────────────────────────────
 
 export const toIncomeDisplaySource = (source: IncomeApiSource): IncomeDisplaySource => {
-    const theme = getIncomeTheme(source.name, source.description, source.sourceType);
-    const isFixed = source.sourceType === "FIXED";
-    const formType = isFixed ? "fixed" : "variable";
-    const status = normalizeIncomeStatus(source.active);
-    const descriptionParts = splitIncomeDescription(source.description);
-    const latestEntries = (source.entries ?? []).slice(0, 3).map(toIncomeDisplayEntry);
+    const theme = getIncomeTheme(source.source, source.company, source.type);
+    const formStatus = toFormStatus(source.status);
+    const isPaused = formStatus === "pause";
 
     return {
         ...source,
-        formType,
-        status,
-        company: descriptionParts.company,
-        position: descriptionParts.position,
-        sourceNote: descriptionParts.note,
+        formType: toFormType(source.type),
+        formStatus,
         icon: theme.icon,
-        iconBg: status === "pause" ? "bg-gray-100" : theme.iconBg,
-        iconColor: status === "pause" ? "text-gray-400" : theme.iconColor,
-        accentHex: status === "pause" ? "#cbd5e1" : theme.accentHex,
-        currentMonthAmount: isFixed ? (source.active ? Number(source.amount ?? 0) : 0) : Number(source.thisMonth ?? 0),
-        previousMonthAmount: isFixed ? Number(source.amount ?? 0) : Number(source.lastMonth ?? 0),
-        statusLabel: status === "active" ? "Active" : "Paused",
-        typeLabel: isFixed ? "Fixed" : "Variable",
-        latestEntries,
+        iconBg: isPaused ? "bg-gray-100" : theme.iconBg,
+        iconColor: isPaused ? "text-gray-400" : theme.iconColor,
+        accentHex: isPaused ? "#cbd5e1" : theme.accentHex,
+        statusLabel: source.status === "ACTIVE" ? "Active" : "Paused",
+        typeLabel: source.type === "FIXED" ? "Fixed" : "Variable",
+        creditDayLabel: formatCreditDay(source.creditDay),
     };
 };
 
-export const toIncomeHistoryMax = (history: Array<{ total: number }>) => {
-    return Math.max(...history.map((point) => point.total), 1);
-};
+export const getIncomeStatusIcon = (status: IncomeFormStatus): ElementType =>
+    status === "active" ? CheckCircle2 : Clock;
 
-export const isIncomeSourceActive = (source: IncomeApiSource) => source.active;
-
-export const getIncomeStatusIcon = (status: IncomeFormStatus): ElementType => {
-    return status === "active" ? CheckCircle2 : Clock;
-};
-
-export const getIncomeDeltaIcon = (deltaPositive: boolean): ElementType => {
-    return deltaPositive ? TrendingUp : TrendingDown;
-};
+export const getIncomeDeltaIcon = (positive: boolean): ElementType =>
+    positive ? TrendingUp : TrendingDown;

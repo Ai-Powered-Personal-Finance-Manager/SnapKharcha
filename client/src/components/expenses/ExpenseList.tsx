@@ -101,7 +101,7 @@ export const ExpenseList = ({
                     {expenses.length} expense{expenses.length !== 1 ? "s" : ""}
                     {activeBudgetLabel && ` in ${activeBudgetLabel}`}
                 </p>
-                <p className="font-mono text-sm font-bold text-gray-800">−₹{totalAmount.toLocaleString()}</p>
+                <p className="font-mono text-sm font-bold text-gray-800">−Rs.{totalAmount.toLocaleString()}</p>
             </div> */}
         </div>
     );

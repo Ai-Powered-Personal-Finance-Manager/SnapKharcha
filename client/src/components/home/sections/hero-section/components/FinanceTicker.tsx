@@ -14,14 +14,14 @@ interface FinanceTickerProps {
 }
 
 const DEFAULT_ITEMS: TickerItem[] = [
-    { label: "Food", value: "₹6,240", change: "▼ 2.1%", trend: "down" },
-    { label: "Transport", value: "₹3,810", change: "▲ 5.4%", trend: "up" },
-    { label: "Subscriptions", value: "₹1,490", change: "▼ 0.8%", trend: "down" },
-    { label: "Rent", value: "₹9,000", trend: "neutral" },
-    { label: "Shopping", value: "₹4,310", change: "▲ 18.2%", trend: "up" },
-    { label: "Health", value: "₹2,200", change: "▼ 3.5%", trend: "down" },
-    { label: "Savings", value: "₹9,500", change: "▲ 5.1%", trend: "up" },
-    { label: "Investments", value: "₹5,000", change: "▲ 12.0%", trend: "up" },
+    { label: "Food", value: "Rs.6,240", change: "▼ 2.1%", trend: "down" },
+    { label: "Transport", value: "Rs.3,810", change: "▲ 5.4%", trend: "up" },
+    { label: "Subscriptions", value: "Rs.1,490", change: "▼ 0.8%", trend: "down" },
+    { label: "Rent", value: "Rs.9,000", trend: "neutral" },
+    { label: "Shopping", value: "Rs.4,310", change: "▲ 18.2%", trend: "up" },
+    { label: "Health", value: "Rs.2,200", change: "▼ 3.5%", trend: "down" },
+    { label: "Savings", value: "Rs.9,500", change: "▲ 5.1%", trend: "up" },
+    { label: "Investments", value: "Rs.5,000", change: "▲ 12.0%", trend: "up" },
 ];
 
 const trendColor: Record<string, string> = {

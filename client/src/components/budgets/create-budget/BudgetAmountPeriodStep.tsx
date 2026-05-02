@@ -33,7 +33,7 @@ export const BudgetAmountPeriodStep = ({
                 <div>
                     <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">Budget Amount *</label>
                     <div className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 transition-all ${amount && Number(amount) > 0 ? "border-[#00C950] bg-[#00C950]/3" : "border-gray-200 focus-within:border-[#00C950] focus-within:bg-[#00C950]/2"}`}>
-                        <span className="text-gray-400 text-2xl font-bold">₹</span>
+                        <span className="text-gray-400 text-2xl font-bold">Rs.</span>
                         <input
                             type="number"
                             placeholder="0"
@@ -52,7 +52,7 @@ export const BudgetAmountPeriodStep = ({
                                 onClick={() => setAmount(value.toString())}
                                 className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-colors ${amount === value.toString() ? "bg-[#00C950] text-white border-transparent" : "border-gray-200 text-gray-500 hover:border-[#00C950]/40 hover:text-[#00C950]"}`}
                             >
-                                ₹{(value / 1000).toFixed(0)}k
+                                Rs.{(value / 1000).toFixed(0)}k
                             </button>
                         ))}
                     </div>

@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ExpenseDetailsPageSkeleton from "@/src/components/loading-skeletons/ExpenseDetailsPageSkeleton";
 
-const formatCurrency = (value: number) => `₹${value.toLocaleString()}`;
+const formatCurrency = (value: number) => `Rs.${value.toLocaleString()}`;
 
 export function ExpenseDetailsPage({ expenseId }: { expenseId: string }) {
     const router = useRouter();
@@ -129,7 +129,7 @@ export function ExpenseDetailsPage({ expenseId }: { expenseId: string }) {
                             <div className="rounded-2xl border border-gray-100 bg-gray-50/80 p-4">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">Budget</p>
                                 <p className="mt-2 text-lg font-bold text-gray-900">{linkedBudget.name}</p>
-                                <p className="text-xs text-gray-500">₹{remainingBudget.toLocaleString()} remaining of ₹{linkedBudget.amount.toLocaleString()}</p>
+                                <p className="text-xs text-gray-500">Rs.{remainingBudget.toLocaleString()} remaining of Rs.{linkedBudget.amount.toLocaleString()}</p>
                             </div>
                             <div className="rounded-2xl border border-gray-100 bg-gray-50/80 p-4">
                                 <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">Date</p>

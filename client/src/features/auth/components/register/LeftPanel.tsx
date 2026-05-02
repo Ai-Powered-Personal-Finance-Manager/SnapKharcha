@@ -90,7 +90,7 @@ const Testimonial = () => {
         className="text-gray-400 text-sm leading-relaxed mb-4"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        "SnapKharcha showed me I was spending ₹11,000/month on things I didn't
+        "SnapKharcha showed me I was spending Rs.11,000/month on things I didn't
         even remember buying. Changed my entire approach to money."
       </p>
       <div className="flex items-center gap-3">

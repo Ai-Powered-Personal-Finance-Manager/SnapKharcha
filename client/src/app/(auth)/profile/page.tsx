@@ -5,8 +5,9 @@ import {
   Camera, Briefcase, GraduationCap, User,
   MapPin, Phone, Mail, Calendar, Globe,
   ChevronDown, CheckCircle2, Edit3, Save,
-  Building2, IndianRupee, Target, Shield,
+  Building2, Target, Shield,
   TrendingUp, Award, Clock,
+  CircleDollarSign,
 } from "lucide-react";
 
 // ─── Employment status options ────────────────────────────────
@@ -19,12 +20,12 @@ const employmentStatuses = [
 ];
 
 const incomeRanges = [
-  "Below ₹2L / year",
-  "₹2L – ₹5L / year",
-  "₹5L – ₹10L / year",
-  "₹10L – ₹20L / year",
-  "₹20L – ₹50L / year",
-  "Above ₹50L / year",
+  "Below Rs.2L / year",
+  "Rs.2L – Rs.5L / year",
+  "Rs.5L – Rs.10L / year",
+  "Rs.10L – Rs.20L / year",
+  "Rs.20L – Rs.50L / year",
+  "Above Rs.50L / year",
   "Prefer not to say",
 ];
 
@@ -136,9 +137,9 @@ export default function ProfilePage() {
         {/* Stats strip */}
         <div className="relative mt-6 pt-5 border-t border-white/8 grid grid-cols-4 gap-4">
           {[
-            { label: "Total Saved",   value: "₹3.6L",  icon: TrendingUp },
+            { label: "Total Saved",   value: "Rs.3.6L",  icon: TrendingUp },
             { label: "Goals Active",  value: "9",       icon: Target     },
-            { label: "Budgets Set",   value: "10",      icon: IndianRupee},
+            { label: "Budgets Set",   value: "10",      icon: CircleDollarSign },
             { label: "Streak",        value: "47 days", icon: Award      },
           ].map((s) => {
             const Icon = s.icon;
@@ -166,7 +167,7 @@ export default function ProfilePage() {
           <Field label="City"            value="Mumbai"                    editable={editingSection === "personal"} />
           <Field label="State"           value="Maharashtra"               editable={editingSection === "personal"} />
           <Field label="PIN Code"        value="400053"                    editable={editingSection === "personal"} />
-          <Field label="Country"         value="India"                     editable={editingSection === "personal"} />
+          <Field label="Country"         value="Nepal"                     editable={editingSection === "personal"} />
         </div>
       </div>
 
@@ -245,7 +246,7 @@ export default function ProfilePage() {
               Annual Income Range
             </label>
             <div className="relative">
-              <select defaultValue="₹5L – ₹10L / year"
+              <select defaultValue="Rs.5L – Rs.10L / year"
                 className="w-full appearance-none px-4 py-3 pr-10 rounded-xl border border-gray-200 text-sm text-gray-700 bg-gray-50 outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/10 transition-all">
                 {incomeRanges.map((r) => <option key={r}>{r}</option>)}
               </select>
@@ -324,12 +325,12 @@ export default function ProfilePage() {
         <SectionHeader title="App Preferences" id="prefs" />
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { label: "Currency",            value: "₹ INR — Indian Rupee" },
+            { label: "Currency",            value: "Rs. — Nepali Rupees" },
             { label: "Language",            value: "English"               },
             { label: "Budget Reset Day",    value: "1st of the month"      },
             { label: "Date Format",         value: "DD/MM/YYYY"            },
-            { label: "Number Format",       value: "1,00,000 (Indian)"     },
-            { label: "Fiscal Year",         value: "Apr – Mar (India)"     },
+            { label: "Number Format",       value: "1,00,000 (Nepal)"     },
+            { label: "Fiscal Year",         value: "Apr – Mar (Nepal)"     },
           ].map((p) => (
             <div key={p.label}>
               <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-1.5">{p.label}</label>

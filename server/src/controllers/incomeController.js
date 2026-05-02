@@ -11,7 +11,7 @@ export const createIncome = async (req, res, next) => {
     const userId = req.user.id;
 
     if (
-      amount === undefined ||
+      !amount ||
       !company ||
       !position ||
       !source ||
@@ -22,7 +22,7 @@ export const createIncome = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message:
-          "amount, company, position, source, status, type and creditDay are required",
+          "amount, company, position, source, status, and type are required",
       });
     }
 
@@ -188,7 +188,7 @@ export const getIncomeById = async (req, res, next) => {
 export const updateIncome = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { amount, company, position, source, note, status, type, creditDay } =
+    const { amount, company, position, source, note, status, type } =
       req.body;
 
     const userId = req.user.id;

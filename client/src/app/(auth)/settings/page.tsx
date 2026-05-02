@@ -187,7 +187,7 @@ export default function SettingsPage() {
         <Section title="Preferences" description="Customise your experience">
             <Row label="Currency" description="Used across all calculations and displays">
             <select className="px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/10 transition-all">
-                <option>₹ INR — Indian Rupee</option>
+                <option>Rs. INR — Nepaln Rupee</option>
                 <option>$ USD — US Dollar</option>
                 <option>€ EUR — Euro</option>
             </select>
@@ -221,7 +221,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                     <p className="text-gray-900 text-sm font-semibold">Pro Plan</p>
-                    <p className="text-gray-400 text-xs">₹299/month · Renews May 1, 2025</p>
+                    <p className="text-gray-400 text-xs">Rs.299/month · Renews May 1, 2025</p>
                 </div>
                 </div>
                 <ActionButton label="Manage Plan" />

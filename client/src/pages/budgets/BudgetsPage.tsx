@@ -64,7 +64,7 @@ export function BudgetsPage() {
                 <TrendingDown size={15} className="text-[#00C950] shrink-0" />
                 <p className="text-gray-500 text-xs">
                     <span className="font-semibold text-gray-700">AI Tip: </span>
-                    You consistently underspend on Health. Reallocating ₹500 to Shopping could reduce overage stress.
+                    You consistently underspend on Health. Reallocating Rs.500 to Shopping could reduce overage stress.
                 </p>
             </div>
         </div>

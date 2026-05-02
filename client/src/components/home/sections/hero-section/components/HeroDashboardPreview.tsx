@@ -46,7 +46,7 @@ export const HeroDashboardPreview = () => {
           className="text-[#00C950] text-2xl font-bold"
           style={{ fontFamily: "'Syne', sans-serif" }}
         >
-          ₹12,400
+          Rs.12,400
         </p>
         <p
           className="text-[#00C950] text-xs flex items-center gap-1 mt-1"

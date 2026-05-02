@@ -6,7 +6,7 @@ export const testimonials: testimonialsInterface[] = [
     role: "College Student, Delhi",
     avatar:
       "https://images.unsplash.com/photo-1494790108755-2616b612b630?w=80&h=80&q=80&fit=crop&crop=face",
-    text: "I had no idea I was spending ₹8,000/month on food delivery alone. SnapKharcha showed me in a pie chart and I actually changed my habits. Game changer.",
+    text: "I had no idea I was spending Rs.8,000/month on food delivery alone. SnapKharcha showed me in a pie chart and I actually changed my habits. Game changer.",
   },
   {
     name: "Rahul Mehta",

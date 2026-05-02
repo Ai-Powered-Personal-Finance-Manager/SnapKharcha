@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
-import { ChevronDown, Loader2, Plus, X } from "lucide-react";
-import type { IncomeDisplayEntry, IncomeDisplaySource, IncomeEntryFormValues, IncomeFormType, IncomeSourceFormValues } from "@/src/types/income";
-import { buildIncomeEntryFormValues, buildIncomeSourceFormValues, formatCreditDay, formatIncomeAmount, formatIncomeDateInput, toIncomeEntryPayload, toIncomeSourcePayload } from "@/src/utils/income";
+import { Loader2, Plus, X } from "lucide-react";
+import type { IncomeDisplaySource, IncomeFormType, IncomeSourceFormValues } from "@/src/types/income";
+import { buildIncomeSourceFormValues, formatCreditDay, formatIncomeAmount } from "@/src/utils/income";
 
 type IncomeSourceFormModalProps = {
     open: boolean;
@@ -12,16 +12,6 @@ type IncomeSourceFormModalProps = {
     initialSource?: IncomeDisplaySource | null;
     onClose: () => void;
     onSubmit: (values: IncomeSourceFormValues) => void;
-    isPending?: boolean;
-};
-
-type IncomeEntryFormModalProps = {
-    open: boolean;
-    mode: "create" | "edit";
-    sourceLabel: string;
-    initialEntry?: IncomeDisplayEntry | null;
-    onClose: () => void;
-    onSubmit: (values: IncomeEntryFormValues) => void;
     isPending?: boolean;
 };
 
@@ -44,35 +34,24 @@ export const IncomeSourceFormModal = ({
     onSubmit,
     isPending,
 }: IncomeSourceFormModalProps) => {
-    const [formState, setFormState] = useState<IncomeSourceFormValues>(() => buildIncomeSourceFormValues(initialSource, defaultType));
+    const [formState, setFormState] = useState<IncomeSourceFormValues>(() =>
+        buildIncomeSourceFormValues(initialSource, defaultType)
+    );
 
     useEffect(() => {
-        if (!open) {
-            return;
-        }
-
-        setFormState(buildIncomeSourceFormValues(initialSource, defaultType));
+        if (open) setFormState(buildIncomeSourceFormValues(initialSource, defaultType));
     }, [defaultType, initialSource, open]);
 
     useEffect(() => {
-        if (!open) {
-            return;
-        }
-
+        if (!open) return;
         const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                onClose();
-            }
+            if (event.key === "Escape") onClose();
         };
-
         document.addEventListener("keydown", handleKeyDown);
-
         return () => document.removeEventListener("keydown", handleKeyDown);
     }, [onClose, open]);
 
-    if (!open) {
-        return null;
-    }
+    if (!open) return null;
 
     const parsedAmount = Number(formState.amount);
     const parsedCreditDay = Number(formState.creditDay);
@@ -81,15 +60,16 @@ export const IncomeSourceFormModal = ({
 
     const canSubmit =
         formState.source.trim().length > 0 &&
-        (isFixed ? Number.isFinite(parsedAmount) && parsedAmount > 0 && Number.isFinite(parsedCreditDay) && parsedCreditDay >= 1 && parsedCreditDay <= 31 : true);
+        formState.company.trim().length > 0 &&
+        formState.position.trim().length > 0 &&
+        (isFixed
+            ? Number.isFinite(parsedAmount) && parsedAmount > 0 &&
+              Number.isFinite(parsedCreditDay) && parsedCreditDay >= 1 && parsedCreditDay <= 31
+            : true);
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        if (!canSubmit) {
-            return;
-        }
-
+        if (!canSubmit) return;
         onSubmit({
             ...formState,
             source: formState.source.trim(),
@@ -101,117 +81,145 @@ export const IncomeSourceFormModal = ({
         });
     };
 
+    const inputCls = "h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15";
+    const selectCls = `${inputCls} appearance-none`;
+
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-            <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl shadow-black/20" onClick={(event) => event.stopPropagation()}>
+            <div
+                className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl shadow-black/20"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div className="flex items-start justify-between gap-4 border-b border-gray-50 px-6 pb-4 pt-6">
                     <div>
-                        <h3 className="text-base font-bold text-gray-900">{mode === "edit" ? "Edit Income Source" : "Add Income Source"}</h3>
+                        <h3 className="text-base font-bold text-gray-900">
+                            {mode === "edit" ? "Edit Income Source" : "Add Income Source"}
+                        </h3>
                         <p className="mt-0.5 text-xs text-gray-400">
                             {isCreate
-                                ? "Create a fixed source or a variable source with an optional first entry."
-                                : "Update the source name, description, amount, or active state."}
+                                ? "Create a fixed or variable income source."
+                                : "Update the source details below."}
                         </p>
                     </div>
-                    <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200" aria-label="Close income source modal">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200"
+                        aria-label="Close modal"
+                    >
                         <X size={15} />
                     </button>
                 </div>
 
                 <form className="space-y-4 px-6 py-5" onSubmit={handleSubmit}>
                     <div className="grid gap-4 sm:grid-cols-2">
+
+                        {/* Type */}
                         <div className="space-y-1.5 sm:col-span-2">
                             <label className="text-xs font-semibold text-gray-500">Type</label>
                             <select
                                 value={formState.type}
-                                onChange={(event) => setFormState((current) => ({ ...current, type: event.target.value as IncomeFormType }))}
+                                onChange={(e) => setFormState((f) => ({
+                                    ...f,
+                                    type: e.target.value as IncomeFormType,
+                                    amount: "",
+                                    creditDay: "",
+                                }))}
                                 disabled={mode === "edit"}
-                                className="h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15 disabled:cursor-not-allowed disabled:bg-gray-50"
+                                className={selectCls}
                             >
                                 <option value="fixed">Fixed</option>
                                 <option value="variable">Variable</option>
                             </select>
                         </div>
 
+                        {/* Source */}
                         <div className="space-y-1.5 sm:col-span-2">
                             <label className="text-xs font-semibold text-gray-500">Source</label>
                             <input
                                 value={formState.source}
-                                onChange={(event) => setFormState((current) => ({ ...current, source: event.target.value }))}
+                                onChange={(e) => setFormState((f) => ({ ...f, source: e.target.value }))}
                                 placeholder="Primary Salary"
-                                className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
+                                className={inputCls}
                             />
                         </div>
 
+                        {/* Company */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-semibold text-gray-500">Company</label>
                             <input
                                 value={formState.company}
-                                onChange={(event) => setFormState((current) => ({ ...current, company: event.target.value }))}
+                                onChange={(e) => setFormState((f) => ({ ...f, company: e.target.value }))}
                                 placeholder="Infosys"
-                                className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
+                                className={inputCls}
                             />
                         </div>
 
+                        {/* Position */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-semibold text-gray-500">Position</label>
                             <input
                                 value={formState.position}
-                                onChange={(event) => setFormState((current) => ({ ...current, position: event.target.value }))}
+                                onChange={(e) => setFormState((f) => ({ ...f, position: e.target.value }))}
                                 placeholder="Software Engineer"
-                                className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
+                                className={inputCls}
                             />
                         </div>
 
+                        {/* Amount */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-semibold text-gray-500">Amount</label>
                             <div className="flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 transition-colors focus-within:border-[#00C950] focus-within:ring-2 focus-within:ring-[#00C950]/15">
-                                <span className="text-sm font-semibold text-gray-400">₹</span>
+                                <span className="text-sm font-semibold text-gray-400">Rs.</span>
                                 <input
                                     type="number"
                                     min="0"
                                     step="1"
                                     value={formState.amount}
-                                    onChange={(event) => setFormState((current) => ({ ...current, amount: event.target.value }))}
+                                    onChange={(e) => setFormState((f) => ({ ...f, amount: e.target.value }))}
                                     className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
+                                    placeholder="50000"
                                 />
                             </div>
                             <p className="text-[10px] text-gray-400">
                                 {isFixed
-                                    ? "Used as the monthly amount for this source."
-                                    : "Optional. If provided, it will be logged as the first entry when the source is created."}
+                                    ? "Fixed monthly amount for this source."
+                                    : "Optional for variable sources."}
                             </p>
                         </div>
 
+                        {/* Status */}
                         <div className="space-y-1.5">
                             <label className="text-xs font-semibold text-gray-500">Status</label>
                             <select
                                 value={formState.status}
-                                onChange={(event) => setFormState((current) => ({ ...current, status: event.target.value as IncomeFormValues["status"] }))}
-                                className="h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
+                                onChange={(e) => setFormState((f) => ({ ...f, status: e.target.value as IncomeSourceFormValues["status"] }))}
+                                className={selectCls}
                             >
                                 <option value="active">Active</option>
                                 <option value="pause">Paused</option>
                             </select>
                         </div>
 
+                        {/* Credit Day */}
                         {isFixed ? (
                             <div className="space-y-1.5">
-                                <label className="text-xs font-semibold text-gray-500">Credit day</label>
+                                <label className="text-xs font-semibold text-gray-500">Credit Day</label>
                                 <input
                                     type="number"
                                     min="1"
                                     max="31"
                                     value={formState.creditDay}
-                                    onChange={(event) => setFormState((current) => ({ ...current, creditDay: event.target.value }))}
-                                    className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
+                                    onChange={(e) => setFormState((f) => ({ ...f, creditDay: e.target.value }))}
+                                    className={inputCls}
+                                    placeholder="1–31"
                                 />
                             </div>
                         ) : (
                             <div className="space-y-1.5">
-                                <label className="text-xs font-semibold text-gray-500">Credit day</label>
+                                <label className="text-xs font-semibold text-gray-500">Credit Day</label>
                                 <div className="flex h-11 items-center rounded-xl border border-gray-200 bg-gray-50 px-3 text-xs text-gray-400">
                                     Variable sources use entries instead of a fixed credit day.
                                 </div>
@@ -219,31 +227,34 @@ export const IncomeSourceFormModal = ({
                         )}
                     </div>
 
+                    {/* Note */}
                     <div className="space-y-1.5">
                         <label className="text-xs font-semibold text-gray-500">Note</label>
                         <textarea
                             rows={4}
                             value={formState.note}
-                            onChange={(event) => setFormState((current) => ({ ...current, note: event.target.value }))}
+                            onChange={(e) => setFormState((f) => ({ ...f, note: e.target.value }))}
                             placeholder="Add a short note about this income source"
                             className="flex min-h-24 w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
                         />
                     </div>
 
+                    {/* Preview */}
                     <div className="rounded-2xl border border-gray-100 bg-gray-50/80 px-4 py-3 text-xs text-gray-500">
                         {isFixed ? (
-                            <>
-                                Monthly impact preview: {formatIncomeAmount(parsedAmount || 0)} credits on {formatCreditDay(parsedCreditDay)}.
-                            </>
+                            <>Monthly impact preview: {formatIncomeAmount(parsedAmount || 0)} credits on {formatCreditDay(parsedCreditDay)}.</>
                         ) : (
-                            <>
-                                Variable income can be logged as entries later. If you filled an amount, it will be captured as the first entry.
-                            </>
+                            <>Variable income can be logged as entries later.</>
                         )}
                     </div>
 
+                    {/* Actions */}
                     <div className="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
-                        <button type="button" onClick={onClose} className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                        >
                             Cancel
                         </button>
                         <button
@@ -252,160 +263,9 @@ export const IncomeSourceFormModal = ({
                             className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#00C950] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#00b848] disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {isPending ? (
-                                <>
-                                    <Loader2 size={14} className="animate-spin" />
-                                    {mode === "edit" ? "Saving..." : "Adding..."}
-                                </>
-                            ) : mode === "edit" ? (
-                                "Save changes"
-                            ) : (
-                                <>
-                                    <Plus size={14} />
-                                    Add Source
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-};
-
-export const IncomeEntryFormModal = ({
-    open,
-    mode,
-    sourceLabel,
-    initialEntry,
-    onClose,
-    onSubmit,
-    isPending,
-}: IncomeEntryFormModalProps) => {
-    const [formState, setFormState] = useState<IncomeEntryFormValues>(() => buildIncomeEntryFormValues(initialEntry));
-
-    useEffect(() => {
-        if (!open) {
-            return;
-        }
-
-        setFormState(buildIncomeEntryFormValues(initialEntry));
-    }, [initialEntry, open]);
-
-    useEffect(() => {
-        if (!open) {
-            return;
-        }
-
-        const handleKeyDown = (event: KeyboardEvent) => {
-            if (event.key === "Escape") {
-                onClose();
-            }
-        };
-
-        document.addEventListener("keydown", handleKeyDown);
-
-        return () => document.removeEventListener("keydown", handleKeyDown);
-    }, [onClose, open]);
-
-    if (!open) {
-        return null;
-    }
-
-    const parsedAmount = Number(formState.amount);
-
-    const canSubmit =
-        Number.isFinite(parsedAmount) &&
-        parsedAmount > 0 &&
-        formState.date.length > 0;
-
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-
-        if (!canSubmit) {
-            return;
-        }
-
-        onSubmit({
-            ...formState,
-            amount: String(parsedAmount),
-            note: formState.note.trim(),
-        });
-    };
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-
-            <div className="relative w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl shadow-black/20" onClick={(event) => event.stopPropagation()}>
-                <div className="flex items-start justify-between gap-4 border-b border-gray-50 px-6 pb-4 pt-6">
-                    <div>
-                        <h3 className="text-base font-bold text-gray-900">{mode === "edit" ? "Edit Income Entry" : "Log Income Entry"}</h3>
-                        <p className="mt-0.5 text-xs text-gray-400">{sourceLabel}</p>
-                    </div>
-                    <button type="button" onClick={onClose} className="flex h-8 w-8 items-center justify-center rounded-xl bg-gray-100 text-gray-500 transition-colors hover:bg-gray-200" aria-label="Close income entry modal">
-                        <X size={15} />
-                    </button>
-                </div>
-
-                <form className="space-y-4 px-6 py-5" onSubmit={handleSubmit}>
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-gray-500">Amount</label>
-                        <div className="flex h-11 items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 transition-colors focus-within:border-[#00C950] focus-within:ring-2 focus-within:ring-[#00C950]/15">
-                            <span className="text-sm font-semibold text-gray-400">₹</span>
-                            <input
-                                type="number"
-                                min="0"
-                                step="1"
-                                value={formState.amount}
-                                onChange={(event) => setFormState((current) => ({ ...current, amount: event.target.value }))}
-                                className="w-full bg-transparent text-sm text-gray-900 outline-none placeholder:text-gray-400"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-gray-500">Date</label>
-                        <input
-                            type="date"
-                            value={formState.date}
-                            onChange={(event) => setFormState((current) => ({ ...current, date: event.target.value }))}
-                            className="h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-gray-900 outline-none transition-colors focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
-                        />
-                    </div>
-
-                    <div className="space-y-1.5">
-                        <label className="text-xs font-semibold text-gray-500">Note</label>
-                        <textarea
-                            rows={4}
-                            value={formState.note}
-                            onChange={(event) => setFormState((current) => ({ ...current, note: event.target.value }))}
-                            placeholder="Add a short note about this entry"
-                            className="flex min-h-24 w-full rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition-colors placeholder:text-gray-400 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/15"
-                        />
-                    </div>
-
-                    <div className="rounded-2xl border border-gray-100 bg-gray-50/80 px-4 py-3 text-xs text-gray-500">
-                        This entry will update the source totals immediately.
-                    </div>
-
-                    <div className="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
-                        <button type="button" onClick={onClose} className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
-                            Cancel
-                        </button>
-                        <button
-                            type="submit"
-                            disabled={!canSubmit || isPending}
-                            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#00C950] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#00b848] disabled:cursor-not-allowed disabled:opacity-60"
-                        >
-                            {isPending ? (
-                                <>
-                                    <Loader2 size={14} className="animate-spin" />
-                                    {mode === "edit" ? "Saving..." : "Logging..."}
-                                </>
-                            ) : mode === "edit" ? (
-                                "Save changes"
-                            ) : (
-                                "Log Entry"
+                                <><Loader2 size={14} className="animate-spin" />{mode === "edit" ? "Saving..." : "Adding..."}</>
+                            ) : mode === "edit" ? "Save changes" : (
+                                <><Plus size={14} />Add Source</>
                             )}
                         </button>
                     </div>
@@ -424,18 +284,27 @@ export const IncomeDeleteDialog = ({
     onConfirm,
     isPending,
 }: IncomeDeleteDialogProps) => {
-    if (!open) {
-        return null;
-    }
+    if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-[1px]" onClick={onClose}>
-            <div className="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl" onClick={(event) => event.stopPropagation()}>
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 p-4 backdrop-blur-[1px]"
+            onClick={onClose}
+        >
+            <div
+                className="w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-6 py-5">
                     <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-red-50 text-red-500">
                         <X size={18} />
                     </div>
-                    <button type="button" onClick={onClose} className="flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700" aria-label="Close delete dialog">
+                    <button
+                        type="button"
+                        onClick={onClose}
+                        className="flex h-9 w-9 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700"
+                        aria-label="Close delete dialog"
+                    >
                         <X size={18} />
                     </button>
                 </div>
@@ -445,7 +314,11 @@ export const IncomeDeleteDialog = ({
                     <p className="mt-2 text-sm leading-6 text-gray-500">{message}</p>
 
                     <div className="mt-6 flex items-center justify-end gap-3">
-                        <button type="button" onClick={onClose} className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+                        <button
+                            type="button"
+                            onClick={onClose}
+                            className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                        >
                             Cancel
                         </button>
                         <button
@@ -455,13 +328,8 @@ export const IncomeDeleteDialog = ({
                             className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             {isPending ? (
-                                <>
-                                    <Loader2 size={14} className="animate-spin" />
-                                    Deleting...
-                                </>
-                            ) : (
-                                confirmLabel
-                            )}
+                                <><Loader2 size={14} className="animate-spin" />Deleting...</>
+                            ) : confirmLabel}
                         </button>
                     </div>
                 </div>

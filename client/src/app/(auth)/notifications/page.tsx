@@ -22,21 +22,21 @@ const notifications = [
         id: 1, unread: true,
         icon: AlertTriangle, iconBg: "bg-red-50", iconColor: "text-red-500",
         title: "Budget Alert — Shopping",
-        body: "You've used 95% of your ₹4,000 shopping budget. Only ₹200 remaining this month.",
+        body: "You've used 95% of your Rs.4,000 shopping budget. Only Rs.200 remaining this month.",
         time: "Just now", tag: "Budget",
     },
     {
         id: 2, unread: true,
         icon: Zap, iconBg: "bg-[#00C950]/8", iconColor: "text-[#00C950]",
         title: "Weekly AI Insight Ready",
-        body: "Your spending report for last week is ready. You saved ₹2,340 more than your target!",
+        body: "Your spending report for last week is ready. You saved Rs.2,340 more than your target!",
         time: "2 hours ago", tag: "Insight",
     },
     {
         id: 3, unread: true,
         icon: CreditCard, iconBg: "bg-blue-50", iconColor: "text-blue-500",
         title: "Salary Credited",
-        body: "₹50,000 has been credited to your HDFC account ending in 4321.",
+        body: "Rs.50,000 has been credited to your HDFC account ending in 4321.",
         time: "Yesterday, 9:02 AM", tag: "Transaction",
     },
     {
@@ -64,7 +64,7 @@ const notifications = [
         id: 7, unread: false,
         icon: Info, iconBg: "bg-gray-100", iconColor: "text-gray-500",
         title: "Bill Reminder — Electricity",
-        body: "Your MSEB electricity bill of approx ₹850 is due in 3 days. Pay early to avoid late fees.",
+        body: "Your MSEB electricity bill of approx Rs.850 is due in 3 days. Pay early to avoid late fees.",
         time: "5 days ago", tag: "Reminder",
     },
 ];

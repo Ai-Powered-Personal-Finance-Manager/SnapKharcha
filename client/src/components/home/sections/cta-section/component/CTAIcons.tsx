@@ -8,7 +8,7 @@ export const CTAIcons = () => {
         { icon: "🔒", label: "Bank-grade security" },
         { icon: "🚫", label: "No credit card required" },
         { icon: "⚡", label: "Setup in under 2 minutes" },
-        { icon: "🇮🇳", label: "Built for India" },
+        { icon: "🇮🇳", label: "Built for Nepal" },
       ].map((badge, i) => (
         <div key={i} className="flex items-center gap-2">
           <span>{badge.icon}</span>

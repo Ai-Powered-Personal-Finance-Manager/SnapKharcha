@@ -39,7 +39,7 @@ export const HeroSection = () => {
                       bg-white border border-green-100 rounded-2xl px-4 py-3 shadow-md
                       animate-[float_6s_ease-in-out_infinite] min-w-[160px]">
         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">Monthly Spend</p>
-        <p className="text-xl font-bold text-gray-900 mt-0.5">₹24,850</p>
+        <p className="text-xl font-bold text-gray-900 mt-0.5">Rs.24,850</p>
         <p className="text-xs font-semibold text-green-500 mt-0.5">↑ 12.4% vs last month</p>
         <Sparkline points="0,28 20,22 40,24 60,14 80,16 100,8 120,6" />
       </div> */}

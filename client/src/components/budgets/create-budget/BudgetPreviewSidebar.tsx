@@ -67,7 +67,7 @@ export const BudgetPreviewSidebar = ({
                         </div>
 
                         <div className="mb-4">
-                            <p className="text-gray-900 text-3xl font-black font-mono">{amount ? `₹${Number(amount).toLocaleString()}` : <span className="text-gray-200">₹0</span>}</p>
+                            <p className="text-gray-900 text-3xl font-black font-mono">{amount ? `Rs.${Number(amount).toLocaleString()}` : <span className="text-gray-200">Rs.0</span>}</p>
                             <p className="text-gray-400 text-[11px] mt-0.5">
                                 {period === "monthly" ? "per month" : period === "custom" ? `${customStartDate} to ${customEndDate}` : "custom period"}
                             </p>
@@ -75,13 +75,13 @@ export const BudgetPreviewSidebar = ({
 
                         <div className="mb-1.5">
                             <div className="flex justify-between mb-1.5">
-                                <span className="text-gray-400 text-[11px]">₹0 spent</span>
+                                <span className="text-gray-400 text-[11px]">Rs.0 spent</span>
                                 <span className="text-gray-400 text-[11px] font-mono">0%</span>
                             </div>
                             <div className="h-2 bg-gray-100 rounded-full">
                                 <div className="h-full w-0 rounded-full" style={{ backgroundColor: selectedCategory?.hex || "#e5e7eb" }} />
                             </div>
-                            <p className="text-gray-400 text-[11px] mt-1">₹{amount ? Number(amount).toLocaleString() : "0"} remaining</p>
+                            <p className="text-gray-400 text-[11px] mt-1">Rs.{amount ? Number(amount).toLocaleString() : "0"} remaining</p>
                         </div>
 
                         <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-50">

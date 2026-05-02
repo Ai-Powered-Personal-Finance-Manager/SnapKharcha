@@ -65,9 +65,9 @@ const faqSections = [
     color: "text-rose-500",
     bg: "bg-rose-50",
     faqs: [
-      { q: "What's the difference between monthly and yearly goals?", a: "Monthly goals reset every month — great for habits like 'save ₹3,000 this month'. Yearly goals accumulate — they track progress toward a single big target like buying a MacBook by December." },
+      { q: "What's the difference between monthly and yearly goals?", a: "Monthly goals reset every month — great for habits like 'save Rs.3,000 this month'. Yearly goals accumulate — they track progress toward a single big target like buying a MacBook by December." },
       { q: "How is net worth calculated?",                   a: "Net Worth = Total Assets − Total Liabilities. Assets include cash, investments, property, and digital assets. Liabilities include loans and credit card balances, which are pulled automatically from the Loans page." },
-      { q: "Do my loan EMIs affect my budgets?",            a: "Yes — this is a core feature. Your EMI total is deducted from monthly income before budgets are calculated. If you earn ₹1L and have ₹15K in EMIs, you can only budget ₹85K for expenses." },
+      { q: "Do my loan EMIs affect my budgets?",            a: "Yes — this is a core feature. Your EMI total is deducted from monthly income before budgets are calculated. If you earn Rs.1L and have Rs.15K in EMIs, you can only budget Rs.85K for expenses." },
     ],
   },
 ];
@@ -76,7 +76,7 @@ const faqSections = [
 const guides = [
   { icon: BookOpen, title: "Complete Setup Guide",      desc: "Get your account fully configured in 10 minutes", time: "10 min read", tag: "Beginner" },
   { icon: Video,    title: "Bill Scanner Walkthrough",  desc: "How to snap a receipt and let AI auto-fill it",   time: "3 min video", tag: "Feature"  },
-  { icon: FileText, title: "Budget Strategy for Beginners", desc: "50/30/20 rule adapted for Indian households", time: "8 min read", tag: "Finance"  },
+  { icon: FileText, title: "Budget Strategy for Beginners", desc: "50/30/20 rule adapted for Nepal households", time: "8 min read", tag: "Finance"  },
   { icon: BarChart3,title: "Understanding AI Insights", desc: "What the suggestions mean and how to act on them",time: "5 min read", tag: "Feature"  },
   { icon: Shield,   title: "Bank Security Explained",   desc: "How Account Aggregator keeps your data safe",     time: "4 min read", tag: "Security" },
   { icon: Target,   title: "Setting Effective Goals",   desc: "Monthly vs yearly goals — which to use when",     time: "6 min read", tag: "Finance"  },
@@ -326,7 +326,7 @@ export default function HelpPage() {
 
           {/* Version info footer */}
           <div className="text-center py-4 space-y-1">
-            <p className="text-gray-300 text-[11px]">SnapKharcha v1.0.0 · Built with ❤️ in India</p>
+            <p className="text-gray-300 text-[11px]">SnapKharcha v1.0.0 · Built in Nepal</p>
             <div className="flex items-center justify-center gap-4">
               {["Privacy Policy","Terms of Service","Status Page"].map((l) => (
                 <button key={l} className="text-gray-400 text-[11px] hover:text-[#00C950] hover:underline transition-colors">{l}</button>
