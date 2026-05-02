@@ -5,22 +5,12 @@ import prisma from "../config/prisma.js";
 // ─────────────────────────────────────────
 export const createIncome = async (req, res, next) => {
   try {
-    const {
-      name,
-      amount,
-      company,
-      position,
-      source,
-      note,
-      status,
-      type,
-      creditDay,
-    } = req.body;
+    const { amount, company, position, source, note, status, type, creditDay } =
+      req.body;
 
     const userId = req.user.id;
 
     if (
-      !name ||
       amount === undefined ||
       !company ||
       !position ||
@@ -32,7 +22,7 @@ export const createIncome = async (req, res, next) => {
       return res.status(400).json({
         success: false,
         message:
-          "name, amount, company, position, source, status, type and creditDay are required",
+          "amount, company, position, source, status, type and creditDay are required",
       });
     }
 
@@ -80,7 +70,6 @@ export const createIncome = async (req, res, next) => {
 
     // ───── Build data ─────
     const data = {
-      name,
       amount: parsedAmount,
       company,
       position,
@@ -199,17 +188,8 @@ export const getIncomeById = async (req, res, next) => {
 export const updateIncome = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const {
-      name,
-      amount,
-      company,
-      position,
-      source,
-      note,
-      status,
-      type,
-      creditDay,
-    } = req.body;
+    const { amount, company, position, source, note, status, type, creditDay } =
+      req.body;
 
     const userId = req.user.id;
 
@@ -281,7 +261,6 @@ export const updateIncome = async (req, res, next) => {
 
     // ───── Build update object ─────
     const data = {
-      name: name ?? existing.name,
       amount: parsedAmount,
       company: company ?? existing.company,
       position: position ?? existing.position,
