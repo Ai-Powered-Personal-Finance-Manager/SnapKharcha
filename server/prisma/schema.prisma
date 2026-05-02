@@ -77,6 +77,13 @@ model Expense {
   @@index([budgetId])
 }
 
+enum PaymentMethod {
+  CASH
+  WALLET
+  BANK
+}
+
+
 model Loan {
   id           String     @id @default(uuid())
   name         String
@@ -93,12 +100,6 @@ model Loan {
   timeValue    Int
   status       StatusType
   user         User       @relation(fields: [userId], references: [id])
-}
-
-enum PaymentMethod {
-  CASH
-  WALLET
-  BANK
 }
 
 enum TimeUnit {
