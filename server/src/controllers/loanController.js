@@ -132,21 +132,29 @@ export const getLoans = async (req, res, next) => {
       },
     });
 
-    // ───── Calculate total loan amounts and total paid ─────
+    // ───── Separate active loans ─────
+    const activeLoans = loans.filter((loan) => loan.status === "ACTIVE");
+
+    // ───── Totals (ALL loans) ─────
     const totalLoanAmount = loans.reduce(
       (sum, loan) => sum + Number(loan.amount),
       0,
     );
-    const totalPaidAmount = loans.reduce(
-      (sum, loan) => sum + Number(loan.paidAmount || 0),
+
+    // ───── ACTIVE loans calculations ─────
+    const totalRemainingAmount = activeLoans.reduce(
+      (sum, loan) => sum + (Number(loan.amount) - Number(loan.paidAmount || 0)),
       0,
     );
 
-    const remainingLoan = totalLoanAmount - totalPaidAmount;
+    const totalMonthlyEmi = activeLoans.reduce(
+      (sum, loan) => sum + Number(loan.emiAmount || 0),
+      0,
+    );
 
-    const overallPercentage =
-      totalLoanAmount > 0 ? (totalPaidAmount / totalLoanAmount) * 100 : 0;
+    const activeLoanCount = activeLoans.length;
 
+    // ───── Format loans ─────
     const formattedLoans = loans.map((loan) => ({
       ...loan,
       status: loan.status === "ACTIVE" ? "ACTIVE" : "PAID",
@@ -157,10 +165,10 @@ export const getLoans = async (req, res, next) => {
       data: {
         loans: formattedLoans,
         summary: {
-          totalLoanAmount: totalLoanAmount,
-          totalPaidAmount: totalPaidAmount,
-          remainingLoan: remainingLoan,
-          overallPercentage: overallPercentage,
+          activeLoans: activeLoanCount,
+          totalRemainingAmount,
+          totalLoanAmount,
+          totalMonthlyEmi,
         },
       },
     });

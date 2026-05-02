@@ -5,24 +5,34 @@ import prisma from "../config/prisma.js";
 // ─────────────────────────────────────────
 export const createIncome = async (req, res, next) => {
   try {
-    const { name, amount, company, position, source, note, status, type } =
-      req.body;
+    const {
+      name,
+      amount,
+      company,
+      position,
+      source,
+      note,
+      status,
+      type,
+      creditDay,
+    } = req.body;
 
     const userId = req.user.id;
 
     if (
       !name ||
-      !amount ||
+      amount === undefined ||
       !company ||
       !position ||
       !source ||
       !status ||
-      !type
+      !type ||
+      creditDay === undefined
     ) {
       return res.status(400).json({
         success: false,
         message:
-          "name, amount, company, position, source, status, and type are required",
+          "name, amount, company, position, source, status, type and creditDay are required",
       });
     }
 
@@ -36,6 +46,20 @@ export const createIncome = async (req, res, next) => {
       });
     }
 
+    // ───── Validate creditDay ─────
+    const parsedCreditDay = Number(creditDay);
+
+    if (
+      !Number.isInteger(parsedCreditDay) ||
+      parsedCreditDay < 1 ||
+      parsedCreditDay > 31
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "creditDay must be an integer between 1 and 31",
+      });
+    }
+
     // ───── Validate type ─────
     const validTypes = ["FIXED", "VARIABLE"];
     if (!validTypes.includes(type)) {
@@ -46,11 +70,11 @@ export const createIncome = async (req, res, next) => {
     }
 
     // ───── Validate status ─────
-    const validStatus = ["ACTIVE", "ENDED"];
+    const validStatus = ["ACTIVE", "PAUSED"];
     if (!validStatus.includes(status)) {
       return res.status(400).json({
         success: false,
-        message: "Invalid status. Must be ACTIVE or ENDED",
+        message: "Invalid status. Must be ACTIVE or PAUSED",
       });
     }
 
@@ -63,6 +87,7 @@ export const createIncome = async (req, res, next) => {
       source,
       status,
       type,
+      creditDay: parsedCreditDay,
       userId,
     };
 
@@ -174,8 +199,17 @@ export const getIncomeById = async (req, res, next) => {
 export const updateIncome = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, amount, company, position, source, note, status, type } =
-      req.body;
+    const {
+      name,
+      amount,
+      company,
+      position,
+      source,
+      note,
+      status,
+      type,
+      creditDay,
+    } = req.body;
 
     const userId = req.user.id;
 
@@ -205,8 +239,26 @@ export const updateIncome = async (req, res, next) => {
       }
     }
 
+    // ───── Validate creditDay ─────
+    let parsedCreditDay = existing.creditDay;
+
+    if (creditDay !== undefined) {
+      parsedCreditDay = Number(creditDay);
+
+      if (
+        !Number.isInteger(parsedCreditDay) ||
+        parsedCreditDay < 1 ||
+        parsedCreditDay > 31
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "creditDay must be an integer between 1 and 31",
+        });
+      }
+    }
+
     // ───── Validate type ─────
-    if (type) {
+    if (type !== undefined) {
       const validTypes = ["FIXED", "VARIABLE"];
       if (!validTypes.includes(type)) {
         return res.status(400).json({
@@ -217,12 +269,12 @@ export const updateIncome = async (req, res, next) => {
     }
 
     // ───── Validate status ─────
-    if (status) {
-      const validStatus = ["ACTIVE", "ENDED"];
+    if (status !== undefined) {
+      const validStatus = ["ACTIVE", "PAUSED"]; // ✅ fixed
       if (!validStatus.includes(status)) {
         return res.status(400).json({
           success: false,
-          message: "Invalid status. Must be ACTIVE or ENDED",
+          message: "Invalid status. Must be ACTIVE or PAUSED",
         });
       }
     }
@@ -237,6 +289,7 @@ export const updateIncome = async (req, res, next) => {
       note: note ?? existing.note,
       status: status ?? existing.status,
       type: type ?? existing.type,
+      creditDay: parsedCreditDay,
     };
 
     // ───── Update income ─────
