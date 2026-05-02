@@ -1,6 +1,8 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../config/prisma.js";
 
+// add query isUsed on getCAtegory
+
 // ─────────────────────────────────────────
 // CREATE CATEGORY
 // ─────────────────────────────────────────

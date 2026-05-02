@@ -4,7 +4,6 @@ import prisma from "../config/prisma.js";
 // ─────────────────────────────────────────
 // CREATE BUDGET
 // ─────────────────────────────────────────
-
 export const createBudget = async (req, res, next) => {
   try {
     const {
@@ -115,6 +114,7 @@ export const getBudgets = async (req, res, next) => {
       where: { userId },
       include: {
         category: true,
+        expenses: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -168,7 +168,6 @@ export const getBudgets = async (req, res, next) => {
 // ─────────────────────────────────────────
 // GET BUDGET BY ID
 // ─────────────────────────────────────────
-
 export const getBudgetById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -181,6 +180,7 @@ export const getBudgetById = async (req, res, next) => {
       },
       include: {
         category: true,
+        expenses: true,
       },
     });
 
@@ -330,7 +330,6 @@ export const updateBudget = async (req, res, next) => {
 // ─────────────────────────────────────────
 // DELETE BUDGET
 // ─────────────────────────────────────────
-
 export const deleteBudget = async (req, res, next) => {
   try {
     const { id } = req.params;

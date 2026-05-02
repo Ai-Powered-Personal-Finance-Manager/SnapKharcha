@@ -37,7 +37,7 @@ const LeftSectionHeader = () => {
       >
         Restaurants, grocery shops, and retail stores can use SnapKharcha to
         generate customer bills, track revenue, and get AI-driven business
-        insights — all from one clean dashboard.
+        insights, all from one clean dashboard.
       </p>
     </>
   );
@@ -51,7 +51,11 @@ const BusinessTypeCard = ({ data }: businessTypeCardDataInterface) => {
           key={i}
           className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/8 hover:border-[#00C950]/40 hover:bg-[#00C950]/8 transition-all duration-200  w-full"
         >
-          <span className="text-2xl">{type.emoji}</span>
+          {typeof type.emoji === "string" ? (
+            <span className="text-2xl">{type.emoji}</span>
+          ) : (
+            <type.emoji className="w-6 h-6 text-[#00C950]" />
+          )}
           <div>
             <p
               className="text-white text-sm font-semibold"

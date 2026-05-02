@@ -4,7 +4,7 @@ export const HeroSocials = () => {
       <div className="flex -space-x-3">
         {[
           "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&q=80&fit=crop&crop=face",
-          "https://images.unsplash.com/photo-1494790108755-2616b612b630?w=40&h=40&q=80&fit=crop&crop=face",
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&q=80&fit=crop&crop=face",
           "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=40&h=40&q=80&fit=crop&crop=face",
           "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=40&h=40&q=80&fit=crop&crop=face",
         ].map((src, i) => (

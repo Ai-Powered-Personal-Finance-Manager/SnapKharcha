@@ -74,7 +74,7 @@ const PricingHeader = ({ plan, yearly }: PricingHeaderInterface) => {
         >
           {yearly ? plan.price.yearly : plan.price.monthly}
         </span>
-        {plan.price.monthly !== "₹0" && (
+        {plan.price.monthly !== "Rs.0" && (
           <span
             className={`text-sm mb-1 ${plan.highlight ? "text-green-100" : "text-gray-400"}`}
             style={{ fontFamily: "'DM Sans', sans-serif" }}

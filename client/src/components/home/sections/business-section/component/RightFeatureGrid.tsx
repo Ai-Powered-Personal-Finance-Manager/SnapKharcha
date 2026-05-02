@@ -8,7 +8,19 @@ export const RightFeatureGrid = () => {
           key={i}
           className="group p-5 rounded-2xl bg-white/5 border border-white/8 hover:border-[#00C950]/40 hover:bg-[#00C950]/8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
         >
-          <span className="text-3xl block mb-3">{f.icon}</span>
+          {typeof f.icon === "string" ? (
+            <span className="text-3xl">{f.icon}</span>
+          ) : (
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110"
+              style={{
+              backgroundColor: "transparent",
+              border: `1px solid #00C950`,
+              color: "#00C950",
+            }}
+            >
+              <f.icon className="w-6 h-6 text-[#00C950]" />
+            </div>
+          )}
           <h4
             className="text-white font-bold text-sm mb-2"
             style={{ fontFamily: "'Syne', sans-serif" }}

@@ -3,7 +3,7 @@ import { PlanInterface } from "../interface";
 export const plans: PlanInterface[] = [
   {
     name: "Personal Free",
-    price: { monthly: "₹0", yearly: "₹0" },
+    price: { monthly: "Rs.0", yearly: "Rs.0" },
     desc: "Perfect for getting started with personal expense tracking.",
     color: "#00C950",
     bg: "#f0fdf4",
@@ -21,7 +21,7 @@ export const plans: PlanInterface[] = [
   },
   {
     name: "Personal Pro",
-    price: { monthly: "₹299", yearly: "₹199" },
+    price: { monthly: "Rs.299", yearly: "Rs.199" },
     desc: "Unlimited tracking + AI insights for power users.",
     color: "#00C950",
     bg: "#f0fdf4",
@@ -42,7 +42,7 @@ export const plans: PlanInterface[] = [
   },
   {
     name: "Business",
-    price: { monthly: "₹799", yearly: "₹599" },
+    price: { monthly: "Rs.799", yearly: "Rs.599" },
     desc: "Full suite for shops, restaurants, and small businesses.",
     color: "#d97706",
     bg: "#fffbeb",

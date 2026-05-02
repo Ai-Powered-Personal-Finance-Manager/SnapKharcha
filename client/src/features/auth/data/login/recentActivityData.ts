@@ -1,26 +1,27 @@
+import { BriefcaseMedical, Car, Utensils } from "lucide-react";
 import { RecentActivityInterface } from "../../interface/loginInterface";
 
 
 export const recentActivity: RecentActivityInterface[] = [
   {
-    icon: "🍔",
+    icon: Utensils,
     label: "Food & Dining",
-    amount: "-₹340",
+    amount: "- Rs.340",
     time: "2h ago",
-    color: "#fbbf24",
+    color: "#00C950",
   },
   {
-    icon: "🚕",
+    icon: Car,
     label: "Transport",
-    amount: "-₹120",
+    amount: "- Rs.120",
     time: "5h ago",
-    color: "#38bdf8",
+    color: "#00C950",
   },
   {
-    icon: "💊",
+    icon: BriefcaseMedical,
     label: "Healthcare",
-    amount: "-₹850",
+    amount: "- Rs.850",
     time: "Yesterday",
-    color: "#f472b6",
+    color: "#00C950",
   },
 ];

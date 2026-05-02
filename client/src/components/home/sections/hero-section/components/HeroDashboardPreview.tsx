@@ -22,7 +22,7 @@ export const HeroDashboardPreview = () => {
           </div>
         </div>
         <Image
-          src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80&auto=format&fit=crop"
+          src="/dashboard.png"
           alt="Finova AI Dashboard Preview"
           height={1000}
           width={1000}
@@ -46,7 +46,7 @@ export const HeroDashboardPreview = () => {
           className="text-[#00C950] text-2xl font-bold"
           style={{ fontFamily: "'Syne', sans-serif" }}
         >
-          ₹12,400
+          Rs.12,400
         </p>
         <p
           className="text-[#00C950] text-xs flex items-center gap-1 mt-1"
