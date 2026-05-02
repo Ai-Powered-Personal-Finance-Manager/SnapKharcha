@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 export const budgetQueryKey = ["budgets"] as const;
 
-export const budgetDetailQueryKey = (id: string) => ["budgets", id] as const;
+export const budgetDetailQueryKey = (id: string) => ["budget", id] as const;
 
 export type CreateBudgetPayload = {
     name: string;
@@ -95,7 +95,7 @@ export const useGetBudgets = () => {
 
 export const useGetBudgetById = (id?: string) => {
     const { data, isLoading, isError, error, refetch } = useQuery({
-        queryKey: id ? budgetDetailQueryKey(id) : ["budgets", "detail", "missing"],
+        queryKey: id ? budgetDetailQueryKey(id) : ["budget", "detail", "missing"],
         queryFn: () => fetchBudgetById(id as string),
         enabled: Boolean(id),
     });

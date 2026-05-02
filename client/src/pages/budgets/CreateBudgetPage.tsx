@@ -1,79 +1,48 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState, type CSSProperties, type ComponentType } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { BudgetApiItem } from "@/src/types/budget";
-import type { CategoryItem } from "@/src/hooks/budgets/useCategories";
+import { ArrowLeft, Info, Utensils, ShoppingBag, Car, Zap, Wifi, Heart, BookOpen, Dumbbell, ShoppingCart, Plane, Pencil, Gamepad2, Coffee, Bus, Scissors, Gift, Home, Music, Shirt, Baby, PawPrint, Wrench, Sparkles } from "lucide-react";
 import { useCreateCategory, useGetCategories } from "@/src/hooks/budgets/useCategories";
 import { useCreateBudget, useGetBudgets } from "@/src/hooks/budgets/useBudgets";
-import {
-  ArrowLeft,
-  Plus,
-  Utensils,
-  ShoppingBag,
-  Car,
-  Zap,
-  Wifi,
-  Heart,
-  BookOpen,
-  Dumbbell,
-  ShoppingCart,
-  Plane,
-  Pencil,
-  Gamepad2,
-  Coffee,
-  Bus,
-  Scissors,
-  Gift,
-  Home,
-  Music,
-  Shirt,
-  Baby,
-  PawPrint,
-  Wrench,
-  Bell,
-  CheckCircle2,
-  ChevronRight,
-  Info,
-  Sparkles,
-  Calendar,
-  Tag,
-  X,
-} from "lucide-react";
+import type { BudgetApiItem } from "@/src/types/budget";
+import { BudgetCategoryStep } from "@/src/components/budgets/create-budget/BudgetCategoryStep";
+import { BudgetNameStep } from "@/src/components/budgets/create-budget/BudgetNameStep";
+import { BudgetAmountPeriodStep } from "@/src/components/budgets/create-budget/BudgetAmountPeriodStep";
+import { BudgetAlertStep } from "@/src/components/budgets/create-budget/BudgetAlertStep";
+import { BudgetNotesStep } from "@/src/components/budgets/create-budget/BudgetNotesStep";
+import { BudgetPreviewSidebar } from "@/src/components/budgets/create-budget/BudgetPreviewSidebar";
+import type { BudgetCategoryOption, BudgetPeriod, CategoryMap } from "@/src/components/budgets/create-budget/types";
+import { PageHeader } from "@/src/components/PageHeader";
+import { tr } from "zod/locales";
 
-// ─── Icon mapping for categories ──────────────────────────────
-const iconMap: Record<
-  string,
-  React.FC<{ size?: number; className?: string; style?: React.CSSProperties }>
-> = {
-  food: Utensils,
-  groceries: ShoppingCart,
-  shopping: ShoppingBag,
-  transport: Car,
-  utilities: Zap,
-  subscriptions: Wifi,
-  health: Heart,
-  education: BookOpen,
-  gym: Dumbbell,
-  travel: Plane,
-  entertainment: Gamepad2,
-  coffee: Coffee,
-  publictravel: Bus,
-  salon: Scissors,
-  gifts: Gift,
-  rent: Home,
-  music: Music,
-  clothing: Shirt,
-  kids: Baby,
-  pets: PawPrint,
-  stationery: Pencil,
-  repairs: Wrench,
+const iconMap: Record<string, ComponentType<{ size?: number; className?: string; style?: CSSProperties }>> = {
+    food: Utensils,
+    groceries: ShoppingCart,
+    shopping: ShoppingBag,
+    transport: Car,
+    utilities: Zap,
+    subscriptions: Wifi,
+    health: Heart,
+    education: BookOpen,
+    gym: Dumbbell,
+    travel: Plane,
+    entertainment: Gamepad2,
+    coffee: Coffee,
+    publictravel: Bus,
+    salon: Scissors,
+    gifts: Gift,
+    rent: Home,
+    music: Music,
+    clothing: Shirt,
+    kids: Baby,
+    pets: PawPrint,
+    stationery: Pencil,
+    repairs: Wrench,
 };
 
-// ─── Color palette for categories ─────────────────────────────
-const colorPalette: Record<string, { hex: string; bg: string; text: string }> =
-  {
+const colorPalette: Record<string, { hex: string; bg: string; text: string }> = {
     "#f97316": { hex: "#f97316", bg: "bg-orange-50", text: "text-orange-500" },
     "#84cc16": { hex: "#84cc16", bg: "bg-lime-50", text: "text-lime-600" },
     "#f59e0b": { hex: "#f59e0b", bg: "bg-yellow-50", text: "text-yellow-600" },
@@ -95,998 +64,314 @@ const colorPalette: Record<string, { hex: string; bg: string; text: string }> =
     "#65a30d": { hex: "#65a30d", bg: "bg-lime-50", text: "text-lime-600" },
     "#78716c": { hex: "#78716c", bg: "bg-stone-50", text: "text-stone-500" },
     "#94a3b8": { hex: "#94a3b8", bg: "bg-gray-100", text: "text-gray-500" },
-  };
+};
 
-// ─── Period options ───────────────────────────────────────────
 const periods = [
-  { id: "monthly", label: "Monthly", desc: "Resets on the 1st of every month" },
-  { id: "custom", label: "Custom", desc: "Set your own start & end date" },
+    { id: "monthly", label: "Monthly", desc: "Resets on the 1st of every month" },
+    { id: "custom", label: "Custom", desc: "Set your own start & end date" },
 ] as const;
 
-type BudgetPeriod = (typeof periods)[number]["id"];
-
-// ─── Alert threshold options ──────────────────────────────────
 const alertOptions = [50, 75, 90, 95];
 
-// ─── Helper: Get last day of month ────────────────────────────
-const getLastDayOfMonth = (date: Date): number => {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-};
+const getLastDayOfMonth = (date: Date): number => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 
-// ─── Helper: Format date to YYYY-MM-DD ────────────────────────
 const formatDate = (date: Date): string => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
 };
 
-// ─── Helper: Parse date string to Date ────────────────────────
-const parseDate = (dateStr: string): Date => {
-  return new Date(dateStr + "T00:00:00");
-};
+const parseDate = (dateStr: string): Date => new Date(`${dateStr}T00:00:00`);
 
 const getInitialCustomDateRange = () => {
-  const today = new Date();
-  const currentYear = today.getFullYear();
-  const currentMonth = today.getMonth();
-
-  return {
-    startDate: formatDate(new Date(currentYear, currentMonth, 1)),
-    endDate: formatDate(
-      new Date(currentYear, currentMonth, getLastDayOfMonth(today)),
-    ),
-  };
-};
-
-// ─── Component ─────────────────────────────────────────────────
-export function CreateBudgetPage() {
-  const router = useRouter();
-  const { data: categoriesData } = useGetCategories();
-  const { data: budgetsData } = useGetBudgets();
-  const { mutate: createCategory, isPending: isCreatingCategory } = useCreateCategory();
-  const createBudgetMutation = useCreateBudget();
-
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
-    null,
-  );
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [period, setPeriod] = useState<BudgetPeriod>("monthly");
-  const [customStartDate, setCustomStartDate] = useState(
-    () => getInitialCustomDateRange().startDate,
-  );
-  const [customEndDate, setCustomEndDate] = useState(
-    () => getInitialCustomDateRange().endDate,
-  );
-  const [alertAt, setAlertAt] = useState(80);
-  const [alertEnabled, setAlert] = useState(true);
-  const [searchCat, setSearchCat] = useState("");
-  const [note, setNote] = useState("");
-  const [showCustomCategoryForm, setShowCustomCategoryForm] = useState(false);
-  const [customCategoryName, setCustomCategoryName] = useState("");
-  const [customCategoryTagInput, setCustomCategoryTagInput] = useState("");
-  const [customCategoryTags, setCustomCategoryTags] = useState<string[]>([]);
-  const [customCategoryColor, setCustomCategoryColor] = useState("#00C950");
-
-  // Process categories and budgets
-  const categoryMap = useMemo(() => {
-    if (!categoriesData?.data) return {};
-    return categoriesData.data.reduce(
-      (acc, cat) => {
-        acc[cat.id] = cat;
-        return acc;
-      },
-      {} as Record<string, CategoryItem>,
-    );
-  }, [categoriesData]);
-
-  const usedCategoryIds = useMemo(() => {
-    const budgets = budgetsData?.data?.budget ?? [];
-    return new Set(budgets.map((budget: BudgetApiItem) => budget.categoryId));
-  }, [budgetsData]);
-
-  const allCategories = useMemo(() => {
-    if (!categoriesData?.data) return [];
-    return categoriesData.data.map((cat) => ({
-      id: cat.id,
-      label: cat.name,
-      icon: iconMap[cat.id] || Sparkles,
-      hex: cat.color || "#94a3b8",
-      bg: colorPalette[cat.color]?.bg || "bg-gray-100",
-      text: colorPalette[cat.color]?.text || "text-gray-500",
-      desc: cat.tags?.join(", ") || "User category",
-    }));
-  }, [categoriesData]);
-
-  const filteredCats = allCategories.filter(
-    (c) =>
-      c.label.toLowerCase().includes(searchCat.toLowerCase()) ||
-      c.desc.toLowerCase().includes(searchCat.toLowerCase()),
-  );
-
-  const availableCats = filteredCats.filter((c) => !usedCategoryIds.has(c.id));
-  const existingCats = filteredCats.filter((c) => usedCategoryIds.has(c.id));
-
-  const selectedCategory = selectedCategoryId
-    ? allCategories.find((c) => c.id === selectedCategoryId)
-    : null;
-
-  const addCustomCategoryTag = (tagValue: string) => {
-    const nextTag = tagValue.trim();
-
-    if (!nextTag) {
-      return;
-    }
-
-    setCustomCategoryTags((currentTags) => {
-      if (currentTags.some((tag) => tag.toLowerCase() === nextTag.toLowerCase())) {
-        return currentTags;
-      }
-
-      return [...currentTags, nextTag];
-    });
-    setCustomCategoryTagInput("");
-  };
-
-  const removeCustomCategoryTag = (tagToRemove: string) => {
-    setCustomCategoryTags((currentTags) =>
-      currentTags.filter((tag) => tag !== tagToRemove),
-    );
-  };
-
-  const handleCustomCategoryTagKeyDown = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    if (event.key !== "Enter") {
-      return;
-    }
-
-    event.preventDefault();
-    addCustomCategoryTag(customCategoryTagInput);
-  };
-
-  const handleCreateCustomCategory = () => {
-    const trimmedName = customCategoryName.trim();
-
-    if (!trimmedName || !customCategoryColor) {
-      return;
-    }
-
-    createCategory(
-      {
-        name: trimmedName,
-        tags: customCategoryTags,
-        color: customCategoryColor,
-        icon: null,
-      },
-      {
-        onSuccess: (response) => {
-          setSelectedCategoryId(response.data?.id ?? null);
-          setShowCustomCategoryForm(false);
-          setCustomCategoryName("");
-          setCustomCategoryTagInput("");
-          setCustomCategoryTags([]);
-          setCustomCategoryColor("#00C950");
-        },
-      },
-    );
-  };
-
-  const canCreateCustomCategory =
-    customCategoryName.trim().length > 0 &&
-    customCategoryColor.trim().length > 0 &&
-    !isCreatingCategory;
-
-  const alertAmount = amount
-    ? Math.round((Number(amount) * alertAt) / 100)
-    : null;
-
-  const dateError = useMemo(() => {
-    if (period !== "custom" || !customStartDate || !customEndDate) {
-      return "";
-    }
-
-    const startDate = parseDate(customStartDate);
-    const endDate = parseDate(customEndDate);
-
-    return endDate < startDate ? "End date cannot be before start date" : "";
-  }, [period, customStartDate, customEndDate]);
-
-  const canSubmit =
-    selectedCategoryId && name && amount && Number(amount) > 0 && !dateError;
-
-  // Handle budget creation
-  const handleCreateBudget = async () => {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth();
 
-    let startingDate: string;
-    let expireDate: string;
+    return {
+        startDate: formatDate(new Date(currentYear, currentMonth, 1)),
+        endDate: formatDate(new Date(currentYear, currentMonth, getLastDayOfMonth(today))),
+    };
+};
 
-    if (period === "monthly") {
-      startingDate = formatDate(new Date(currentYear, currentMonth, 1));
-      const lastDay = getLastDayOfMonth(today);
-      expireDate = formatDate(new Date(currentYear, currentMonth, lastDay));
-    } else {
-      startingDate = customStartDate;
-      expireDate = customEndDate;
-    }
+export function CreateBudgetPage() {
+    const router = useRouter();
+    const { data: categoriesData } = useGetCategories();
+    const { data: budgetsData } = useGetBudgets();
+    const { mutate: createCategory, isPending: isCreatingCategory } = useCreateCategory();
+    const createBudgetMutation = useCreateBudget();
 
-    const payload = {
-      name: name || selectedCategory?.label || "Unnamed Budget",
-      amount: Number(amount),
-      startingDate,
-      expireDate,
-      categoryId: selectedCategoryId!,
-      note: note || undefined,
-      alert: alertEnabled,
-      alertLimit: alertEnabled
-        ? alertAt
-        : null,
+    const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+    const [name, setName] = useState("");
+    const [amount, setAmount] = useState("");
+    const [period, setPeriod] = useState<BudgetPeriod>("monthly");
+    const [customStartDate, setCustomStartDate] = useState(() => getInitialCustomDateRange().startDate);
+    const [customEndDate, setCustomEndDate] = useState(() => getInitialCustomDateRange().endDate);
+    const [alertAt, setAlertAt] = useState(80);
+    const [alertEnabled, setAlertEnabled] = useState(true);
+    const [searchCat, setSearchCat] = useState("");
+    const [note, setNote] = useState("");
+    const [showCustomCategoryForm, setShowCustomCategoryForm] = useState(false);
+    const [customCategoryName, setCustomCategoryName] = useState("");
+    const [customCategoryTagInput, setCustomCategoryTagInput] = useState("");
+    const [customCategoryTags, setCustomCategoryTags] = useState<string[]>([]);
+    const [customCategoryColor, setCustomCategoryColor] = useState("#00C950");
+
+    const categoryMap = useMemo(() => {
+        if (!categoriesData?.data) {
+            return {} as CategoryMap;
+        }
+
+        return categoriesData.data.reduce((accumulator, category) => {
+            accumulator[category.id] = category;
+            return accumulator;
+        }, {} as CategoryMap);
+    }, [categoriesData]);
+
+    const usedCategoryIds = useMemo(() => {
+        const budgets = budgetsData?.data?.budget ?? [];
+        return new Set(budgets.map((budget: BudgetApiItem) => budget.categoryId));
+    }, [budgetsData]);
+
+    const allCategories = useMemo(() => {
+        if (!categoriesData?.data) {
+            return [];
+        }
+
+        return categoriesData.data.map((category) => ({
+            id: category.id,
+            label: category.name,
+            icon: iconMap[category.id] || Sparkles,
+            hex: category.color || "#94a3b8",
+            bg: colorPalette[category.color]?.bg || "bg-gray-100",
+            text: colorPalette[category.color]?.text || "text-gray-500",
+            desc: category.tags?.join(", ") || "User category",
+        })) as BudgetCategoryOption[];
+    }, [categoriesData]);
+
+    const filteredCats = allCategories.filter(
+        (category) =>
+            category.label.toLowerCase().includes(searchCat.toLowerCase()) ||
+            category.desc.toLowerCase().includes(searchCat.toLowerCase()),
+    );
+
+    const availableCats = filteredCats.filter((category) => !usedCategoryIds.has(category.id));
+    const existingCats = filteredCats.filter((category) => usedCategoryIds.has(category.id));
+
+    const selectedCategory = selectedCategoryId
+        ? allCategories.find((category) => category.id === selectedCategoryId) ?? null
+        : null;
+
+    const customCategory = {
+        name: customCategoryName,
+        tagInput: customCategoryTagInput,
+        tags: customCategoryTags,
+        color: customCategoryColor,
     };
 
-    createBudgetMutation.mutate(payload, {
-      onSuccess: () => {
-        router.push("/budgets");
-      },
-    });
-  };
+    const addCustomCategoryTag = (tagValue: string) => {
+        const nextTag = tagValue.trim();
 
-  return (
-    <div className=" space-y-6">
-      {/* Back + header */}
-      <div className="flex items-center gap-4">
-        <Link
-          href="/budgets"
-          className="flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-gray-800 transition-colors shrink-0"
-        >
-          <ArrowLeft size={16} />
-        </Link>
-        <div>
-          <h2 className="text-gray-900 font-bold text-xl tracking-tight">
-            Create Budget
-          </h2>
-          <p className="text-gray-400 text-sm mt-0.5">
-            Set a spending limit for a category you care about
-          </p>
-        </div>
-      </div>
+        if (!nextTag) {
+            return;
+        }
 
-      {/* Info callout */}
-      {/* {!catsLoading && !budgetsLoading && ( */}
-      <div className="flex items-start gap-3 px-5 py-4 rounded-2xl bg-blue-50/70 border border-blue-100">
-        <Info size={15} className="text-blue-400 shrink-0 mt-0.5" />
-        <p className="text-blue-700 text-xs leading-relaxed">
-          <span className="font-semibold">How budgets work: </span>
-          Budgets are spending limits per category. When you log an expense, you
-          choose which budget to deduct from. You can only create one budget per
-          category. Greyed out categories already have a budget.
-        </p>
-      </div>
-      {/* )} */}
+        setCustomCategoryTags((currentTags) => {
+            if (currentTags.some((tag) => tag.toLowerCase() === nextTag.toLowerCase())) {
+                return currentTags;
+            }
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* ── Left: Form ────────────────────────────────────── */}
-        <div className="xl:col-span-2 space-y-5">
-          {/* Step 1: Category picker */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <div className="flex items-center gap-2">
-                <Tag size={13} className="text-gray-400 shrink-0" />
-                <span className="w-6 h-6 rounded-lg bg-[#00C950] text-white text-[11px] font-bold flex items-center justify-center">
-                  1
-                </span>
-                <h3 className="text-gray-900 font-semibold text-sm">
-                  Choose Category
-                </h3>
-                {selectedCategory && (
-                  <div
-                    className="ml-auto flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
-                    style={{
-                      backgroundColor: `${selectedCategory.hex}18`,
-                      color: selectedCategory.hex,
-                    }}
-                  >
-                    <selectedCategory.icon size={11} style={{ color: selectedCategory.hex }} />
-                    {selectedCategory.label}
-                    <button
-                      onClick={() => setSelectedCategoryId(null)}
-                      className="ml-1 opacity-60 hover:opacity-100"
-                    >
-                      ×
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
+            return [...currentTags, nextTag];
+        });
+        setCustomCategoryTagInput("");
+    };
 
-            <div className="p-5">
-              {/* Search */}
-              <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-gray-50 border border-gray-200 mb-4 focus-within:border-[#00C950] focus-within:ring-2 focus-within:ring-[#00C950]/10 transition-all">
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  className="text-gray-400 shrink-0"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
-                <input
-                  type="text"
-                  placeholder="Search categories…"
-                  value={searchCat}
-                  onChange={(e) => setSearchCat(e.target.value)}
-                  className="flex-1 bg-transparent text-sm text-gray-700 placeholder:text-gray-400 outline-none"
-                />
-              </div>
+    const removeCustomCategoryTag = (tagToRemove: string) => {
+        setCustomCategoryTags((currentTags) => currentTags.filter((tag) => tag !== tagToRemove));
+    };
 
-              {/* Available categories */}
-              {availableCats.length > 0 && (
-                <div className="mb-4">
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">
-                    Available
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {availableCats.map((c) => {
-                      const Icon = c.icon;
-                      const isSelected = selectedCategoryId === c.id;
-                      return (
-                        <button
-                          key={c.id}
-                          onClick={() =>
-                            setSelectedCategoryId(isSelected ? null : c.id)
-                          }
-                          className={`group flex items-start gap-3 p-3.5 rounded-xl border-2 text-left transition-all duration-150 ${
-                            isSelected
-                              ? "border-[#00C950] bg-[#00C950]/5 shadow-sm"
-                              : "border-gray-100 hover:border-gray-200 hover:bg-gray-50"
-                          }`}
-                        >
-                          <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                            style={{ backgroundColor: `${c.hex}18` }}
-                          >
-                            <Icon size={16} style={{ color: c.hex }} />
-                          </div>
-                          <div className="min-w-0">
-                            <p
-                              className={`text-xs font-semibold leading-tight ${isSelected ? "text-[#00C950]" : "text-gray-700"}`}
-                            >
-                              {c.label}
-                            </p>
-                            <p className="text-gray-400 text-[10px] mt-0.5 leading-snug">
-                              {c.desc}
-                            </p>
-                          </div>
-                          {isSelected && (
-                            <CheckCircle2
-                              size={14}
-                              className="text-[#00C950] shrink-0 ml-auto mt-0.5"
-                            />
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+    const handleCustomCategoryTagKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key !== "Enter") {
+            return;
+        }
 
-              {/* Already created */}
-              {existingCats.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-300 mb-3">
-                    Already budgeted
-                  </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                    {existingCats.map((c) => {
-                      const Icon = c.icon;
-                      return (
-                        <div
-                          key={c.id}
-                          className="flex items-start gap-3 p-3.5 rounded-xl border-2 border-gray-100 opacity-40 cursor-not-allowed"
-                        >
-                          <div
-                            className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
-                            style={{ backgroundColor: `${c.hex}18` }}
-                          >
-                            <Icon size={16} style={{ color: c.hex }} />
-                          </div>
-                          <div className="min-w-0">
-                            <p className="text-xs font-semibold text-gray-500 leading-tight">
-                              {c.label}
-                            </p>
-                            <p className="text-gray-300 text-[10px] mt-0.5">
-                              Budget exists
-                            </p>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+        event.preventDefault();
+        addCustomCategoryTag(customCategoryTagInput);
+    };
 
-              {filteredCats.length === 0 && (
-                <div className="text-center py-8 text-gray-400 text-sm">
-                  No categories match <span className="font-medium">{searchCat}</span>
-                </div>
-              )}
+    const handleCreateCustomCategory = () => {
+        const trimmedName = customCategoryName.trim();
 
-              <div className="mt-5 rounded-2xl border border-dashed border-gray-200 bg-gray-50/50 p-4">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900">Create your own category</p>
-                    <p className="text-[11px] text-gray-400">
-                      Add a custom category with tags and a hex color.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => setShowCustomCategoryForm((current) => !current)}
-                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#00C950] px-3 py-2 text-xs font-semibold text-white shadow-sm shadow-[#00C950]/20 transition-colors hover:bg-[#00b347]"
-                  >
-                    <Plus size={13} />
-                    {showCustomCategoryForm ? "Close" : "Add"}
-                  </button>
-                </div>
+        if (!trimmedName || !customCategoryColor) {
+            return;
+        }
 
-                {showCustomCategoryForm && (
-                  <div className="mt-4 space-y-4 rounded-2xl border border-gray-100 bg-white p-4">
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                        Category name
-                      </label>
-                      <input
-                        type="text"
-                        value={customCategoryName}
-                        onChange={(event) => setCustomCategoryName(event.target.value)}
-                        placeholder="e.g. Gaming"
-                        className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-700 outline-none transition-colors placeholder:text-gray-300 focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/10"
-                      />
-                    </div>
+        createCategory(
+            {
+                name: trimmedName,
+                tags: customCategoryTags,
+                color: customCategoryColor,
+                icon: null,
+            },
+            {
+                onSuccess: (response) => {
+                    setSelectedCategoryId(response.data?.id ?? null);
+                    setShowCustomCategoryForm(false);
+                    setCustomCategoryName("");
+                    setCustomCategoryTagInput("");
+                    setCustomCategoryTags([]);
+                    setCustomCategoryColor("#00C950");
+                },
+            },
+        );
+    };
 
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                        Tags
-                      </label>
-                      <div className="flex min-h-12 flex-wrap gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5">
-                        {customCategoryTags.map((tagValue) => (
-                          <span
-                            key={tagValue}
-                            className="inline-flex items-center gap-1.5 rounded-full bg-white px-3 py-1 text-xs font-medium text-gray-600 shadow-sm border border-gray-200"
-                          >
-                            {tagValue}
-                            <button
-                              type="button"
-                              onClick={() => removeCustomCategoryTag(tagValue)}
-                              className="rounded-full text-gray-400 transition-colors hover:text-gray-700"
-                              aria-label={`Remove tag ${tagValue}`}
-                            >
-                              <X size={12} />
-                            </button>
-                          </span>
-                        ))}
-                        <input
-                          type="text"
-                          value={customCategoryTagInput}
-                          onChange={(event) => setCustomCategoryTagInput(event.target.value)}
-                          onKeyDown={handleCustomCategoryTagKeyDown}
-                          placeholder="Type a tag and press Enter"
-                          className="min-w-40 flex-1 bg-transparent text-sm text-gray-700 outline-none placeholder:text-gray-300"
-                        />
-                      </div>
-                      <p className="text-[11px] text-gray-400">
-                        Press Enter to add tags like gaming or play.
-                      </p>
-                    </div>
+    const alertAmount = amount ? Math.round((Number(amount) * alertAt) / 100) : null;
 
-                    <div className="space-y-1.5">
-                      <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                        Color
-                      </label>
-                      <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 p-3">
-                        <input
-                          type="color"
-                          value={customCategoryColor}
-                          onChange={(event) => setCustomCategoryColor(event.target.value)}
-                          className="h-11 w-14 rounded-lg border border-gray-200 bg-white p-1"
-                          aria-label="Category color"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                            Selected hex
-                          </p>
-                          <p className="font-mono text-sm text-gray-700">
-                            {customCategoryColor.toUpperCase()}
-                          </p>
-                        </div>
-                        <div
-                          className="h-10 w-10 rounded-xl border border-gray-200"
-                          style={{ backgroundColor: customCategoryColor }}
-                        />
-                      </div>
-                    </div>
+    const dateError = useMemo(() => {
+        if (period !== "custom" || !customStartDate || !customEndDate) {
+            return "";
+        }
 
-                    <div className="flex items-center justify-end gap-3 pt-1">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowCustomCategoryForm(false);
-                          setCustomCategoryName("");
-                          setCustomCategoryTagInput("");
-                          setCustomCategoryTags([]);
-                          setCustomCategoryColor("#00C950");
-                        }}
-                        className="rounded-xl border border-gray-200 px-4 py-2 text-xs font-semibold text-gray-500 transition-colors hover:bg-gray-50"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleCreateCustomCategory}
-                        disabled={!canCreateCustomCategory}
-                        className="rounded-xl bg-[#00C950] px-4 py-2 text-xs font-semibold text-white shadow-sm shadow-[#00C950]/20 transition-colors hover:bg-[#00b347] disabled:cursor-not-allowed disabled:opacity-40"
-                      >
-                        {isCreatingCategory ? "Saving..." : "Save category"}
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+        const startDate = parseDate(customStartDate);
+        const endDate = parseDate(customEndDate);
 
-          {/* Step 2: Set Budget Name */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-[#00C950] text-white text-[11px] font-bold flex items-center justify-center">
-                  2
-                </span>
-                <h3 className="text-gray-900 font-semibold text-sm">
-                  Set Budget Name
-                </h3>
-              </div>
-            </div>
+        return endDate < startDate ? "End date cannot be before start date" : "";
+    }, [period, customStartDate, customEndDate]);
 
-            <div className="p-6 space-y-5">
-              {/* Amount input */}
-              <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">
-                  Budget Name *
-                </label>
-                <div
-                  className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 transition-all ${name ? "border-[#00C950] bg-[#00C950]/3" : "border-gray-200 focus-within:border-[#00C950] focus-within:bg-[#00C950]/2"}`}
-                >
-                  <input
-                    type="text"
-                    placeholder="Enter budget name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="flex-1 bg-transparent text-gray-900 text-3xl font-black font-mono outline-none placeholder:text-gray-200"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
+    const canSubmit = Boolean(selectedCategoryId && name && amount && Number(amount) > 0 && !dateError);
 
-          {/* Step 3: Amount & Period */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-[#00C950] text-white text-[11px] font-bold flex items-center justify-center">
-                  3
-                </span>
-                <h3 className="text-gray-900 font-semibold text-sm">
-                  Set Amount & Period
-                </h3>
-              </div>
-            </div>
+    const handleCreateBudget = async () => {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentMonth = today.getMonth();
 
-            <div className="p-6 space-y-5">
-              {/* Amount input */}
-              <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">
-                  Budget Amount *
-                </label>
-                <div
-                  className={`flex items-center gap-3 px-5 py-4 rounded-2xl border-2 transition-all ${amount && Number(amount) > 0 ? "border-[#00C950] bg-[#00C950]/3" : "border-gray-200 focus-within:border-[#00C950] focus-within:bg-[#00C950]/2"}`}
-                >
-                  <span className="text-gray-400 text-2xl font-bold">₹</span>
-                  <input
-                    type="number"
-                    placeholder="0"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    className="flex-1 bg-transparent text-gray-900 text-3xl font-black font-mono outline-none placeholder:text-gray-200"
-                  />
-                  <span className="text-gray-400 text-sm">/ month</span>
-                </div>
-                {/* Quick presets */}
-                <div className="flex items-center gap-2 mt-2 flex-wrap">
-                  <span className="text-[11px] text-gray-400">Quick:</span>
-                  {[1000, 2000, 3000, 5000, 10000, 15000].map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setAmount(v.toString())}
-                      className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold border transition-colors ${amount === v.toString() ? "bg-[#00C950] text-white border-transparent" : "border-gray-200 text-gray-500 hover:border-[#00C950]/40 hover:text-[#00C950]"}`}
-                    >
-                      ₹{(v / 1000).toFixed(0)}k
-                    </button>
-                  ))}
-                </div>
-              </div>
+        let startingDate: string;
+        let expireDate: string;
 
-              {/* Period selector */}
-              <div>
-                <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">
-                  Reset Period
-                </label>
-                <div className="grid grid-cols-3 gap-3">
-                  {periods.map((p) => (
-                    <button
-                      key={p.id}
-                      onClick={() => setPeriod(p.id)}
-                      className={`flex flex-col items-start p-3.5 rounded-xl border-2 text-left transition-all ${period === p.id ? "border-[#00C950] bg-[#00C950]/5" : "border-gray-200 hover:border-gray-300"}`}
-                    >
-                      <p
-                        className={`text-xs font-bold ${period === p.id ? "text-[#00C950]" : "text-gray-700"}`}
-                      >
-                        {p.label}
-                      </p>
-                      <p className="text-gray-400 text-[10px] mt-1 leading-snug">
-                        {p.desc}
-                      </p>
-                    </button>
-                  ))}
-                </div>
-                {/* Custom date range */}
-                {period === "custom" && (
-                  <div>
-                    <div className="grid grid-cols-2 gap-3 mt-3">
-                      <div>
-                        <label className="text-[11px] text-gray-400 block mb-1">
-                          Start Date
-                        </label>
-                        <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-gray-200 focus-within:border-[#00C950] transition-all">
-                          <Calendar size={13} className="text-gray-400" />
-                          <input
-                            type="date"
-                            value={customStartDate}
-                            onChange={(e) => setCustomStartDate(e.target.value)}
-                            className="flex-1 bg-transparent text-xs text-gray-700 outline-none"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-[11px] text-gray-400 block mb-1">
-                          End Date
-                        </label>
-                        <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl border border-gray-200 focus-within:border-[#00C950] transition-all">
-                          <Calendar size={13} className="text-gray-400" />
-                          <input
-                            type="date"
-                            value={customEndDate}
-                            onChange={(e) => setCustomEndDate(e.target.value)}
-                            className="flex-1 bg-transparent text-xs text-gray-700 outline-none"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    {dateError && (
-                      <p className="text-red-500 text-[11px] mt-2">
-                        {dateError}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+        if (period === "monthly") {
+            startingDate = formatDate(new Date(currentYear, currentMonth, 1));
+            expireDate = formatDate(new Date(currentYear, currentMonth, getLastDayOfMonth(today)));
+        } else {
+            startingDate = customStartDate;
+            expireDate = customEndDate;
+        }
 
-          {/* Step 4: Alerts */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="w-6 h-6 rounded-lg bg-[#00C950] text-white text-[11px] font-bold flex items-center justify-center">
-                    4
-                  </span>
-                  <h3 className="text-gray-900 font-semibold text-sm">
-                    Spending Alert
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setAlert((a) => !a)}
-                  className={`w-11 h-6 rounded-full flex items-center px-1 transition-colors ${alertEnabled ? "bg-[#00C950]" : "bg-gray-200"}`}
-                >
-                  <div
-                    className={`w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 ${alertEnabled ? "translate-x-5" : "translate-x-0"}`}
-                  />
-                </button>
-              </div>
-            </div>
+        createBudgetMutation.mutate(
+            {
+                name: name || selectedCategory?.label || "Unnamed Budget",
+                amount: Number(amount),
+                startingDate,
+                expireDate,
+                categoryId: selectedCategoryId!,
+                note: note || undefined,
+                alert: alertEnabled,
+                alertLimit: alertEnabled ? alertAt : null,
+            },
+            {
+                onSuccess: () => {
+                    router.push("/budgets");
+                },
+            },
+        );
+    };
 
-            {alertEnabled && (
-              <div className="p-6 space-y-4">
-                <p className="text-gray-500 text-xs">
-                  Notify me when I&apos;ve used this much of my budget:
+    const activeBudgets = budgetsData?.data?.budget ?? [];
+
+    return (
+        <div className="space-y-6">
+            <PageHeader
+                title="Create Budget"
+                description="Set a spending limit for a category you care about"
+                back={true}
+            />
+
+            <div className="flex items-start gap-3 px-5 py-4 rounded-2xl bg-blue-50/70 border border-blue-100">
+                <Info size={15} className="text-blue-400 shrink-0 mt-0.5" />
+                <p className="text-blue-700 text-xs leading-relaxed">
+                    <span className="font-semibold">How budgets work: </span>
+                    Budgets are spending limits per category. When you log an expense, you choose which budget to deduct from. You can only create one budget per category. Greyed out categories already have a budget.
                 </p>
-                <div className="flex gap-3">
-                  {alertOptions.map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setAlertAt(v)}
-                      className={`flex-1 py-3 rounded-xl border-2 text-sm font-bold transition-all ${alertAt === v ? "border-[#00C950] bg-[#00C950] text-white shadow-sm shadow-[#00C950]/25" : "border-gray-200 text-gray-600 hover:border-[#00C950]/40"}`}
-                    >
-                      {v}%
-                    </button>
-                  ))}
-                </div>
-                {alertAmount && (
-                  <div className="flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-50 border border-amber-100">
-                    <Bell size={14} className="text-amber-500 shrink-0" />
-                    <p className="text-amber-700 text-xs">
-                      You&apos;ll be notified when spending reaches{" "}
-                      <span className="font-bold font-mono">
-                        Rs. {alertAmount.toLocaleString()}
-                      </span>{" "}
-                      ({alertAt}% of Rs. {Number(amount).toLocaleString()})
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-            {!alertEnabled && (
-              <div className="px-6 py-4">
-                <p className="text-gray-400 text-xs">
-                  No alerts will be sent for this budget.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Step 5: Notes */}
-          <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 border-b border-gray-50">
-              <div className="flex items-center gap-2">
-                <span className="w-6 h-6 rounded-lg bg-gray-200 text-gray-500 text-[11px] font-bold flex items-center justify-center">
-                  5
-                </span>
-                <h3 className="text-gray-900 font-semibold text-sm">
-                  Notes{" "}
-                  <span className="text-gray-400 font-normal">(optional)</span>
-                </h3>
-              </div>
             </div>
-            <div className="p-6">
-              <textarea
-                placeholder="e.g. Includes weekend dining out, office lunches, and coffee. Exclude groceries."
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                rows={3}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 placeholder:text-gray-300 outline-none resize-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/10 transition-all"
-              />
-            </div>
-          </div>
 
-          {/* Submit buttons */}
-          <div className="flex items-center gap-3">
-            <Link
-              href="/budgets"
-              className="flex-1 py-3.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold text-center hover:bg-gray-50 transition-colors"
-            >
-              Cancel
-            </Link>
-            <button
-              onClick={handleCreateBudget}
-              disabled={!canSubmit || createBudgetMutation.isPending}
-              className="flex-1 py-3.5 rounded-xl bg-[#00C950] text-white text-sm font-bold shadow-lg shadow-[#00C950]/25 hover:bg-[#00b347] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-            >
-              {createBudgetMutation.isPending ? "Creating..." : "Create Budget"}
-            </button>
-          </div>
-        </div>
-
-        {/* ── Right: Live Preview ────────────────────────────── */}
-        <div className="space-y-4">
-          {/* Preview card */}
-          <div className="sticky top-6">
-            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3 px-1">
-              Live Preview
-            </p>
-
-            <div
-              className={`bg-white rounded-2xl border-2 overflow-hidden transition-all duration-300 ${selectedCategory && amount ? "border-[#00C950]/30 shadow-lg shadow-[#00C950]/8" : "border-gray-200"}`}
-            >
-              {/* Progress bar top */}
-              <div className="h-1.5 bg-gray-100">
-                {selectedCategory && amount && (
-                  <div
-                    className="h-full w-0 rounded-full transition-all duration-700"
-                    style={{ backgroundColor: selectedCategory.hex }}
-                  />
-                )}
-              </div>
-
-              <div className="p-5">
-                {/* Category */}
-                <div className="flex items-center gap-3 mb-4">
-                  {selectedCategory ? (
-                    <>
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center"
-                        style={{ backgroundColor: `${selectedCategory.hex}18` }}
-                      >
-                        <selectedCategory.icon
-                          size={18}
-                          style={{ color: selectedCategory.hex }}
-                        />
-                      </div>
-                      <div>
-                        <p className="text-gray-800 text-sm font-semibold">
-                          {selectedCategory.label}
-                        </p>
-                        <p className="text-gray-400 text-[11px]">
-                          {selectedCategory.desc}
-                        </p>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="w-10 h-10 rounded-xl bg-gray-100 flex items-center justify-center">
-                        <span className="text-gray-300 text-lg">?</span>
-                      </div>
-                      <div>
-                        <p className="text-gray-300 text-sm font-semibold">
-                          Select a category
-                        </p>
-                        <p className="text-gray-200 text-[11px]">
-                          above to preview
-                        </p>
-                      </div>
-                    </>
-                  )}
-                </div>
-
-                {/* Amount display */}
-                <div className="mb-4">
-                  <p className="text-gray-900 text-3xl font-black font-mono">
-                    {amount ? (
-                      `₹${Number(amount).toLocaleString()}`
-                    ) : (
-                      <span className="text-gray-200">₹0</span>
-                    )}
-                  </p>
-                  <p className="text-gray-400 text-[11px] mt-0.5">
-                    {period === "monthly"
-                      ? "per month"
-                      : period === "custom"
-                        ? `${customStartDate} to ${customEndDate}`
-                        : "custom period"}
-                  </p>
-                </div>
-
-                {/* Progress bar (0% at start) */}
-                <div className="mb-1.5">
-                  <div className="flex justify-between mb-1.5">
-                    <span className="text-gray-400 text-[11px]">₹0 spent</span>
-                    <span className="text-gray-400 text-[11px] font-mono">
-                      0%
-                    </span>
-                  </div>
-                  <div className="h-2 bg-gray-100 rounded-full">
-                    <div
-                      className="h-full w-0 rounded-full"
-                      style={{
-                        backgroundColor: selectedCategory?.hex || "#e5e7eb",
-                      }}
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                <div className="xl:col-span-2 space-y-5">
+                    <BudgetCategoryStep
+                        selectedCategory={selectedCategory}
+                        searchCat={searchCat}
+                        setSearchCat={setSearchCat}
+                        availableCats={availableCats}
+                        existingCats={existingCats}
+                        showCustomCategoryForm={showCustomCategoryForm}
+                        setShowCustomCategoryForm={setShowCustomCategoryForm}
+                        customCategory={customCategory}
+                        setCustomCategoryName={setCustomCategoryName}
+                        setCustomCategoryTagInput={setCustomCategoryTagInput}
+                        setCustomCategoryTags={setCustomCategoryTags}
+                        setCustomCategoryColor={setCustomCategoryColor}
+                        onSelectCategory={setSelectedCategoryId}
+                        onAddCustomCategoryTag={addCustomCategoryTag}
+                        onRemoveCustomCategoryTag={removeCustomCategoryTag}
+                        onCustomCategoryTagKeyDown={handleCustomCategoryTagKeyDown}
+                        onCreateCustomCategory={handleCreateCustomCategory}
+                        isCreatingCategory={isCreatingCategory}
                     />
-                  </div>
-                  <p className="text-gray-400 text-[11px] mt-1">
-                    ₹{amount ? Number(amount).toLocaleString() : "0"} remaining
-                  </p>
-                </div>
 
-                {/* Meta chips */}
-                <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-50">
-                  <span
-                    className={`text-[10px] font-semibold px-2 py-1 rounded-lg ${period === "monthly" ? "bg-blue-50 text-blue-500" : "bg-amber-50 text-amber-600"}`}
-                  >
-                    {periods.find((p) => p.id === period)?.label}
-                  </span>
-                  {alertEnabled && amount && (
-                    <span className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-amber-50 text-amber-600">
-                      Alert at {alertAt}%
-                    </span>
-                  )}
+                    <BudgetNameStep name={name} setName={setName} />
 
-                  {!alertEnabled && (
-                    <span className="text-[10px] font-semibold px-2 py-1 rounded-lg bg-gray-100 text-gray-400">
-                      No alerts
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
+                    <BudgetAmountPeriodStep
+                        amount={amount}
+                        setAmount={setAmount}
+                        period={period}
+                        setPeriod={setPeriod}
+                        customStartDate={customStartDate}
+                        setCustomStartDate={setCustomStartDate}
+                        customEndDate={customEndDate}
+                        setCustomEndDate={setCustomEndDate}
+                        dateError={dateError}
+                        periods={periods}
+                    />
 
-            {/* Validation checklist */}
-            <div className="mt-4 space-y-2">
-              {[
-                { label: "Category selected", done: !!selectedCategory },
-                { label: "Amount set", done: !!amount && Number(amount) > 0 },
-                { label: "Period configured", done: true },
-                { label: "Alert preference saved", done: true },
-              ].map((check) => (
-                <div key={check.label} className="flex items-center gap-2">
-                  <div
-                    className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 ${check.done ? "bg-[#00C950]" : "bg-gray-200"}`}
-                  >
-                    {check.done ? (
-                      <CheckCircle2 size={10} className="text-white" />
-                    ) : (
-                      <span className="w-1.5 h-1.5 rounded-full bg-gray-400" />
-                    )}
-                  </div>
-                  <span
-                    className={`text-xs ${check.done ? "text-gray-600" : "text-gray-400"}`}
-                  >
-                    {check.label}
-                  </span>
-                </div>
-              ))}
-            </div>
+                    <BudgetAlertStep
+                        alertEnabled={alertEnabled}
+                        setAlertEnabled={setAlertEnabled}
+                        alertAt={alertAt}
+                        setAlertAt={setAlertAt}
+                        amount={amount}
+                        alertAmount={alertAmount}
+                        alertOptions={alertOptions}
+                    />
 
-            {/* Existing budgets quick reference */}
-            <div className="mt-5 bg-white rounded-2xl border border-gray-100 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-3">
-                Your Active Budgets
-              </p>
-              <div className="space-y-2">
-                {(budgetsData?.data?.budget ?? []).slice(0, 5).map((budget: BudgetApiItem) => {
-                  if (!budget.categoryId) {
-                    return null;
-                  }
+                    <BudgetNotesStep note={note} setNote={setNote} />
 
-                  const category = categoryMap[budget.categoryId];
-                  if (!category) return null;
-                  const cat = allCategories.find(
-                    (c) => c.id === budget.categoryId,
-                  );
-                  const Icon = cat?.icon || Sparkles;
-                  const accentHex = cat?.hex || "#94a3b8";
-                  return (
-                    <div key={budget.id} className="flex items-center gap-2">
-                      <div
-                        className="w-5 h-5 rounded-md flex items-center justify-center"
-                        style={{ backgroundColor: `${accentHex}18` }}
-                      >
-                        <Icon size={11} style={{ color: accentHex }} />
-                      </div>
-                      <span className="text-gray-600 text-xs flex-1">
-                        {category.name}
-                      </span>
-                      <ChevronRight size={12} className="text-gray-300" />
+                    <div className="flex items-center gap-3">
+                        <Link href="/budgets" className="flex-1 py-3.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold text-center hover:bg-gray-50 transition-colors">
+                            Cancel
+                        </Link>
+                        <button
+                            onClick={handleCreateBudget}
+                            disabled={!canSubmit || createBudgetMutation.isPending}
+                            className="flex-1 py-3.5 rounded-xl bg-[#00C950] text-white text-sm font-bold shadow-lg shadow-[#00C950]/25 hover:bg-[#00b347] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+                        >
+                            {createBudgetMutation.isPending ? "Creating..." : "Create Budget"}
+                        </button>
                     </div>
-                  );
-                })}
-                <Link
-                  href="/budgets"
-                  className="flex items-center gap-1 text-[#00C950] text-xs font-semibold pt-1 hover:underline"
-                >
-                  View all budgets <ChevronRight size={11} />
-                </Link>
-              </div>
+                </div>
+
+                <BudgetPreviewSidebar
+                    selectedCategory={selectedCategory}
+                    amount={amount}
+                    period={period}
+                    customStartDate={customStartDate}
+                    customEndDate={customEndDate}
+                    alertEnabled={alertEnabled}
+                    alertAt={alertAt}
+                    budgets={activeBudgets}
+                    categoryMap={categoryMap}
+                    allCategories={allCategories}
+                />
             </div>
-          </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 }

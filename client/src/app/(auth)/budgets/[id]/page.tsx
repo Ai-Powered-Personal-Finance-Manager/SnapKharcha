@@ -1,9 +1,11 @@
 import { BudgetDetailsPage } from "@/src/pages/budgets/BudgetDetailsPage";
 
-export default function BudgetDetailsRoute({
+export default async function BudgetDetailsRoute({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    return <BudgetDetailsPage budgetId={params.id} />;
+    const { id } = await params;
+
+    return <BudgetDetailsPage budgetId={id} />;
 }

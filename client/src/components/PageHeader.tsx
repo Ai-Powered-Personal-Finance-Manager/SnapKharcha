@@ -1,4 +1,5 @@
 import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 interface PageHeaderProps {
@@ -8,6 +9,7 @@ interface PageHeaderProps {
     action?: {
         label: string;
         icon: React.ElementType;
+        variant?: "primary" | "outline";
         onClick: () => void;
     }[];
 }
@@ -18,11 +20,12 @@ export const PageHeader = ({
     back = false, 
     action 
 }: PageHeaderProps) => {
+    const router = useRouter();
     return (
         <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
                 {back && (
-                    <button className="h-9 w-9 text-gray-400 hover:text-black border border-gray-300 hover:bg-gray-100 flex items-center justify-center rounded-xl cursor-pointer">
+                    <button onClick={() => router.back()} className="h-9 w-9 text-gray-400 hover:text-black border border-gray-300 hover:bg-gray-100 flex items-center justify-center rounded-xl cursor-pointer">
                         <ChevronLeft size={18} />
                     </button>
                 )}
@@ -35,8 +38,9 @@ export const PageHeader = ({
                 <div className="flex items-center gap-2">
                     {action.map((act, idx) => {
                         const Icon = act.icon;
+                        const variant = act.variant ?? "primary";
                         return (
-                            <button key={idx} onClick={act.onClick} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00C950] text-white text-xs font-semibold shadow-md shadow-[#00C950]/20 hover:bg-[#00b347] transition-colors cursor-pointer">
+                            <button key={idx} onClick={act.onClick} className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer ${variant === "primary" ? "bg-[#00C950] text-white shadow-md shadow-[#00C950]/20 hover:bg-[#00b347]" : "border border-gray-300 text-gray-600 hover:bg-gray-100"}`}>
                                 <Icon size={18}/>
                                 {act.label}
                             </button>

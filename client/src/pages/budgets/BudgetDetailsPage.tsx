@@ -69,7 +69,6 @@ const BudgetDetailsSkeleton = () => {
 
 export function BudgetDetailsPage({ budgetId }: { budgetId: string }) {
     const { data: budget, isLoading, isError, refetch } = useGetBudgetById(budgetId);
-
     if (isLoading) {
         return <BudgetDetailsSkeleton />;
     }
@@ -83,7 +82,7 @@ export function BudgetDetailsPage({ budgetId }: { budgetId: string }) {
     const remaining = Math.max(budget.amount - budget.spendAmount, 0);
     const overBudget = budget.spendAmount > budget.amount;
     const recentExpenses = (budget.expenses ?? []).slice(0, 6);
-    const transactionCount = budget.expenses?.length ?? budget.expenseCount ?? 0;
+    const transactionCount = budget.expenses?.length ?? 0;
 
     return (
         <div className="space-y-6">

@@ -18,7 +18,7 @@ export const BudgetCardsGrid = ({
             ))}
 
             {/* Add new budget card */}
-            <button onClick={() => router.push("/budgets/create") } className="flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border-2 border-dashed border-gray-200 p-5 hover:border-[#00C950]/40 hover:bg-[#00C950]/2 transition-all duration-200 min-h-[180px] group">
+            <button onClick={() => router.push("/budgets/create") } className="flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border-2 border-dashed border-gray-200 p-5 hover:border-[#00C950]/40 hover:bg-[#00C950]/2 transition-all duration-200 min-h-[180px] group cursor-pointer">
                 <div className="w-10 h-10 rounded-xl bg-gray-100 group-hover:bg-[#00C950]/10 flex items-center justify-center transition-colors">
                     <Plus size={18} className="text-gray-400 group-hover:text-[#00C950] transition-colors" />
                 </div>
