@@ -114,13 +114,12 @@ enum StatusType {
 
 model Income {
   id       String     @id @default(uuid())
-  name     String
   amount   Int
   company  String
   position String
   source   String
   note     String?
-  status   String
+  status   IncomeStaus
   type     IncomeType
   userId   String
   creditDay Int
