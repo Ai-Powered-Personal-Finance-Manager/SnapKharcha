@@ -56,7 +56,7 @@ export const HeroSection = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 pt-32 pb-20 flex flex-col items-center text-center">
         {/* Badge */}
-        <PillBadge text="AI-Powered Personal Finance · Final Year Project 2025" />
+        <PillBadge text="AI-Powered Personal Finance Manager · Final Year Project 2026" />
 
         {/* Main Headline */}
         <HeroHeadline />

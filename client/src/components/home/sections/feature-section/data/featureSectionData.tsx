@@ -30,7 +30,7 @@ export const featuresData: FeatureDataInterface[] = [
     badgeBorder: "rgba(0,201,80,0.2)",
     title: "Bill Snap & Auto-Categorize",
     description:
-      "Point your camera at any receipt. Our AI vision model reads the total, items, and merchant — auto-tagging it to the right category like Food, Travel, or Utilities instantly.",
+      "Point your camera at any receipt. Our AI vision model reads the total, items, and merchant, auto-tagging it to the right category like Food, Travel, or Utilities instantly.",
     badge: "AI Vision",
   },
   {
@@ -56,7 +56,7 @@ export const featuresData: FeatureDataInterface[] = [
     badgeBorder: "rgba(56,189,248,0.2)",
     title: "Smart Spending Insights",
     description:
-      "Go beyond raw numbers. SnapKharcha analyzes your patterns and surfaces actionable insights — like 'Your dining out spending has doubled this month.'",
+      "Go beyond raw numbers. SnapKharcha analyzes your patterns and surfaces actionable insights, like 'Your dining out spending has doubled this month.'",
     badge: "Analytics",
   },
   {
@@ -82,7 +82,7 @@ export const featuresData: FeatureDataInterface[] = [
     badgeBorder: "rgba(167,139,250,0.2)",
     title: "Overspending Alerts",
     description:
-      "Set custom budget limits per category. Get real-time push notifications when you're approaching or crossing your limits — before it's too late.",
+      "Set custom budget limits per category. Get real-time push notifications when you're approaching or crossing your limits, before it's too late.",
     badge: "Real-time",
   },
   {
@@ -114,7 +114,7 @@ export const featuresData: FeatureDataInterface[] = [
     badgeBorder: "rgba(251,191,36,0.2)",
     title: "Visual Expense Dashboard",
     description:
-      "Beautiful charts and breakdowns of your monthly spending. Pie charts, bar graphs, and trend lines — a crystal-clear picture of where your money goes.",
+      "Beautiful charts and breakdowns of your monthly spending. Pie charts, bar graphs, and trend lines, a crystal-clear picture of where your money goes.",
     badge: "Dashboard",
   },
   {
@@ -140,7 +140,7 @@ export const featuresData: FeatureDataInterface[] = [
     badgeBorder: "rgba(244,114,182,0.2)",
     title: "Goal & Savings Tracker",
     description:
-      "Set financial goals — a trip, a gadget, an emergency fund. SnapKharcha tracks your progress, calculates how much to save monthly, and celebrates milestones.",
+      "Set financial goals, a trip, a gadget, an emergency fund. SnapKharcha tracks your progress, calculates how much to save monthly, and celebrates milestones.",
     badge: "Goals",
   },
   {

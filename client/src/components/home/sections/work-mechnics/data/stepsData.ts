@@ -7,7 +7,7 @@ export const steps: stepsInterface[] = [
     description:
       "Sign up as a Personal User or Business User. Personal users track individual finances. Business users get invoice generation, customer billing, and sales analytics on top.",
     image:
-      "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=600&q=80&auto=format&fit=crop",
+      "/register.png",
     color: "#00C950",
     bg: "#f0fdf4",
     border: "#bbf7d0",
@@ -18,7 +18,7 @@ export const steps: stepsInterface[] = [
     description:
       "Add expenses manually with categories, or simply snap a photo of your bill. Our AI model reads the receipt and auto-fills category, amount, date, and merchant name.",
     image:
-      "https://images.unsplash.com/photo-1592503254549-d83d24a4dfab?w=600&q=80&auto=format&fit=crop",
+      "/expense.png",
     color: "#0284c7",
     bg: "#f0f9ff",
     border: "#bae6fd",
@@ -29,7 +29,7 @@ export const steps: stepsInterface[] = [
     description:
       "Define monthly budget limits per category. Set savings goals — vacation, gadget, emergency fund. SnapKharcha tracks your progress and nudges you when you drift off track.",
     image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80&auto=format&fit=crop",
+      "/goals.png",
     color: "#7c3aed",
     bg: "#faf5ff",
     border: "#ddd6fe",
@@ -40,7 +40,7 @@ export const steps: stepsInterface[] = [
     description:
       "SnapKharcha's AI engine analyzes your patterns and surfaces actionable insights — spending trends, anomalies, predictive forecasts, and personalized saving recommendations.",
     image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80&auto=format&fit=crop",
+      "/analytics.png",
     color: "#d97706",
     bg: "#fffbeb",
     border: "#fde68a",

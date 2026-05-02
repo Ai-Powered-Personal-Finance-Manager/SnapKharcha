@@ -1,4 +1,5 @@
 import { Logo } from "@/src/components/home/shared";
+import { Camera, Bell, BarChart3, Store } from "lucide-react";
 
 export const LeftPanel = () => {
   return (
@@ -61,15 +62,19 @@ const LeftPanelCenter = () => {
       <div className="space-y-3.5">
         {[
           {
-            icon: "📸",
+            icon: Camera,
             label: "Snap any bill — AI reads & categorizes it instantly",
           },
-          { icon: "📊", label: "Visual dashboards updated in real time" },
-          { icon: "🔔", label: "Smart alerts before you overspend" },
-          { icon: "🏪", label: "Business mode for shops & restaurants" },
+          { icon: BarChart3, label: "Visual dashboards updated in real time" },
+          { icon: Bell, label: "Smart alerts before you overspend" },
+          { icon: Store, label: "Business mode for shops & restaurants" },
         ].map((item, i) => (
-          <div key={i} className="flex items-start gap-3">
-            <span className="text-xl leading-none mt-0.5">{item.icon}</span>
+          <div key={i} className="flex items-center gap-3">
+            {typeof item.icon === "string" ? (
+              <span className="text-xl leading-none mt-0.5">{item.icon}</span>
+            ) : (
+              <item.icon className="w-5 h-5 text-[#00C950] mt-0.5" />
+            )}
             <p
               className="text-gray-400 text-sm"
               style={{ fontFamily: "'DM Sans', sans-serif" }}

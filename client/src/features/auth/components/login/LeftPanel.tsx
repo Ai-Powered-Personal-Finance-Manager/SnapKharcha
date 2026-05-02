@@ -120,7 +120,7 @@ const RecentActivity = ({ data }: LeftPanelInterface) => {
               className="w-8 h-8 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
               style={{ backgroundColor: `${item.color}15` }}
             >
-              {item.icon}
+              <item.icon size={16} className="text-green-500"/>
             </div>
             <div className="flex-1 min-w-0">
               <p
@@ -137,9 +137,9 @@ const RecentActivity = ({ data }: LeftPanelInterface) => {
               </p>
             </div>
             <span
-              className="text-xs font-bold"
+              className="text-xs font-medium"
               style={{
-                color: item.color,
+                color: "red",
                 fontFamily: "'Syne', sans-serif",
               }}
             >
@@ -155,13 +155,13 @@ const RecentActivity = ({ data }: LeftPanelInterface) => {
 const BottomNote = () => {
   return (
     <div className="relative z-10 flex items-center gap-2">
-      <div className="w-2 h-2 rounded-full bg-[#00C950] animate-pulse" />
+      {/* <div className="w-2 h-2 rounded-full bg-[#00C950] animate-pulse" />
       <p
         className="text-gray-500 text-xs"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
         All data encrypted with AES-256 · Bank-grade security
-      </p>
+      </p> */}
     </div>
   );
 };

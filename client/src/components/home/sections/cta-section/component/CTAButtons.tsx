@@ -6,7 +6,7 @@ export const CTAButtons = () => {
       <LinkButton
         href="/register"
         label="Create Free Account"
-        className="group inline-flex items-center justify-center gap-2 px-10 py-5 rounded-2xl bg-gray-900 text-white hover:text-white font-bold text-base hover:bg-gray-800 transition-all duration-200 shadow-2xl shadow-black/20 hover:scale-105"
+        className="group inline-flex items-center justify-center gap-2 px-10 py-5 rounded-2xl bg-[#00C950] text-white hover:text-white font-bold text-base hover:bg-[#00C950]/80 transition-all duration-200 shadow-2xl shadow-black/20 hover:scale-105"
         children={
           <svg
             className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -24,7 +24,7 @@ export const CTAButtons = () => {
         }
       />
       <LinkButton
-        label="🏪 Start as Business"
+        label="Start as Business"
         href="/register?type=business"
         className="inline-flex items-center justify-center gap-2 px-10 py-5 rounded-2xl border-2 border-white/50 text-white font-semibold text-base hover:bg-white/10 hover:text-white hover:border-white transition-all duration-200"
       />

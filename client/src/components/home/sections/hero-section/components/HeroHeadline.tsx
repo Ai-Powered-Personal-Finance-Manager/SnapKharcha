@@ -20,7 +20,7 @@ export const HeroHeadline = () => {
         className="text-[#8888aa] text-lg sm:text-xl max-w-2xl mb-10 leading-relaxed"
         style={{ fontFamily: "'DM Sans', sans-serif" }}
       >
-        Snap a bill, log an expense, or import your transactions — SnapKharcha
+        Snap a bill, log an expense, or import your transactions. SnapKharcha
         categorizes, analyzes, and gives you{" "}
         <strong className="text-green-500 font-semibold">
           personalized financial insights

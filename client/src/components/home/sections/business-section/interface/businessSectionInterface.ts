@@ -1,11 +1,13 @@
+import { ElementType } from "react";
+
 export interface businessFeaturesDataInterface {
-  icon: string;
+  icon: string | ElementType;
   title: string;
   desc: string;
 }
 
 export interface businessTypeCardInterface {
-  emoji: string;
+  emoji: string | ElementType;
   label: string;
   desc: string;
 }

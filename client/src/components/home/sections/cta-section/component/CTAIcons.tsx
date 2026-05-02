@@ -1,3 +1,5 @@
+import { Ban, Flag, Lock, Zap } from "lucide-react";
+
 export const CTAIcons = () => {
   return (
     <div
@@ -5,13 +7,17 @@ export const CTAIcons = () => {
       style={{ fontFamily: "'DM Sans', sans-serif" }}
     >
       {[
-        { icon: "🔒", label: "Bank-grade security" },
-        { icon: "🚫", label: "No credit card required" },
-        { icon: "⚡", label: "Setup in under 2 minutes" },
-        { icon: "🇮🇳", label: "Built for Nepal" },
+        { icon: Lock, label: "Bank-grade security" },
+        { icon: Ban, label: "No credit card required" },
+        { icon: Zap, label: "Setup in under 2 minutes" },
+        { icon: Flag, label: "Built for Nepal" },
       ].map((badge, i) => (
         <div key={i} className="flex items-center gap-2">
-          <span>{badge.icon}</span>
+          {typeof badge.icon === "string" ? (
+            <span className="text-xs font-bold">{badge.icon}</span>
+          ) : (
+            <badge.icon size={16} className="text-green-500" />
+          )}
           <span>{badge.label}</span>
         </div>
       ))}
