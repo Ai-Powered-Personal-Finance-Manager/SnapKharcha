@@ -1,4 +1,4 @@
-import type { ExpenseApiItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/types/expense";
+import type { ExpenseApiItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/features/expenses/types";
 
 const paymentMethodLabels: Record<ExpensePaymentMethod, string> = {
     BANK: "Net Banking",

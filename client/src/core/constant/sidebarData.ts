@@ -118,11 +118,11 @@ export const mainNavSections: NavSection[] = [
                 badge: 5,
                 badgeColor: "red",
             },
-            {
-                label: "Settings",
-                href: "/settings",
-                icon: Settings,
-            },
+            // {
+            //     label: "Settings",
+            //     href: "/settings",
+            //     icon: Settings,
+            // },
         ],
     },
 ];

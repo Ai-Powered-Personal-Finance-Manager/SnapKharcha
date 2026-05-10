@@ -1,6 +1,6 @@
 import { Banknote, Car, CheckCircle2, Clock, GraduationCap, Home, AlertTriangle } from "lucide-react";
 import type { ElementType } from "react";
-import type { LoanApiItem, LoanDisplayItem, LoanFormValues, LoanStatus, LoanTimeUnit } from "@/src/types/loan";
+import type { LoanApiItem, LoanDisplayItem, LoanFormValues, LoanStatus, LoanTimeUnit } from "@/src/features/loans-and-emis/types";
 
 const loanStatusConfig: Record<LoanStatus, { label: string; bg: string; text: string; icon: ElementType }> = {
     active: { label: "Active", bg: "bg-blue-50", text: "text-blue-500", icon: Clock },

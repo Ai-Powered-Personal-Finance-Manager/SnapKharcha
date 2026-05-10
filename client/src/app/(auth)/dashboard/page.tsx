@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import DashboardPage from "@/src/pages/dashboard/DashboardPage";
+import DashboardPage from "@/src/features/dashboard/pages/DashboardPage";
 
 export const metadata: Metadata = {
     title: "Dashboard | SnapKharcha",

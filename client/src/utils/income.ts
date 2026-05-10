@@ -17,7 +17,7 @@ import type {
     IncomeFormStatus,
     IncomeFormType,
     IncomeSourceFormValues,
-} from "@/src/types/income";
+} from "@/src/features/incomes/types";
 import type { ElementType } from "react";
 
 const incomeThemes = [
