@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BudgetsPage } from "@/src/pages/budgets/BudgetsPage";
+import { BudgetsPage } from "@/src/features/budgets/pages/BudgetsPage";
 
 export const metadata: Metadata = {
     title: "Budgets | Snapkharcha",

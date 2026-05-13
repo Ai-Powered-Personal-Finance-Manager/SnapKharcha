@@ -1,16 +1,14 @@
-import type { ExpenseApiItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/types/expense";
+import type { ExpenseApiItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/features/expenses/types";
 
 const paymentMethodLabels: Record<ExpensePaymentMethod, string> = {
-    BANK: "Net Banking",
-    UPI: "UPI",
-    CARD: "Card",
+    BANK: "Bank",
+    WALLET: "Wallet",
     CASH: "Cash",
 };
 
 export const expensePaymentMethodOptions = [
-    { value: "BANK" as const, label: "Net Banking" },
-    { value: "UPI" as const, label: "UPI" },
-    { value: "CARD" as const, label: "Card" },
+    { value: "BANK" as const, label: "Bank" },
+    { value: "WALLET" as const, label: "Wallet" },
     { value: "CASH" as const, label: "Cash" },
 ] as const;
 

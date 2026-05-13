@@ -106,7 +106,7 @@ model Income {
   userId    String
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
-  creditDay Int
+  creditDay Int?
   status    IncomeStaus
   user      User        @relation(fields: [userId], references: [id])
 }

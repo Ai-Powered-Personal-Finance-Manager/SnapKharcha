@@ -1,11 +1,17 @@
 const ExpenseDetailsPageSkeleton = () => {
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <div className="h-10 w-10 animate-pulse rounded-xl bg-gray-200" />
-                <div className="space-y-2">
-                    <div className="h-4 w-24 animate-pulse rounded-full bg-gray-200" />
-                    <div className="h-6 w-48 animate-pulse rounded-full bg-gray-200" />
+            <div className="flex justify-between items-center gap-4">
+                <div className="flex items-center gap-4">
+                    <div className="h-10 w-10 animate-pulse rounded-xl bg-gray-200" />
+                    <div className="space-y-2">
+                        <div className="h-4 w-24 animate-pulse rounded-full bg-gray-200" />
+                        <div className="h-6 w-48 animate-pulse rounded-full bg-gray-200" />
+                    </div>
+                </div>
+                <div className="flex items-center gap-4">
+                    <div className="h-10 w-24 animate-pulse rounded-xl bg-gray-200" />
+                    <div className="h-10 w-24 animate-pulse rounded-xl bg-gray-200" />
                 </div>
             </div>
 

@@ -130,6 +130,14 @@ export const getExpenses = async (req, res, next) => {
   try {
     const userId = req.user.id;
 
+    // Today's start and end
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    // Get all expenses
     const expenses = await prisma.expense.findMany({
       where: { userId },
       include: {
@@ -141,10 +149,46 @@ export const getExpenses = async (req, res, next) => {
       },
     });
 
+    // Today's transactions
+    const todayStats = await prisma.expense.aggregate({
+      where: {
+        userId,
+        date: {
+          gte: startOfToday,
+          lte: endOfToday,
+        },
+      },
+      _sum: {
+        amount: true,
+      },
+      _count: {
+        id: true,
+      },
+    });
+
+    // Overall transactions
+    const overallStats = await prisma.expense.aggregate({
+      where: { userId },
+      _sum: {
+        amount: true,
+      },
+      _count: {
+        id: true,
+      },
+    });
+
     return res.status(200).json({
       success: true,
-      message: "Expenses fetched successfully",
-      data: expenses,
+      data: {
+        expenses: expenses,
+        summary: {
+          todayTransactions: todayStats._count.id || 0,
+          todayAmount: todayStats._sum.amount || 0,
+
+          totalTransactions: overallStats._count.id || 0,
+          totalAmount: overallStats._sum.amount || 0,
+        },
+      },
     });
   } catch (error) {
     next(error);

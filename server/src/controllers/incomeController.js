@@ -10,15 +10,8 @@ export const createIncome = async (req, res, next) => {
 
     const userId = req.user.id;
 
-    if (
-      !amount ||
-      !company ||
-      !position ||
-      !source ||
-      !status ||
-      !type ||
-      creditDay === undefined
-    ) {
+    // ───── Required fields (creditDay excluded here) ─────
+    if (!amount || !company || !position || !source || !status || !type) {
       return res.status(400).json({
         success: false,
         message:
@@ -28,25 +21,10 @@ export const createIncome = async (req, res, next) => {
 
     // ───── Validate amount ─────
     const parsedAmount = Number(amount);
-
     if (!Number.isInteger(parsedAmount) || parsedAmount < 0) {
       return res.status(400).json({
         success: false,
         message: "amount must be a valid positive integer",
-      });
-    }
-
-    // ───── Validate creditDay ─────
-    const parsedCreditDay = Number(creditDay);
-
-    if (
-      !Number.isInteger(parsedCreditDay) ||
-      parsedCreditDay < 1 ||
-      parsedCreditDay > 31
-    ) {
-      return res.status(400).json({
-        success: false,
-        message: "creditDay must be an integer between 1 and 31",
       });
     }
 
@@ -68,6 +46,51 @@ export const createIncome = async (req, res, next) => {
       });
     }
 
+    let parsedCreditDay;
+
+    // ───── Conditional creditDay logic ─────
+    if (type === "FIXED") {
+      // REQUIRED for FIXED
+      if (creditDay === undefined || creditDay === null) {
+        return res.status(400).json({
+          success: false,
+          message: "creditDay is required when type is FIXED",
+        });
+      }
+
+      parsedCreditDay = Number(creditDay);
+
+      if (
+        !Number.isInteger(parsedCreditDay) ||
+        parsedCreditDay < 1 ||
+        parsedCreditDay > 31
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "creditDay must be an integer between 1 and 31",
+        });
+      }
+    }
+    // else if (type === "VARIABLE") {
+    //   // OPTIONAL for VARIABLE (validate only if provided)
+    //   if (creditDay !== undefined && creditDay !== null) {
+    //     parsedCreditDay = Number(creditDay);
+
+    //     if (
+    //       !Number.isInteger(parsedCreditDay) ||
+    //       parsedCreditDay < 1 ||
+    //       parsedCreditDay > 31
+    //     ) {
+    //       return res.status(400).json({
+    //         success: false,
+    //         message: "creditDay must be an integer between 1 and 31",
+    //       });
+    //     }
+    //   }
+    else if (type === "VARIABLE") {
+      parsedCreditDay = null;
+    }
+
     // ───── Build data ─────
     const data = {
       amount: parsedAmount,
@@ -76,11 +99,11 @@ export const createIncome = async (req, res, next) => {
       source,
       status,
       type,
-      creditDay: parsedCreditDay,
       userId,
     };
 
     if (note) data.note = note;
+    if (parsedCreditDay !== undefined) data.creditDay = parsedCreditDay;
 
     // ───── Create income ─────
     const income = await prisma.income.create({
@@ -188,7 +211,7 @@ export const getIncomeById = async (req, res, next) => {
 export const updateIncome = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { amount, company, position, source, note, status, type } =
+    const { amount, company, position, source, note, status, type, creditDay } =
       req.body;
 
     const userId = req.user.id;
@@ -219,24 +242,6 @@ export const updateIncome = async (req, res, next) => {
       }
     }
 
-    // ───── Validate creditDay ─────
-    let parsedCreditDay = existing.creditDay;
-
-    if (creditDay !== undefined) {
-      parsedCreditDay = Number(creditDay);
-
-      if (
-        !Number.isInteger(parsedCreditDay) ||
-        parsedCreditDay < 1 ||
-        parsedCreditDay > 31
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: "creditDay must be an integer between 1 and 31",
-        });
-      }
-    }
-
     // ───── Validate type ─────
     if (type !== undefined) {
       const validTypes = ["FIXED", "VARIABLE"];
@@ -250,13 +255,47 @@ export const updateIncome = async (req, res, next) => {
 
     // ───── Validate status ─────
     if (status !== undefined) {
-      const validStatus = ["ACTIVE", "PAUSED"]; // ✅ fixed
+      const validStatus = ["ACTIVE", "PAUSED"];
       if (!validStatus.includes(status)) {
         return res.status(400).json({
           success: false,
           message: "Invalid status. Must be ACTIVE or PAUSED",
         });
       }
+    }
+
+    // ───── Determine final type ─────
+    const finalType = type ?? existing.type;
+
+    let parsedCreditDay = existing.creditDay;
+
+    // ───── Conditional creditDay logic ─────
+    if (finalType === "FIXED") {
+      const incomingCreditDay =
+        creditDay !== undefined ? creditDay : existing.creditDay;
+
+      if (incomingCreditDay === undefined || incomingCreditDay === null) {
+        return res.status(400).json({
+          success: false,
+          message: "creditDay is required when type is FIXED",
+        });
+      }
+
+      parsedCreditDay = Number(incomingCreditDay);
+
+      if (
+        !Number.isInteger(parsedCreditDay) ||
+        parsedCreditDay < 1 ||
+        parsedCreditDay > 31
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "creditDay must be an integer between 1 and 31",
+        });
+      }
+    } else if (finalType === "VARIABLE") {
+      // Optional: clear it completely (recommended)
+      parsedCreditDay = null;
     }
 
     // ───── Build update object ─────
@@ -267,7 +306,7 @@ export const updateIncome = async (req, res, next) => {
       source: source ?? existing.source,
       note: note ?? existing.note,
       status: status ?? existing.status,
-      type: type ?? existing.type,
+      type: finalType,
       creditDay: parsedCreditDay,
     };
 
@@ -286,7 +325,6 @@ export const updateIncome = async (req, res, next) => {
     next(error);
   }
 };
-
 // ─────────────────────────────────────────
 // DELETE INCOME
 // ─────────────────────────────────────────
