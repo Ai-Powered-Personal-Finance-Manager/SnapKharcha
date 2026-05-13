@@ -136,13 +136,3 @@ enum IncomeStaus {
   ACTIVE
   PAUSED
 }
-
-
-// add in expense getAll
-// summary:{
-
-// today's no of transaction
-// today's transaction amount
-// total amount overall
-// total no of transaction
-// }

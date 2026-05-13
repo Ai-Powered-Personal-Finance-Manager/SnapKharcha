@@ -179,15 +179,15 @@ export const getExpenses = async (req, res, next) => {
 
     return res.status(200).json({
       success: true,
-      message: "Expenses fetched successfully",
-      data: expenses,
+      data: {
+        expenses: expenses,
+        summary: {
+          todayTransactions: todayStats._count.id || 0,
+          todayAmount: todayStats._sum.amount || 0,
 
-      summary: {
-        todayTransactions: todayStats._count.id || 0,
-        todayAmount: todayStats._sum.amount || 0,
-
-        totalTransactions: overallStats._count.id || 0,
-        totalAmount: overallStats._sum.amount || 0,
+          totalTransactions: overallStats._count.id || 0,
+          totalAmount: overallStats._sum.amount || 0,
+        },
       },
     });
   } catch (error) {
