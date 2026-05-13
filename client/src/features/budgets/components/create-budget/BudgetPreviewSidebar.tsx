@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight, CheckCircle2, ChevronRight, Info } from "lucide-react";
-import type { BudgetApiItem } from "@/src/features/budgets/types";
-import type { BudgetCategoryOption, CategoryMap, BudgetPeriod } from "./types";
+import { getCategoryIcon } from "@/src/utils/budget";
+import { BudgetCategoryOption, BudgetPeriod, CategoryMap } from "./types";
+import { BudgetApiItem } from "../../types";
 
 type BudgetPreviewSidebarProps = {
     selectedCategory: BudgetCategoryOption | null;
@@ -123,9 +124,8 @@ export const BudgetPreviewSidebar = ({
                                 return null;
                             }
 
-                            const cat = allCategories.find((entry) => entry.id === budget.categoryId);
-                            const Icon = cat?.icon || (() => null);
-                            const accentHex = cat?.hex || category.color || "#94a3b8";
+                            const Icon = getCategoryIcon(category.name, category.tags);
+                            const accentHex = category.color || "#94a3b8";
 
                             return (
                                 <div key={budget.id} className="flex items-center gap-2">

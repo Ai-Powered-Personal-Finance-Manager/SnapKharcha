@@ -3,7 +3,8 @@
 import { useMemo, useState, type CSSProperties, type ComponentType } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Info, Utensils, ShoppingBag, Car, Zap, Wifi, Heart, BookOpen, Dumbbell, ShoppingCart, Plane, Pencil, Gamepad2, Coffee, Bus, Scissors, Gift, Home, Music, Shirt, Baby, PawPrint, Wrench, Sparkles } from "lucide-react";
+import { ArrowLeft, Info, Sparkles } from "lucide-react";
+import { getCategoryIcon } from "@/src/utils/budget";
 import { useCreateCategory, useGetCategories } from "@/src/features/categories/api";
 import { useCreateBudget, useGetBudgets } from "@/src/features/budgets/api";
 import type { BudgetApiItem } from "@/src/features/budgets/types";
@@ -17,30 +18,7 @@ import type { BudgetCategoryOption, BudgetPeriod, CategoryMap } from "@/src/feat
 import { PageHeader } from "@/src/components/PageHeader";
 import { tr } from "zod/locales";
 
-const iconMap: Record<string, ComponentType<{ size?: number; className?: string; style?: CSSProperties }>> = {
-    food: Utensils,
-    groceries: ShoppingCart,
-    shopping: ShoppingBag,
-    transport: Car,
-    utilities: Zap,
-    subscriptions: Wifi,
-    health: Heart,
-    education: BookOpen,
-    gym: Dumbbell,
-    travel: Plane,
-    entertainment: Gamepad2,
-    coffee: Coffee,
-    publictravel: Bus,
-    salon: Scissors,
-    gifts: Gift,
-    rent: Home,
-    music: Music,
-    clothing: Shirt,
-    kids: Baby,
-    pets: PawPrint,
-    stationery: Pencil,
-    repairs: Wrench,
-};
+
 
 const colorPalette: Record<string, { hex: string; bg: string; text: string }> = {
     "#f97316": { hex: "#f97316", bg: "bg-orange-50", text: "text-orange-500" },
@@ -142,7 +120,7 @@ export function CreateBudgetPage() {
         return categoriesData.data.map((category) => ({
             id: category.id,
             label: category.name,
-            icon: iconMap[category.id] || Sparkles,
+            icon: getCategoryIcon(category.name, category.tags),
             hex: category.color || "#94a3b8",
             bg: colorPalette[category.color]?.bg || "bg-gray-100",
             text: colorPalette[category.color]?.text || "text-gray-500",

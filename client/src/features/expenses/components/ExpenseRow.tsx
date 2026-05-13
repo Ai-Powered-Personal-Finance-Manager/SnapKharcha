@@ -8,6 +8,8 @@ import {
     formatExpenseTime,
 } from "@/src/utils/expense";
 
+import { getCategoryIcon } from "@/src/utils/budget";
+
 type ExpenseRowProps = {
     expense: ExpenseApiItem;
     onView: (expense: ExpenseApiItem) => void;
@@ -58,6 +60,7 @@ export const ExpenseRow = ({ expense, onView, onEdit, onDelete }: ExpenseRowProp
     const timeLabel = formatExpenseTime(expense.date ?? expense.createdAt);
     const paymentMethod = formatExpensePaymentMethod(expense.paymentMethod);
     const noteLabel = expense.note || expense.category.name || expense.budget.name;
+    const Icon = getCategoryIcon(expense.category.name, expense.category.tags);
 
     return (
         <div className="group relative flex items-center gap-4 px-5 py-3.5 transition-colors hover:bg-gray-50/60">
@@ -65,7 +68,7 @@ export const ExpenseRow = ({ expense, onView, onEdit, onDelete }: ExpenseRowProp
                 className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                 style={{ backgroundColor: `${categoryColor}18` }}
             >
-                <Receipt size={16} style={{ color: categoryColor }} />
+                <Icon size={16} style={{ color: categoryColor }} />
             </div>
 
             <div className="min-w-0 flex-1">
@@ -98,7 +101,7 @@ export const ExpenseRow = ({ expense, onView, onEdit, onDelete }: ExpenseRowProp
                 <button
                     type="button"
                     onClick={() => onEdit(expense)}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-gray-100 hover:text-gray-600 cursor-pointer"
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 cursor-pointer"
                     aria-label="Edit expense"
                 >
                     <PencilLine size={13} />
@@ -106,7 +109,7 @@ export const ExpenseRow = ({ expense, onView, onEdit, onDelete }: ExpenseRowProp
                 <button
                     type="button"
                     onClick={() => setMenuOpen((value) => !value)}
-                    className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-300 transition-colors hover:bg-gray-100 hover:text-gray-600 cursor-pointer"
+                    className="flex h-7 w-7 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 cursor-pointer"
                     aria-label="Expense actions"
                     aria-haspopup="menu"
                     aria-expanded={menuOpen}

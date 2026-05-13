@@ -7,7 +7,7 @@ interface Props {
     trend?: string;
     change?: string;
     color?: "green" | "red";
-    sub?: string;
+    meta?: string;
 }
 
 export const StatsGrid = ({ 
@@ -30,18 +30,22 @@ export const StatsGrid = ({
                             <p className="text-gray-900 text-2xl font-bold mt-1 tracking-tight font-mono">{s.value}</p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-1.5 mt-2">
-                        {s.trend === "up" && s.color === "green" ? (
-                            <span className="flex items-center gap-1 text-[#00C950] text-[11px] font-semibold bg-[#00C950]/8 px-2 py-0.5 rounded-full">
-                                <TrendingUp size={11} /> {s.change}
-                            </span>
-                        ) : (
-                            <span className="flex items-center gap-1 text-red-500 text-[11px] font-semibold bg-red-50 px-2 py-0.5 rounded-full">
-                                <TrendingDown size={11} /> {s.change}
-                            </span>
-                        )}
-                    </div>
-                    <p className="text-gray-400 text-[11px] mt-1.5">{s.sub}</p>
+                    {s.trend && 
+                        <div className="flex items-center gap-1.5 mt-2">
+                            {s.trend === "up" && s.color === "green" ? (
+                                <span className="flex items-center gap-1 text-[#00C950] text-[11px] font-semibold bg-[#00C950]/8 px-2 py-0.5 rounded-full">
+                                    <TrendingUp size={11} /> {s.change}
+                                </span>
+                            ) : s.trend === "down" && s.color === "red"  ? (
+                                <span className="flex items-center gap-1 text-red-500 text-[11px] font-semibold bg-red-50 px-2 py-0.5 rounded-full">
+                                    <TrendingDown size={11} /> {s.change}
+                                </span>
+                            ) : (
+                                <span>{s.change}</span>
+                            )}
+                        </div>
+                    }
+                    <p className="text-gray-400 text-[11px] mt-1.5">{s.meta}</p>
                     <div className="absolute bottom-0 left-0 h-1 w-0 group-hover:w-full bg-green-500 transition-all duration-300"/>
                 </div>
             ))}

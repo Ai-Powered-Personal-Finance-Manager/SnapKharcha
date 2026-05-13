@@ -7,15 +7,16 @@ import {
     CheckCircle2,
     ChevronDown,
     Loader2,
-    PiggyBank,
     Receipt,
     ScanLine,
     Tag,
     Wallet,
     X,
 } from "lucide-react";
+import { getCategoryIcon } from "@/src/utils/budget";
+
 import type { BudgetApiItem } from "@/src/features/budgets/types";
-import type { ExpenseApiItem, ExpenseFormValues } from "@/src/features/expenses/types";
+import type { ExpenseListItem, ExpenseFormValues } from "@/src/features/expenses/types";
 import {
     buildExpenseFormValues,
     expensePaymentMethodOptions,
@@ -25,7 +26,7 @@ type ExpenseFormModalProps = {
     open: boolean;
     mode: "create" | "edit";
     budgets: BudgetApiItem[];
-    initialExpense?: ExpenseApiItem | null;
+    initialExpense?: ExpenseListItem | null;
     onClose: () => void;
     onSubmit: (values: ExpenseFormValues) => void;
     isPending?: boolean;
@@ -80,6 +81,33 @@ export const ExpenseFormModal = ({
         selectedBudget && Number.isFinite(parsedAmount) && parsedAmount > 0
             ? parsedAmount > remaining!
             : false;
+
+    // date constraints for the expense form
+    const dateConstraints = useMemo(() => {
+        const today = new Date().toLocaleDateString("sv-SE");
+        const max = selectedBudget
+            ? selectedBudget.expireDate.split("T")[0] < today
+                ? selectedBudget.expireDate.split("T")[0]
+                : today
+            : today;
+        const min = selectedBudget ? selectedBudget.startingDate.split("T")[0] : undefined;
+
+        return { min, max };
+    }, [selectedBudget]);
+
+    // Ensure the date stays within the budget's constraints when the budget changes
+    useEffect(() => {
+        if (!formState.date) {
+            return;
+        }
+
+        const { min, max } = dateConstraints;
+        if (min && formState.date < min) {
+            setFormState((current) => ({ ...current, date: min }));
+        } else if (max && formState.date > max) {
+            setFormState((current) => ({ ...current, date: max }));
+        }
+    }, [dateConstraints, formState.date]);
 
     const canSubmit =
         formState.budgetId.length > 0 &&
@@ -156,7 +184,10 @@ export const ExpenseFormModal = ({
                                     className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
                                     style={{ backgroundColor: `${selectedBudget.category.color ?? "#94a3b8"}18` }}
                                 >
-                                    <PiggyBank size={16} style={{ color: selectedBudget.category.color ?? "#94a3b8" }} />
+                                    {(() => {
+                                        const Icon = getCategoryIcon(selectedBudget.category.name, selectedBudget.category.tags);
+                                        return <Icon size={16} style={{ color: selectedBudget.category.color ?? "#94a3b8" }} />;
+                                    })()}
                                 </div>
                                 <div className="flex-1 text-left">
                                     <p className="text-sm font-semibold text-gray-800">{selectedBudget.name}</p>
@@ -193,7 +224,10 @@ export const ExpenseFormModal = ({
                                                     className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
                                                     style={{ backgroundColor: iconBg }}
                                                 >
-                                                    <PiggyBank size={14} style={{ color: iconColor }} />
+                                                    {(() => {
+                                                        const Icon = getCategoryIcon(budget.category.name, budget.category.tags);
+                                                        return <Icon size={14} style={{ color: iconColor }} />;
+                                                    })()}
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <p className="truncate text-xs font-semibold text-gray-700">{budget.name}</p>
@@ -308,6 +342,8 @@ export const ExpenseFormModal = ({
                                         <input
                                             type="date"
                                             value={formState.date}
+                                            min={dateConstraints.min}
+                                            max={dateConstraints.max}
                                             onChange={(event) =>
                                                 setFormState((current) => ({ ...current, date: event.target.value }))
                                             }

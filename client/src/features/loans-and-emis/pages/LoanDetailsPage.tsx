@@ -11,42 +11,10 @@ import { AlertTriangle, ArrowLeft, Calendar, CheckCircle2, Info, PencilLine, Tra
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import LoanDetailsSkeleton from "@/src/components/loading-skeletons/LoanDetailSkeleton";
 
-const LoanDetailsSkeleton = () => {
-    return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <div className="h-10 w-10 animate-pulse rounded-xl bg-gray-100" />
-                <div className="space-y-2">
-                    <div className="h-4 w-24 animate-pulse rounded-full bg-gray-100" />
-                    <div className="h-6 w-48 animate-pulse rounded-full bg-gray-100" />
-                </div>
-            </div>
 
-            <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-                <div className="animate-pulse rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-                    <div className="h-8 w-40 rounded-full bg-gray-100" />
-                    <div className="mt-6 h-4 w-full rounded-full bg-gray-100" />
-                    <div className="mt-3 h-2 w-full rounded-full bg-gray-100" />
-                    <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                        <div className="h-24 rounded-2xl bg-gray-100" />
-                        <div className="h-24 rounded-2xl bg-gray-100" />
-                    </div>
-                </div>
-                <div className="animate-pulse rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-                    <div className="h-6 w-40 rounded-full bg-gray-100" />
-                    <div className="mt-4 space-y-3">
-                        <div className="h-12 rounded-2xl bg-gray-100" />
-                        <div className="h-12 rounded-2xl bg-gray-100" />
-                        <div className="h-12 rounded-2xl bg-gray-100" />
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export function LoanDetailsPage({ loanId }: { loanId: string }) {
+export default function LoanDetailsPage({ loanId }: { loanId: string }) {
     const router = useRouter();
     const { data: loan, isLoading, isError, refetch } = useGetLoanById(loanId);
     const updateLoanMutation = useUpdateLoan();

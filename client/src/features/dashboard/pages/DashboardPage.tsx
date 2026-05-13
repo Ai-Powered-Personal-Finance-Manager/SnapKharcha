@@ -57,7 +57,7 @@ const stats: StatItem[] = [
         change: "+12% vs last month",
         trend: "up",
         sub: "of Rs.25,000 budget",
-        color: "red",
+        color: "green",
     },
     {
         label: "Monthly Income",

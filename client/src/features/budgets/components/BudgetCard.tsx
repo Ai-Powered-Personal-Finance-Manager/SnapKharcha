@@ -8,6 +8,8 @@ import { AlertTriangle, Eye, MoreHorizontal, PencilLine, PiggyBank, Trash2 } fro
 import { BudgetEditModal } from "./BudgetEditModal";
 import { DeleteConfirmModal } from "@/src/components/DeleteConfirmModal";
 
+import { getCategoryIcon } from "@/src/utils/budget";
+
 // Mix a color with white so every category gets the same soft pastel tint.
 const lightenColor = (hex: string, whitePercent: number = 80) => {
     const normalizedHex = hex.replace("#", "");
@@ -78,6 +80,7 @@ export const BudgetCard = ({ budgetData }: { budgetData: BudgetApiItem }) => {
     const over = pct >= 90;
     const categoryColor = budgetData.category.color ?? "#94a3b8";
     const lightColor = lightenColor(categoryColor, 80);
+    const Icon = getCategoryIcon(budgetData.category.name, budgetData.category.tags);
 
     const closeMenu = () => setMenuOpen(false);
 
@@ -116,7 +119,7 @@ export const BudgetCard = ({ budgetData }: { budgetData: BudgetApiItem }) => {
                         className="flex h-10 w-10 items-center justify-center rounded-xl"
                         style={{ backgroundColor: lightColor }}
                     >
-                        <PiggyBank size={18} style={{ color: categoryColor }} />
+                        <Icon size={18} style={{ color: categoryColor }} />
                     </div>
                     <div>
                         <p className="text-sm font-semibold text-gray-800">{budgetData.category.name}</p>

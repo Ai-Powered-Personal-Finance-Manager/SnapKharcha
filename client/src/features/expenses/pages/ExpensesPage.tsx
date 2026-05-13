@@ -7,13 +7,14 @@ import { ExpenseList } from "../components/ExpenseList";
 import { expenseOverviewCards, expenseInsight, expenseSidebarStats } from "./expenseStatic";
 import { useDeleteExpense, useGetExpenses, useCreateExpense, useUpdateExpense } from "@/src/features/expenses/api";
 import { useGetBudgets } from "@/src/features/budgets/api";
-import type { ExpenseApiItem, ExpenseFormValues } from "@/src/features/expenses/types";
+import type { ExpenseListItem, ExpenseFormValues } from "@/src/features/expenses/types";
 import { formatExpensePaymentMethod } from "@/src/utils/expense";
 import { Plus, Search, Filter, ScanLine, AlertTriangle, TrendingDown, ArrowDownLeft, Zap } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/src/components/PageHeader";
 import ExpenseSkeletonLoading from "@/src/components/loading-skeletons/ExpenseSkeletonLoading";
+import { StatsGrid } from "@/src/components/StatsGrid";
 
 const formatCurrency = (value: number) => `Rs.${value.toLocaleString()}`;
 
@@ -26,13 +27,14 @@ export function ExpensesPage() {
     const deleteExpenseMutation = useDeleteExpense();
 
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const [editingExpense, setEditingExpense] = useState<ExpenseApiItem | null>(null);
-    const [deletingExpense, setDeletingExpense] = useState<ExpenseApiItem | null>(null);
+    const [editingExpense, setEditingExpense] = useState<ExpenseListItem | null>(null);
+    const [deletingExpense, setDeletingExpense] = useState<ExpenseListItem | null>(null);
     const [activeBudgetFilter, setActiveBudgetFilter] = useState<string>("all");
     const [searchQuery, setSearchQuery] = useState("");
 
     const budgets = budgetsResponse?.data?.budget ?? [];
-    const expenses = expensesResponse?.data ?? [];
+    const expenses = expensesResponse?.data?.expenses ?? [];
+    const summary = expensesResponse?.data?.summary;
 
     const filteredExpenses = useMemo(() => {
         return expenses.filter((expense) => {
@@ -68,14 +70,65 @@ export function ExpensesPage() {
         });
     }, [budgets]);
 
+    const summaryCards = useMemo(() => {
+        if (!summary) {
+            return [];
+        }
+
+        return [
+            {
+                label: "Total Spent",
+                value: `Rs. ${summary.totalAmount.toLocaleString()}`,
+                meta: `across ${summary.totalTransactions} transactions`,
+                sub: `across ${summary.totalTransactions} transactions`,
+            },
+            {
+                label: "Total Transactions",
+                value: `${summary.totalTransactions}`,
+                meta: `across all budgets`,
+                sub: `across all budgets`,
+            },
+            {
+                label: "Spent Today",
+                value: `Rs. ${summary.todayAmount.toLocaleString()}`,
+                meta: `${summary.todayTransactions} records today`,
+                sub: `${summary.todayTransactions} records today`,
+            },
+            {
+                label: "Today's Transactions",
+                value: `${summary.todayTransactions}`,
+                meta: `transactions today`,
+                sub: `transactions today`,
+            },
+        ];
+    }, [summary]);
+
+    const dynamicSidebarStats = useMemo(() => {
+        const budgetsAtLimit = budgets.filter((b) => (b.spendAmount ?? 0) >= b.amount).length;
+        const budgetsNearLimit = budgets.filter((b) => {
+            const pct = (b.spendAmount ?? 0) / (b.amount || 1);
+            return pct >= 0.9 && pct < 1;
+        }).length;
+        const largestExpense = expenses.reduce((max, e) => Math.max(max, e.amount), 0);
+
+        return [
+            { label: "Budgets created", value: budgets.length.toString() },
+            { label: "Budgets at limit", value: budgetsAtLimit.toString() },
+            { label: "Budgets near limit", value: budgetsNearLimit.toString() },
+            { label: "Total expenses", value: summary?.totalTransactions.toString() || "0" },
+            { label: "Largest expense", value: `Rs. ${largestExpense.toLocaleString()}` },
+        ];
+    }, [budgets, expenses, summary]);
+
     const handleExpenseSubmit = (values: ExpenseFormValues) => {
+
         const payload = {
             amount: Number(values.amount),
             merchant: values.merchant.trim(),
             note: values.note.trim() || undefined,
             budgetId: values.budgetId,
             paymentMethod: values.paymentMethod,
-            date: new Date(`${values.date}T00:00:00`).toISOString(),
+            date: new Date(`${values.date}T00:00:00Z`).toISOString(),
         };
 
         if (editingExpense) {
@@ -144,17 +197,16 @@ export function ExpensesPage() {
                     ]}
                 />
 
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    {expenseOverviewCards.map((card) => (
+                <StatsGrid stats={summaryCards}/>
+                {/* <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+                    {summaryCards.map((card) => (
                         <div key={card.label} className="rounded-2xl border border-gray-100 bg-white p-4">
                             <p className="text-xs text-gray-400">{card.label}</p>
-                            <p className="mt-1 font-mono text-xl font-bold text-gray-900">
-                                {card.value}
-                            </p>
+                            <p className="mt-1 font-mono text-xl font-bold text-gray-900">{card.value}</p>
                             <p className="mt-1 text-[11px] text-gray-400">{card.meta}</p>
                         </div>
                     ))}
-                </div>
+                </div> */}
 
                 {/* {nearLimitBudgets.length > 0 && activeBudgetFilter === "all" && (
                     <div className="flex items-start gap-3 rounded-2xl border border-amber-100 bg-amber-50 px-4 py-3.5">
@@ -301,7 +353,7 @@ export function ExpensesPage() {
 
                         <div className="rounded-2xl border border-gray-100 bg-white p-4 space-y-3">
                             <h3 className="text-sm font-semibold text-gray-900">This Month</h3>
-                            {expenseSidebarStats.map((stat) => (
+                            {dynamicSidebarStats.map((stat) => (
                                 <div key={stat.label} className="flex items-center justify-between">
                                     <p className="text-xs text-gray-400">{stat.label}</p>
                                     <p className="text-xs font-bold font-mono text-gray-900">{stat.value}</p>

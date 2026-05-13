@@ -1,4 +1,5 @@
 import { Plus, ScanLine } from "lucide-react"
+import { useRouter } from "next/navigation";
 
 interface WelcomeBannerProps {
     greeting: {
@@ -8,6 +9,7 @@ interface WelcomeBannerProps {
 }
 
 export const WelcomeBanner = ({ greeting, userName = "Guest" }: WelcomeBannerProps) => {
+    const router = useRouter();
     return (
         <div className="relative overflow-hidden rounded-2xl bg-[#01271E] px-6 py-5">
             {/* Dot grid */}
@@ -23,7 +25,7 @@ export const WelcomeBanner = ({ greeting, userName = "Guest" }: WelcomeBannerPro
                     <p className="text-white/40 text-xs mt-1">Here&apos;s your financial snapshot for today</p>
                 </div>
                 <div className="flex gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00C950] text-white text-xs font-semibold shadow-lg shadow-[#00C950]/25 hover:bg-[#00b347] transition-colors">
+                    <button onClick={() => router.push("/expenses")} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#00C950] text-white text-xs font-semibold shadow-lg shadow-[#00C950]/25 hover:bg-[#00b347] transition-colors">
                         <Plus size={14} /> Add Expense
                     </button>
                     <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/8 border border-white/12 text-white/70 text-xs font-semibold hover:bg-white/12 transition-colors">

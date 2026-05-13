@@ -1,4 +1,4 @@
-export type ExpensePaymentMethod = "BANK" | "UPI" | "CARD" | "CASH";
+export type ExpensePaymentMethod = "BANK" | "WALLET" | "CASH";
 
 // ─── API Models ───────────────────────────────────────────────────────────────
 
@@ -27,7 +27,7 @@ export interface ExpenseApiBudget {
     createdAt: string;
 }
 
-export interface ExpenseApiItem {
+export interface ExpenseListItem {
     id: string;
     amount: number;
     note: string | null;
@@ -44,16 +44,28 @@ export interface ExpenseApiItem {
     receiptAttached?: boolean;
 }
 
+export interface ExpenseSummary {
+    todayTransactions: number;
+    todayAmount: number;
+    totalTransactions: number;
+    totalAmount: number;
+}
+
+export interface ExpenseApiData {
+    expenses: ExpenseListItem[];
+    summary: ExpenseSummary;
+}
+
 export interface ExpenseApiListResponse {
     success: boolean;
     message?: string;
-    data: ExpenseApiItem[];
+    data: ExpenseApiData;
 }
 
 export interface ExpenseMutationResponse {
     success: boolean;
     message: string;
-    data?: ExpenseApiItem;
+    data?: ExpenseApiData;
 }
 
 export interface DeleteExpenseResponse {

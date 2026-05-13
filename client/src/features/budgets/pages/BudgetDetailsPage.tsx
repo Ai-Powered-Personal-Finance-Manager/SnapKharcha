@@ -1,10 +1,15 @@
 "use client";
 
 import { ErrorFallback } from "@/src/components/ErrorFallback";
+import BudgetDetailSkeleton from "@/src/components/loading-skeletons/BudgetDetailSkeleton";
+import { PageHeader } from "@/src/components/PageHeader";
 import { useGetBudgetById } from "@/src/features/budgets/api";
 import type { BudgetApiItem } from "@/src/features/budgets/types";
-import { AlertTriangle, ArrowLeft, Calendar, PiggyBank, TrendingDown } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Calendar, PiggyBank, Plus, TrendingDown } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import { getCategoryIcon } from "@/src/utils/budget";
 
 const formatCurrency = (value: number) => `Rs. ${value.toLocaleString()}`;
 
@@ -24,53 +29,11 @@ const buildProgress = (budget: BudgetApiItem) => {
     return Math.min(Math.round((budget.spendAmount / budget.amount) * 100), 100);
 };
 
-const BudgetDetailsSkeleton = () => {
-    return (
-        <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-xl bg-gray-100 animate-pulse" />
-                <div className="space-y-2">
-                    <div className="h-4 w-24 rounded-full bg-gray-100 animate-pulse" />
-                    <div className="h-6 w-48 rounded-full bg-gray-100 animate-pulse" />
-                </div>
-            </div>
-
-            <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-                <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm animate-pulse">
-                    <div className="h-8 w-40 rounded-full bg-gray-100" />
-                    <div className="mt-6 h-4 w-full rounded-full bg-gray-100" />
-                    <div className="mt-3 h-2 w-full rounded-full bg-gray-100" />
-                    <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                        <div className="h-24 rounded-2xl bg-gray-100" />
-                        <div className="h-24 rounded-2xl bg-gray-100" />
-                    </div>
-                </div>
-                <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm animate-pulse">
-                    <div className="h-6 w-40 rounded-full bg-gray-100" />
-                    <div className="mt-4 space-y-3">
-                        <div className="h-12 rounded-2xl bg-gray-100" />
-                        <div className="h-12 rounded-2xl bg-gray-100" />
-                        <div className="h-12 rounded-2xl bg-gray-100" />
-                    </div>
-                </div>
-            </div>
-
-            <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm animate-pulse">
-                <div className="h-6 w-44 rounded-full bg-gray-100" />
-                <div className="mt-4 space-y-3">
-                    <div className="h-16 rounded-2xl bg-gray-100" />
-                    <div className="h-16 rounded-2xl bg-gray-100" />
-                    <div className="h-16 rounded-2xl bg-gray-100" />
-                </div>
-            </div>
-        </div>
-    );
-};
-
 export function BudgetDetailsPage({ budgetId }: { budgetId: string }) {
     const { data: budget, isLoading, isError, refetch } = useGetBudgetById(budgetId);
+    const router = useRouter();
     if (isLoading) {
-        return <BudgetDetailsSkeleton />;
+        return <BudgetDetailSkeleton />;
     }
 
     if (isError || !budget) {
@@ -83,24 +46,23 @@ export function BudgetDetailsPage({ budgetId }: { budgetId: string }) {
     const overBudget = budget.spendAmount > budget.amount;
     const recentExpenses = (budget.expenses ?? []).slice(0, 6);
     const transactionCount = budget.expenses?.length ?? 0;
+    const Icon = getCategoryIcon(budget.category.name, budget.category.tags);
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center gap-4">
-                <Link
-                    href="/budgets"
-                    className="flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-800"
-                >
-                    <ArrowLeft size={16} />
-                </Link>
-                <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-gray-400">
-                        Budget overview
-                    </p>
-                    <h2 className="text-2xl font-bold tracking-tight text-gray-900">{budget.name}</h2>
-                    <p className="text-sm text-gray-500">{budget.category.name}</p>
-                </div>
-            </div>
+            <PageHeader
+                title={budget.name}
+                description={budget.category.name}
+                back={true}
+                action={[
+                    {
+                        label: "Add Expense",
+                        icon: Plus,
+                        variant: "primary",
+                        onClick: () => router.push(`/expenses`),
+                    },
+                ]}
+            />
 
             <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
                 <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
@@ -110,7 +72,7 @@ export function BudgetDetailsPage({ budgetId }: { budgetId: string }) {
                                 className="flex h-14 w-14 items-center justify-center rounded-2xl"
                                 style={{ backgroundColor: `${categoryColor}18` }}
                             >
-                                <PiggyBank size={24} style={{ color: categoryColor }} />
+                                <Icon size={24} style={{ color: categoryColor }} />
                             </div>
                             <div>
                                 <p className="text-sm font-semibold text-gray-900">{budget.category.name}</p>

@@ -10,6 +10,7 @@ import { incomeInsight } from "./incomeStatic";
 import { AlertTriangle, ArrowRight, CheckCircle2, Info, Plus, ShieldCheck, TrendingDown, Wallet, Zap, ArrowUpRight } from "lucide-react";
 import { useMemo, useState } from "react";
 import IncomePageSkeleton from "@/src/components/loading-skeletons/IncomePageSkeleton";
+import { PageHeader } from "@/src/components/PageHeader";
 
 export function IncomePage() {
     const { data: incomeResponse, isLoading, isError, refetch } = useGetIncomes();
@@ -107,28 +108,24 @@ export function IncomePage() {
 
             <div className="space-y-6">
                 {/* Page header */}
-                <div className="flex items-start justify-between gap-4">
-                    <div>
-                        <h2 className="text-xl font-bold tracking-tight text-gray-900">Income</h2>
-                        <p className="mt-0.5 text-sm text-gray-400">Track fixed and variable income sources in one clean dashboard.</p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <button
-                            type="button"
-                            onClick={() => openCreateSource("fixed")}
-                            className="flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2.5 text-xs font-semibold text-gray-600 transition-colors hover:bg-gray-50"
-                        >
-                            <Plus size={14} /> Fixed Source
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => openCreateSource("variable")}
-                            className="flex items-center gap-2 rounded-xl bg-[#00C950] px-4 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#00C950]/20 transition-colors hover:bg-[#00b347]"
-                        >
-                            <Plus size={14} /> Variable Source
-                        </button>
-                    </div>
-                </div>
+                <PageHeader
+                    title="Incomes"
+                    description="Track fixed and variable income sources in one clean dashboard."
+                    action={[
+                        {
+                            label: "Fixed Source",
+                            icon: Plus,
+                            variant: "outline",
+                            onClick: () => openCreateSource("fixed"),
+                        },
+                        {
+                            label: "Variable Source",
+                            icon: Plus,
+                            variant: "primary",
+                            onClick: () => openCreateSource("variable"),
+                        },
+                    ]}
+                />
 
                 {/* Overview banner */}
                 <div className="relative overflow-hidden rounded-2xl bg-[#01271E] p-6">
