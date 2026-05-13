@@ -148,7 +148,7 @@ clientAPI.interceptors.response.use(
     }
 
     if (status === 400) {
-      console.error(error?.response?.data?.message);
+      console?.error(error?.response?.data?.message);
     }
 
     if (status === 409) {
