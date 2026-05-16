@@ -8,16 +8,16 @@ import {
 } from "../controllers/expenseController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
-const expenseRoute = express();
+const expenseRouter = express();
 
-expenseRoute.post("/", authMiddleware, createExpense);
+expenseRouter.post("/", authMiddleware, createExpense);
 
-expenseRoute.get("/", authMiddleware, getExpenses);
+expenseRouter.get("/", authMiddleware, getExpenses);
 
-expenseRoute.get("/:id", authMiddleware, getExpenseById);
+expenseRouter.get("/:id", authMiddleware, getExpenseById);
 
-expenseRoute.patch("/:id", authMiddleware, updateExpense);
+expenseRouter.patch("/:id", authMiddleware, updateExpense);
 
-expenseRoute.delete("/:id", authMiddleware, deleteExpense);
+expenseRouter.delete("/:id", authMiddleware, deleteExpense);
 
-export default expenseRoute;
+export default expenseRouter;

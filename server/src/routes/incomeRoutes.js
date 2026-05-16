@@ -8,16 +8,16 @@ import {
 } from "../controllers/incomeController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 
-const incomeRoutes = express();
+const incomeRouter = express();
 
-incomeRoutes.post("/", authMiddleware, createIncome);
+incomeRouter.post("/", authMiddleware, createIncome);
 
-incomeRoutes.get("/", authMiddleware, getIncomes);
+incomeRouter.get("/", authMiddleware, getIncomes);
 
-incomeRoutes.get("/:id", authMiddleware, getIncomeById);
+incomeRouter.get("/:id", authMiddleware, getIncomeById);
 
-incomeRoutes.patch("/:id", authMiddleware, updateIncome);
+incomeRouter.patch("/:id", authMiddleware, updateIncome);
 
-incomeRoutes.delete("/:id", authMiddleware, deleteIncome);
+incomeRouter.delete("/:id", authMiddleware, deleteIncome);
 
-export default incomeRoutes;
+export default incomeRouter;

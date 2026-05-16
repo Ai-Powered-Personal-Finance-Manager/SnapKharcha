@@ -13,9 +13,10 @@ import errorHandler from "./middleware/errorHandler.js";
 import authRouter from "./routes/authRoutes.js";
 import budgetRouter from "./routes/budgetRoutes.js";
 import categoryRouter from "./routes/categoryRoutes.js";
-import expenseRoute from "./routes/expenseRoutes.js";
-import incomeRoutes from "./routes/incomeRoutes.js";
-import loanRoutes from "./routes/loanRoutes.js";
+import expenseRouter from "./routes/expenseRoutes.js";
+import incomeRouter from "./routes/incomeRoutes.js";
+import loanRouter from "./routes/loanRoutes.js";
+import dashboardRouter from "./routes/dashboardRoutes.js";
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -57,27 +58,30 @@ app.use(passport.session());
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
-app.get("/", (req, res) => {
+app.get("/",/* #swagger.ignore = true */ (req, res) => {
   res.send("API running...");
 });
 
 //routes
-app.use("/api/auth", authRouter); /* #swagger.tags = ['Auth'] */
+app.use("/api/auth", authRouter);
 
 //budget
-app.use("/api/budget", budgetRouter); /* #swagger.tags = ['Budget'] */
+app.use("/api/budget", budgetRouter);
 
 //category
-app.use("/api/category", categoryRouter); /* #swagger.tags = ['Category'] */
+app.use("/api/category", categoryRouter);
 
 //expense
-app.use("/api/expense", expenseRoute);
+app.use("/api/expense", expenseRouter);
 
 //loan
-app.use("/api/loan", loanRoutes);
+app.use("/api/loan", loanRouter);
 
 //income
-app.use("/api/income", incomeRoutes);
+app.use("/api/income", incomeRouter);
+
+//dashboard
+app.use("/api/dashboard", dashboardRouter);
 
 // must be after all routes
 app.use(errorHandler);
