@@ -4,6 +4,7 @@ import prisma from "../config/prisma.js";
 // CREATE INCOME
 // ─────────────────────────────────────────
 export const createIncome = async (req, res, next) => {
+  /* #swagger.tags = ['Income'] */
   try {
     const { amount, company, position, source, note, status, type, creditDay } =
       req.body;
@@ -124,6 +125,7 @@ export const createIncome = async (req, res, next) => {
 // GET INCOMES
 // ─────────────────────────────────────────
 export const getIncomes = async (req, res, next) => {
+  /* #swagger.tags = ['Income'] */
   try {
     const userId = req.user.id;
 
@@ -178,6 +180,7 @@ export const getIncomes = async (req, res, next) => {
 // GET INCOME BY ID
 // ─────────────────────────────────────────
 export const getIncomeById = async (req, res, next) => {
+  /* #swagger.tags = ['Income'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -209,6 +212,7 @@ export const getIncomeById = async (req, res, next) => {
 // UPDATE INCOME
 // ─────────────────────────────────────────
 export const updateIncome = async (req, res, next) => {
+  /* #swagger.tags = ['Income'] */
   try {
     const { id } = req.params;
     const { amount, company, position, source, note, status, type, creditDay } =
@@ -329,6 +333,7 @@ export const updateIncome = async (req, res, next) => {
 // DELETE INCOME
 // ─────────────────────────────────────────
 export const deleteIncome = async (req, res, next) => {
+  /* #swagger.tags = ['Income'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;
