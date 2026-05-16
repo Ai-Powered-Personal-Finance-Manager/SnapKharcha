@@ -1,4 +1,4 @@
-import { BudgetDetailsPage } from "@/src/pages/budgets/BudgetDetailsPage";
+import { BudgetDetailsPage } from "@/src/features/budgets/pages/BudgetDetailsPage";
 
 export default async function BudgetDetailsRoute({
     params,

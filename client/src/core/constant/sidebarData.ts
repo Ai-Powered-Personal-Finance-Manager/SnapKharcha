@@ -81,11 +81,11 @@ export const mainNavSections: NavSection[] = [
                 href: "/loans-and-emis",
                 icon: FileText,
             },
-            {
-                label: "Net Worth",
-                href: "/net-worth",
-                icon: BarChart3,
-            },
+            // {
+            //     label: "Net Worth",
+            //     href: "/net-worth",
+            //     icon: BarChart3,
+            // },
             {
                 label: "Savings Goals",
                 href: "/savings-goals",

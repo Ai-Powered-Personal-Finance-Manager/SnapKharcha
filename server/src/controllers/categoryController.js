@@ -7,6 +7,7 @@ import prisma from "../config/prisma.js";
 // CREATE CATEGORY
 // ─────────────────────────────────────────
 export const createCategory = async (req, res, next) => {
+  /* #swagger.tags = ['Category'] */
   try {
     let { name, tags, icon, color } = req.body;
     const userId = req.user.id;
@@ -71,6 +72,7 @@ export const createCategory = async (req, res, next) => {
 // GET CATEGORY
 // ─────────────────────────────────────────
 export const getCategories = async (req, res, next) => {
+  /* #swagger.tags = ['Category'] */
   try {
     const userId = req.user.id;
 
@@ -92,6 +94,7 @@ export const getCategories = async (req, res, next) => {
 // GET CATEGORY BY ID
 // ─────────────────────────────────────────
 export const getCategoryById = async (req, res, next) => {
+  /* #swagger.tags = ['Category'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -120,6 +123,7 @@ export const getCategoryById = async (req, res, next) => {
 // UDPATE CATEGORY
 // ─────────────────────────────────────────
 export const updateCategory = async (req, res, next) => {
+  /* #swagger.tags = ['Category'] */
   try {
     const { id } = req.params;
     let { name, tags, icon, color } = req.body;
@@ -203,6 +207,7 @@ export const updateCategory = async (req, res, next) => {
 // DELETE CATEGORY
 // ─────────────────────────────────────────
 export const deleteCategory = async (req, res, next) => {
+  /* #swagger.tags = ['Category'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;

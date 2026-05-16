@@ -5,6 +5,7 @@ import prisma from "../config/prisma.js";
 // CREATE LOAN
 // ─────────────────────────────────────────
 export const createLoan = async (req, res, next) => {
+  /* #swagger.tags = ['Loan'] */
   try {
     const {
       name,
@@ -122,6 +123,7 @@ export const createLoan = async (req, res, next) => {
 // GET LOANS
 // ─────────────────────────────────────────
 export const getLoans = async (req, res, next) => {
+  /* #swagger.tags = ['Loan'] */
   try {
     const userId = req.user.id;
 
@@ -181,6 +183,7 @@ export const getLoans = async (req, res, next) => {
 // GET LOAN BY ID
 // ─────────────────────────────────────────
 export const getLoanById = async (req, res, next) => {
+  /* #swagger.tags = ['Loan'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -218,6 +221,7 @@ export const getLoanById = async (req, res, next) => {
 // ─────────────────────────────────────────
 
 export const updateLoan = async (req, res, next) => {
+  /* #swagger.tags = ['Loan'] */
   try {
     const { id } = req.params;
     const {
@@ -345,6 +349,7 @@ export const updateLoan = async (req, res, next) => {
 // DELETE LOAN
 // ─────────────────────────────────────────
 export const deleteLoan = async (req, res, next) => {
+  /* #swagger.tags = ['Loan'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;

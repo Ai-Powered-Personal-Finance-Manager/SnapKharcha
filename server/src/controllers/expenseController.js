@@ -4,6 +4,7 @@ import prisma from "../config/prisma.js";
 // CREATE EXPENSE
 // ─────────────────────────────────────────
 export const createExpense = async (req, res, next) => {
+  /* #swagger.tags = ['Expense'] */
   try {
     const { amount, note, budgetId, paymentMethod, date, merchant } = req.body;
     const userId = req.user.id;
@@ -127,6 +128,7 @@ export const createExpense = async (req, res, next) => {
 // GET EXPENSES
 // ─────────────────────────────────────────
 export const getExpenses = async (req, res, next) => {
+  /* #swagger.tags = ['Expense'] */
   try {
     const userId = req.user.id;
 
@@ -199,6 +201,7 @@ export const getExpenses = async (req, res, next) => {
 // GET EXPENSE BY ID
 // ─────────────────────────────────────────
 export const getExpenseById = async (req, res, next) => {
+  /* #swagger.tags = ['Expense'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;
@@ -235,6 +238,7 @@ export const getExpenseById = async (req, res, next) => {
 // UPDATE EXPENSE
 // ─────────────────────────────────────────
 export const updateExpense = async (req, res, next) => {
+  /* #swagger.tags = ['Expense'] */
   try {
     const { id } = req.params;
     const { amount, note, budgetId, paymentMethod, date, merchant } = req.body;
@@ -396,6 +400,7 @@ export const updateExpense = async (req, res, next) => {
 // DELETE EXPENSE
 // ─────────────────────────────────────────
 export const deleteExpense = async (req, res, next) => {
+  /* #swagger.tags = ['Expense'] */
   try {
     const { id } = req.params;
     const userId = req.user.id;

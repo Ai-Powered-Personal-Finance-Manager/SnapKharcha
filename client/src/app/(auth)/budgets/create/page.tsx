@@ -1,4 +1,4 @@
-import { CreateBudgetPage } from "@/src/pages/budgets/CreateBudgetPage";
+import { CreateBudgetPage } from "@/src/features/budgets/pages/CreateBudgetPage";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
