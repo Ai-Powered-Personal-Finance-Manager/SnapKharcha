@@ -5,4 +5,5 @@ export const REVALIDATE = {
   VERIFY_OTP: "verify-otp",
   AUTH_ME: "auth-me",
   LOGOUT: "logout",
+  DASHBOARD: "dashboard",
 };
