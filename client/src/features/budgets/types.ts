@@ -1,5 +1,5 @@
 import { LucideIcon } from "lucide-react";
-import type { ExpenseApiItem } from "@/src/features/expenses/types";
+import { ExpenseListItem } from "../expenses/types";
 
 // ─── UI Models ────────────────────────────────────────────────────────────────
 
@@ -72,7 +72,7 @@ export interface BudgetApiItem {
     createdAt: string;
     category: BudgetApiCategory;
     categoryId?: string;
-    expenses: ExpenseApiItem[];
+    expenses: ExpenseListItem[];
     expenseCount?: number;
 }
 

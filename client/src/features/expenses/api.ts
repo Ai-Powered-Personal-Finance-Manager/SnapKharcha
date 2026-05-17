@@ -5,9 +5,11 @@ import { budgetDetailQueryKey, budgetQueryKey } from "@/src/features/budgets/api
 import type {
     CreateExpensePayload,
     DeleteExpenseResponse,
-    ExpenseApiItem,
+    ExpenseApiData,
     ExpenseApiListResponse,
+    ExpenseListItem,
     ExpenseMutationResponse,
+    SingleExpenseResponse,
     UpdateExpensePayload,
 } from "@/src/features/expenses/types";
 import type { AxiosError } from "axios";
@@ -31,9 +33,9 @@ export const fetchAllExpenses = async (): Promise<ExpenseApiListResponse> => {
     return response.data;
 };
 
-export const fetchExpenseById = async (id: string): Promise<ExpenseApiItem> => {
-    const response = await clientAPI.get<ExpenseMutationResponse>(`/expense/${id}`);
-    return response.data.data as ExpenseApiItem;
+export const fetchExpenseById = async (id: string): Promise<ExpenseListItem> => {
+    const response = await clientAPI.get<SingleExpenseResponse>(`/expense/${id}`);
+    return response.data.data;
 };
 
 export const createExpense = async (
