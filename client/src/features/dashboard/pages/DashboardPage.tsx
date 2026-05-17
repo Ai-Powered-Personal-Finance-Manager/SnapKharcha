@@ -10,12 +10,12 @@ import { RecentTransactions } from "@/src/features/dashboard/components/RecentTr
 import { SavingsGoal } from "@/src/features/dashboard/components/SavingsGoal";
 import { WelcomeBanner } from "@/src/features/dashboard/components/WelcomeBanner";
 import {
-  Car,
-  Coffee,
-  ShoppingBag,
-  ShoppingCart,
-  Utensils,
-  Zap,
+    Car,
+    Coffee,
+    ShoppingBag,
+    ShoppingCart,
+    Utensils,
+    Zap,
 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -98,7 +98,7 @@ export default function DashboardPage() {
       {/* Main Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
         {/* Transactions */}
-        <RecentTransactions transactions={transactions} />
+        <RecentTransactions transactions={dashbaord.expenses} />
 
         {/* Right column */}
         <div className="space-y-5">
