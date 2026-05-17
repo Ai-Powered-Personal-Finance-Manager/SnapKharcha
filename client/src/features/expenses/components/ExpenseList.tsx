@@ -2,17 +2,17 @@
 
 import { useMemo } from "react";
 import { Clock, Receipt, Plus } from "lucide-react";
-import type { ExpenseApiItem } from "@/src/features/expenses/types";
+import type { ExpenseListItem } from "@/src/features/expenses/types";
 import { getExpenseDateKey, formatExpenseGroupLabel } from "@/src/utils/expense";
 import { ExpenseRow } from "./ExpenseRow";
 
 type ExpenseListProps = {
-    expenses: ExpenseApiItem[];
+    expenses: ExpenseListItem[];
     activeBudgetLabel?: string;
     onAddExpense: () => void;
-    onView: (expense: ExpenseApiItem) => void;
-    onEdit: (expense: ExpenseApiItem) => void;
-    onDelete: (expense: ExpenseApiItem) => void;
+    onView: (expense: ExpenseListItem) => void;
+    onEdit: (expense: ExpenseListItem) => void;
+    onDelete: (expense: ExpenseListItem) => void;
 };
 
 export const ExpenseList = ({
@@ -24,7 +24,7 @@ export const ExpenseList = ({
     onDelete,
 }: ExpenseListProps) => {
     const groupedExpenses = useMemo(() => {
-        const grouped: Record<string, { label: string; items: ExpenseApiItem[] }> = {};
+        const grouped: Record<string, { label: string; items: ExpenseListItem[] }> = {};
 
         expenses.forEach((expense) => {
             const dateValue = expense.date ?? expense.createdAt;
