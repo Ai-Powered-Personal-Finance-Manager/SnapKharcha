@@ -49,7 +49,7 @@ export const IncomeSourceCard = ({
 
     const metricLabel = isVariable ? "This month" : !isPaused ? "Monthly amount" : "Paused";
     const metricValue = isVariable
-        ? formatIncomeAmount(source.currentMonthAmount)
+        ? formatIncomeAmount(source.amount)
         : !isPaused
             ? formatIncomeAmount(Number(source.amount ?? 0))
             : formatIncomeAmount(0);
@@ -141,7 +141,7 @@ export const IncomeSourceCard = ({
                     <div className="rounded-xl bg-gray-50 p-3">
                         <p className="mb-1 text-[10px] uppercase tracking-wider text-gray-400">{isVariable ? "Last month" : "Credit day"}</p>
                         <p className="font-mono text-sm font-bold text-gray-900">
-                            {isVariable ? formatIncomeAmount(source.previousMonthAmount) : formatCreditDay(source.creditDay)}
+                            {isVariable ? formatIncomeAmount(source.amount) : formatCreditDay(source.creditDay)}
                         </p>
                     </div>
                     <div className="rounded-xl bg-gray-50 p-3">

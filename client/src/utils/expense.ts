@@ -1,4 +1,4 @@
-import type { ExpenseApiItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/features/expenses/types";
+import type { ExpenseListItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/features/expenses/types";
 
 const paymentMethodLabels: Record<ExpensePaymentMethod, string> = {
     BANK: "Bank",
@@ -130,7 +130,7 @@ export const formatExpenseGroupLabel = (value?: string | null) => {
     });
 };
 
-export const buildExpenseFormValues = (expense?: ExpenseApiItem | null): ExpenseFormValues => {
+export const buildExpenseFormValues = (expense?: ExpenseListItem | null): ExpenseFormValues => {
     return {
         amount: expense ? String(expense.amount) : "",
         merchant: expense?.merchant ?? "",
