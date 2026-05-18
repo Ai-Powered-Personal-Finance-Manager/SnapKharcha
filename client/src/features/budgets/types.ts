@@ -60,20 +60,20 @@ export interface BudgetApiCategory {
 }
 
 export interface BudgetApiItem {
-  id: string;
-  name: string;
-  amount: number;
-  startingDate: string;
-  expireDate: string;
-  spendAmount: number;
-  note: string | null;
-  alert: boolean | null;
-  alertLimit: number | null;
-  createdAt: string;
-  category: BudgetApiCategory;
-  categoryId?: string;
-  expenses: ExpenseListItem[];
-  expenseCount?: number;
+    id: string;
+    name: string;
+    amount: number;
+    startingDate: string;
+    expireDate: string;
+    spendAmount: number;
+    note: string | null;
+    alert: boolean | null;
+    alertLimit: number | null;
+    createdAt: string;
+    category: BudgetApiCategory;
+    categoryId?: string;
+    expenses: ExpenseListItem[];
+    expenseCount?: number;
 }
 
 export interface BudgetApiData {

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Eye, MoreHorizontal, PencilLine, Receipt, Trash2 } from "lucide-react";
-import type { ExpenseApiItem } from "@/src/features/expenses/types";
+import type { ExpenseListItem } from "@/src/features/expenses/types";
 import {
     formatExpensePaymentMethod,
     formatExpenseTime,
@@ -11,10 +11,10 @@ import {
 import { getCategoryIcon } from "@/src/utils/budget";
 
 type ExpenseRowProps = {
-    expense: ExpenseApiItem;
-    onView: (expense: ExpenseApiItem) => void;
-    onEdit: (expense: ExpenseApiItem) => void;
-    onDelete: (expense: ExpenseApiItem) => void;
+    expense: ExpenseListItem;
+    onView: (expense: ExpenseListItem) => void;
+    onEdit: (expense: ExpenseListItem) => void;
+    onDelete: (expense: ExpenseListItem) => void;
 };
 
 const paymentColors: Record<string, string> = {

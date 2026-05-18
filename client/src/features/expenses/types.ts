@@ -56,6 +56,12 @@ export interface ExpenseApiData {
   summary: ExpenseSummary;
 }
 
+export interface SingleExpenseResponse {
+    success: boolean;
+    message: string;
+    data: ExpenseListItem;
+}
+
 export interface ExpenseApiListResponse {
   success: boolean;
   message?: string;
