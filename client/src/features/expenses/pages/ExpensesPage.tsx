@@ -32,7 +32,6 @@ import { useMemo, useState } from "react";
 import { ExpenseDeleteDialog } from "../components/ExpenseDeleteDialog";
 import { ExpenseList } from "../components/ExpenseList";
 import { expenseInsight } from "./expenseStatic";
-
 const formatCurrency = (value: number) => `Rs.${value.toLocaleString()}`;
 
 export function ExpensesPage() {

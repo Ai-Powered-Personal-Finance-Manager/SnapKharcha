@@ -16,11 +16,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #00C950;
+  background: #00c950;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #00C950;
+  background: #00c950;
 }
 
 /* Smooth scroll */
@@ -30,8 +30,14 @@ html {
 
 /* Fade-in animation */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fade-in {
@@ -39,10 +45,26 @@ html {
 }
 
 /* Staggered animation helper classes */
-.stagger-1 { animation-delay: 0.1s; opacity: 0; animation: fadeIn 0.7s ease-out 0.1s forwards; }
-.stagger-2 { animation-delay: 0.2s; opacity: 0; animation: fadeIn 0.7s ease-out 0.2s forwards; }
-.stagger-3 { animation-delay: 0.3s; opacity: 0; animation: fadeIn 0.7s ease-out 0.3s forwards; }
-.stagger-4 { animation-delay: 0.4s; opacity: 0; animation: fadeIn 0.7s ease-out 0.4s forwards; }
+.stagger-1 {
+  animation-delay: 0.1s;
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 0.1s forwards;
+}
+.stagger-2 {
+  animation-delay: 0.2s;
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 0.2s forwards;
+}
+.stagger-3 {
+  animation-delay: 0.3s;
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 0.3s forwards;
+}
+.stagger-4 {
+  animation-delay: 0.4s;
+  opacity: 0;
+  animation: fadeIn 0.7s ease-out 0.4s forwards;
+}
 
 /* Gradient text utility */
 .gradient-text {
@@ -55,6 +77,5 @@ html {
 /* Selection color */
 ::selection {
   background-color: #00e5a020;
-  color: #00C950;
+  color: #00c950;
 }
-

@@ -28,42 +28,6 @@ clientAPI.interceptors.request.use(
 );
 
 // RESPONSE INTERCEPTOR
-// clientAPI.interceptors.response.use(
-//   (response) => response,
-//   async (error) => {
-//     // Network error
-//     if (error.code === "ERR_NETWORK") {
-//       console.error("Network error. Check your connection.");
-//       return Promise.reject(error);
-//     }
-
-//     const status = error?.response?.status;
-
-//     // Unauthorized → logout
-//     if (status === 401) {
-//       localStorageUtil.remove(CONFIG.LOCALSTORAGE.ACCESS_TOKEN);
-//       window.location.href = "/login";
-//     }
-
-//     // Forbidden
-//     if (status === 403) {
-//       console.error("You don’t have permission.");
-//     }
-
-//     // Bad request
-//     if (status === 400) {
-//       console.error(error?.response?.data?.message || "Bad request");
-//     }
-
-//     // Conflict
-//     if (status === 409) {
-//       return Promise.reject(error?.response?.data);
-//     }
-
-//     return Promise.reject(error);
-//   },
-// );
-
 let isRefreshing = false;
 let failedQueue: any[] = [];
 
@@ -94,7 +58,12 @@ clientAPI.interceptors.response.use(
     // ========================
     // 401 → TRY REFRESH
     // ========================
-    if (status === 401 && !originalRequest._retry) {
+    const isOpenRoute =
+      originalRequest.url?.includes("/login") ||
+      originalRequest.url?.includes("/register") ||
+      originalRequest.url?.includes("/refresh");
+
+    if (status === 401 && !originalRequest._retry && !isOpenRoute) {
       originalRequest._retry = true;
 
       if (isRefreshing) {

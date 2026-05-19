@@ -2,6 +2,7 @@
 
 import { useDashboard } from "@/src/components/dashboard-layout/hooks/useDashboard";
 import { useUser } from "@/src/components/dashboard-layout/hooks/useUser";
+import { DashboardSkeletonLoading } from "@/src/components/loading-skeletons/DashboardSkeletonLoading";
 import { StatsGrid } from "@/src/components/StatsGrid";
 import { getGreeting } from "@/src/core/utils/getGreetings";
 import { AIInsight } from "@/src/features/dashboard/components/AIInsight";
@@ -10,12 +11,12 @@ import { RecentTransactions } from "@/src/features/dashboard/components/RecentTr
 import { SavingsGoal } from "@/src/features/dashboard/components/SavingsGoal";
 import { WelcomeBanner } from "@/src/features/dashboard/components/WelcomeBanner";
 import {
-    Car,
-    Coffee,
-    ShoppingBag,
-    ShoppingCart,
-    Utensils,
-    Zap,
+  Car,
+  Coffee,
+  ShoppingBag,
+  ShoppingCart,
+  Utensils,
+  Zap,
 } from "lucide-react";
 import { useMemo } from "react";
 
@@ -85,7 +86,7 @@ export default function DashboardPage() {
   const greeting = useMemo(() => getGreeting(), []);
   const { dashbaord, isLoading: isDashboardLoading } = useDashboard();
 
-  if (isDashboardLoading || !dashbaord) return null;
+  if (isDashboardLoading || !dashbaord) return <DashboardSkeletonLoading />;
 
   return (
     <div className="space-y-6">
