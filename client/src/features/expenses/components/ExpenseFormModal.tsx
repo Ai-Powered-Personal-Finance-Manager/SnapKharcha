@@ -21,6 +21,7 @@ import {
     buildExpenseFormValues,
     expensePaymentMethodOptions,
 } from "@/src/utils/expense";
+import ReceiptScanner from "./ReceiptScanner";
 
 type ExpenseFormModalProps = {
     open: boolean;
@@ -141,6 +142,22 @@ export const ExpenseFormModal = ({
         mode === "edit"
             ? "Update the amount, merchant, budget, or payment details."
             : "Charge to one of your active budgets.";
+
+    const handleScanComplete = (scannedData: any) => {
+        console.log("Scanned data received in modal:", scannedData);
+        if(scannedData) {
+            setFormState((current) => ({ ...current, amount: String(scannedData.amount), merchant: scannedData.merchant, date: scannedData.date }));
+            if(scannedData.note){
+                setFormState((current) => ({ ...current, note: scannedData.note }));
+            }
+            if(scannedData.category){
+                const matchedBudget = budgets.find(budget => budget.category.name.toLowerCase() === scannedData.category.toLowerCase());
+                if(matchedBudget){
+                    setFormState((current) => ({ ...current, budgetId: matchedBudget.id }));
+                }
+            }
+        }
+    }
 
     return (
         <div
@@ -377,12 +394,13 @@ export const ExpenseFormModal = ({
                                 </div>
                             </div>
 
-                            <button
+                            {/* <button
                                 type="button"
                                 className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 py-2.5 text-xs font-medium text-gray-400 transition-all hover:border-[#00C950]/40 hover:bg-[#00C950]/3 hover:text-[#00C950]"
                             >
                                 <ScanLine size={14} /> Scan Receipt (optional)
-                            </button>
+                            </button> */}
+                            <ReceiptScanner onScanComplete={handleScanComplete} />
                         </>
                     )}
 

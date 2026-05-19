@@ -17,6 +17,11 @@ model User {
   otp          String?
   otpExpiresAt DateTime?
   createdAt    DateTime   @default(now())
+  city         String?
+  country      String?
+  dob          DateTime?
+  phoneNumber  String?
+  state        String?
   budgets      Budget[]
   categories   Category[]
   expenses     Expense[]

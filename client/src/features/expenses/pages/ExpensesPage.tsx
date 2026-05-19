@@ -10,7 +10,7 @@ import { useGetBudgets } from "@/src/features/budgets/api";
 import type { ExpenseListItem, ExpenseFormValues } from "@/src/features/expenses/types";
 import { formatExpensePaymentMethod } from "@/src/utils/expense";
 import { Plus, Search, Filter, ScanLine, AlertTriangle, TrendingDown, ArrowDownLeft, Zap } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/src/components/PageHeader";
 import ExpenseSkeletonLoading from "@/src/components/loading-skeletons/ExpenseSkeletonLoading";
@@ -19,6 +19,7 @@ import { StatsGrid } from "@/src/components/StatsGrid";
 const formatCurrency = (value: number) => `Rs.${value.toLocaleString()}`;
 
 export function ExpensesPage() {
+    const receiptInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
     const { data: expensesResponse, isLoading: isExpensesLoading, isError: isExpensesError, refetch: refetchExpenses } = useGetExpenses();
     const { data: budgetsResponse, isLoading: isBudgetsLoading, isError: isBudgetsError, refetch: refetchBudgets } = useGetBudgets();
@@ -167,6 +168,18 @@ export function ExpensesPage() {
         refetchBudgets();
     };
 
+    const handleReceiptUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        // For now just open the create modal with the file ready
+        // Later: send to OCR API, parse response, pre-fill the form
+        setShowCreateModal(true);
+
+        // Reset so the same file can be selected again if needed
+        event.target.value = "";
+    };
+
     if (isExpensesLoading || isBudgetsLoading) {
         return <ExpenseSkeletonLoading/>;
     }
@@ -186,7 +199,7 @@ export function ExpensesPage() {
                             icon: ScanLine,
                             label: "Scan Receipt",
                             variant: "outline",
-                            onClick: () => {}, // TODO: Implement receipt scanning
+                            onClick: () => receiptInputRef.current?.click(), // TODO: Implement receipt scanning
                         },
                         {
                             icon: Plus,
@@ -398,6 +411,14 @@ export function ExpensesPage() {
                 onClose={() => setDeletingExpense(null)}
                 onConfirm={handleDeleteExpense}
                 isPending={deleteExpenseMutation.isPending}
+            />
+
+            <input
+                ref={receiptInputRef}
+                type="file"
+                accept="image/*,application/pdf"
+                className="hidden"
+                onChange={handleReceiptUpload}
             />
         </>
     );

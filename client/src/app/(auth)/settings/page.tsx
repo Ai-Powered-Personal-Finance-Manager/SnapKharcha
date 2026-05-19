@@ -131,7 +131,7 @@ export default function SettingsPage() {
             <Row label="Password" description="Last changed 3 months ago">
             <ActionButton label="Change Password" />
             </Row>
-            <Row label="Two-Factor Authentication" description="Add an extra layer of security via OTP">
+            {/* <Row label="Two-Factor Authentication" description="Add an extra layer of security via OTP">
             <Toggle enabled={true} />
             </Row>
             <Row label="Active Sessions" description="2 devices currently logged in">
@@ -141,34 +141,34 @@ export default function SettingsPage() {
             </Row>
             <Row label="Login Alerts" description="Get notified when someone logs in from a new device">
             <Toggle enabled={true} />
-            </Row>
+            </Row> */}
 
             {/* Sessions list */}
-            <div className="px-6 py-4 space-y-3 bg-gray-50/50">
-            {[
-                { device: "Chrome · MacBook Pro", location: "Mumbai, IN", icon: Globe, current: true  },
-                { device: "SnapKharcha App · iPhone 15", location: "Mumbai, IN", icon: Smartphone, current: false },
-            ].map((s) => (
-                <div key={s.device} className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                    <s.icon size={15} className="text-gray-400" />
-                    <div>
-                    <p className="text-gray-700 text-xs font-medium">{s.device}</p>
-                    <p className="text-gray-400 text-[11px]">{s.location}</p>
+            {/* <div className="px-6 py-4 space-y-3 bg-gray-50/50">
+                {[
+                    { device: "Chrome · MacBook Pro", location: "Mumbai, IN", icon: Globe, current: true  },
+                    { device: "SnapKharcha App · iPhone 15", location: "Mumbai, IN", icon: Smartphone, current: false },
+                ].map((s) => (
+                    <div key={s.device} className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                        <s.icon size={15} className="text-gray-400" />
+                        <div>
+                        <p className="text-gray-700 text-xs font-medium">{s.device}</p>
+                        <p className="text-gray-400 text-[11px]">{s.location}</p>
+                        </div>
                     </div>
-                </div>
-                {s.current ? (
-                    <span className="text-[10px] font-semibold text-[#00C950] bg-[#00C950]/8 px-2 py-0.5 rounded-full">Current</span>
-                ) : (
-                    <button className="text-[11px] text-red-500 hover:underline">Revoke</button>
-                )}
-                </div>
-            ))}
-            </div>
+                    {s.current ? (
+                        <span className="text-[10px] font-semibold text-[#00C950] bg-[#00C950]/8 px-2 py-0.5 rounded-full">Current</span>
+                    ) : (
+                        <button className="text-[11px] text-red-500 hover:underline">Revoke</button>
+                    )}
+                    </div>
+                ))}
+            </div> */}
         </Section>
 
         {/* Notifications */}
-        <Section title="Notifications" description="Choose what alerts you want to receive">
+        {/* <Section title="Notifications" description="Choose what alerts you want to receive">
             {[
             { label: "Budget Alerts",      desc: "When you're near or over a budget limit",   on: true  },
             { label: "Transaction Alerts", desc: "For every debit and credit on your account", on: true  },
@@ -181,13 +181,13 @@ export default function SettingsPage() {
                 <Toggle enabled={n.on} />
             </Row>
             ))}
-        </Section>
+        </Section> */}
 
         {/* Preferences */}
         <Section title="Preferences" description="Customise your experience">
             <Row label="Currency" description="Used across all calculations and displays">
             <select className="px-3 py-2 text-sm text-gray-700 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-[#00C950] focus:ring-2 focus:ring-[#00C950]/10 transition-all">
-                <option>Rs. INR — Nepaln Rupee</option>
+                <option>Rs. NRP — Nepali Rupees</option>
                 <option>$ USD — US Dollar</option>
                 <option>€ EUR — Euro</option>
             </select>
@@ -212,7 +212,7 @@ export default function SettingsPage() {
         </Section>
 
         {/* Plan */}
-        <Section title="Subscription">
+        {/* <Section title="Subscription">
             <div className="px-6 py-5">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
@@ -234,7 +234,7 @@ export default function SettingsPage() {
                 ))}
             </div>
             </div>
-        </Section>
+        </Section> */}
 
         {/* Data */}
         <Section title="Data & Privacy">
