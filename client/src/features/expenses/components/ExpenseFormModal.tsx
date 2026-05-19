@@ -4,11 +4,9 @@ import { useEffect, useMemo, useState, type FormEvent } from "react";
 import {
     AlertTriangle,
     Calendar,
-    CheckCircle2,
     ChevronDown,
     Loader2,
     Receipt,
-    ScanLine,
     Tag,
     Wallet,
     X,
@@ -42,7 +40,6 @@ export const ExpenseFormModal = ({
     onSubmit,
     isPending,
 }: ExpenseFormModalProps) => {
-    const [step, setStep] = useState<1 | 2>(mode === "edit" ? 2 : 1);
     const [formState, setFormState] = useState<ExpenseFormValues>(() => buildExpenseFormValues(initialExpense));
 
     useEffect(() => {
@@ -51,7 +48,6 @@ export const ExpenseFormModal = ({
         }
 
         setFormState(buildExpenseFormValues(initialExpense));
-        setStep(mode === "edit" || Boolean(initialExpense?.budgetId) ? 2 : 1);
     }, [initialExpense, mode, open]);
 
     useEffect(() => {
@@ -116,7 +112,8 @@ export const ExpenseFormModal = ({
         Number.isFinite(parsedAmount) &&
         parsedAmount > 0 &&
         formState.date.length > 0 &&
-        !Number.isNaN(new Date(`${formState.date}T00:00:00`).getTime());
+        !Number.isNaN(new Date(`${formState.date}T00:00:00`).getTime()) &&
+        formState.paymentMethod.length > 0;
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -133,6 +130,37 @@ export const ExpenseFormModal = ({
         });
     };
 
+    const handleScanComplete = (scannedData: any) => {
+        console.log("Scanned data received in modal:", scannedData);
+        if (scannedData) {
+            setFormState((current) => ({
+                ...current,
+                amount: String(scannedData.amount),
+                merchant: scannedData.merchant,
+                date: scannedData.date,
+            }));
+            if (scannedData.note) {
+                setFormState((current) => ({ ...current, note: scannedData.note }));
+            }
+            if (scannedData.paymentMethod) {
+                setFormState((current) => ({
+                    ...current,
+                    paymentMethod: scannedData.paymentMethod,
+                }));
+            }
+            if (scannedData.category) {
+                const matchedBudget = budgets.find(
+                    (budget) =>
+                        budget.category.name.toLowerCase() ===
+                        scannedData.category.toLowerCase(),
+                );
+                if (matchedBudget) {
+                    setFormState((current) => ({ ...current, budgetId: matchedBudget.id }));
+                }
+            }
+        }
+    };
+
     if (!open) {
         return null;
     }
@@ -142,22 +170,6 @@ export const ExpenseFormModal = ({
         mode === "edit"
             ? "Update the amount, merchant, budget, or payment details."
             : "Charge to one of your active budgets.";
-
-    const handleScanComplete = (scannedData: any) => {
-        console.log("Scanned data received in modal:", scannedData);
-        if(scannedData) {
-            setFormState((current) => ({ ...current, amount: String(scannedData.amount), merchant: scannedData.merchant, date: scannedData.date }));
-            if(scannedData.note){
-                setFormState((current) => ({ ...current, note: scannedData.note }));
-            }
-            if(scannedData.category){
-                const matchedBudget = budgets.find(budget => budget.category.name.toLowerCase() === scannedData.category.toLowerCase());
-                if(matchedBudget){
-                    setFormState((current) => ({ ...current, budgetId: matchedBudget.id }));
-                }
-            }
-        }
-    }
 
     return (
         <div
@@ -188,259 +200,265 @@ export const ExpenseFormModal = ({
                 <form className="space-y-4 px-6 py-5" onSubmit={handleSubmit}>
                     <div>
                         <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                            1. Choose Budget *
+                            Budget *
                         </label>
 
-                        {selectedBudget ? (
-                            <button
-                                type="button"
-                                onClick={() => setFormState((current) => ({ ...current, budgetId: "" }))}
-                                className="flex w-full items-center gap-3 rounded-xl border-2 border-[#00C950] bg-[#00C950]/5 px-4 py-3 transition-all"
+                        <div className="relative">
+                            <select
+                                value={formState.budgetId}
+                                onChange={(event) =>
+                                    setFormState((current) => ({
+                                        ...current,
+                                        budgetId: event.target.value,
+                                    }))
+                                }
+                                className="w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-gray-900 outline-none transition-all focus:border-[#00C950] focus:ring-1 focus:ring-[#00C950]"
                             >
-                                <div
-                                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg"
-                                    style={{ backgroundColor: `${selectedBudget.category.color ?? "#94a3b8"}18` }}
-                                >
-                                    {(() => {
-                                        const Icon = getCategoryIcon(selectedBudget.category.name, selectedBudget.category.tags);
-                                        return <Icon size={16} style={{ color: selectedBudget.category.color ?? "#94a3b8" }} />;
-                                    })()}
-                                </div>
-                                <div className="flex-1 text-left">
-                                    <p className="text-sm font-semibold text-gray-800">{selectedBudget.name}</p>
-                                    <p className="text-[11px] text-gray-400">{selectedBudget.category.name}</p>
-                                    <p className="text-[11px] text-gray-400">
-                                        Rs.{Math.max(selectedBudget.amount - (selectedBudget.spendAmount ?? 0), 0).toLocaleString()} remaining of Rs.{selectedBudget.amount.toLocaleString()}
-                                    </p>
-                                </div>
-                                <CheckCircle2 size={16} className="shrink-0 text-[#00C950]" />
-                            </button>
-                        ) : (
-                            <div className="grid max-h-52 grid-cols-2 gap-2 overflow-y-auto pr-1">
-                                {budgets.length > 0 ? (
-                                    budgets.map((budget) => {
-                                        const budgetRemaining = Math.max(budget.amount - (budget.spendAmount ?? 0), 0);
-                                        const budgetPct = budget.amount > 0 ? Math.round(((budget.spendAmount ?? 0) / budget.amount) * 100) : 0;
-                                        const iconColor = budget.category.color ?? "#94a3b8";
-                                        const iconBg = `${iconColor}18`;
-                                        const isFull = budgetRemaining <= 0;
+                                <option value="">Select a budget...</option>
+                                {budgets.map((budget) => {
+                                    const budgetRemaining = Math.max(
+                                        budget.amount - (budget.spendAmount ?? 0),
+                                        0,
+                                    );
+                                    const isFull = budgetRemaining <= 0;
+                                    return (
+                                        <option
+                                            key={budget.id}
+                                            value={budget.id}
+                                            disabled={isFull}
+                                        >
+                                            {budget.name} ({budget.category.name})
+                                            {isFull
+                                                ? " - Full"
+                                                : ` - Rs.${budgetRemaining.toLocaleString()} left`}
+                                        </option>
+                                    );
+                                })}
+                            </select>
+                            <ChevronDown
+                                size={14}
+                                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                            />
+                        </div>
 
-                                        return (
-                                            <button
-                                                key={budget.id}
-                                                type="button"
-                                                onClick={() => !isFull && setFormState((current) => ({ ...current, budgetId: budget.id }))}
-                                                disabled={isFull}
-                                                className={`flex items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left transition-all ${
-                                                    isFull
-                                                        ? "cursor-not-allowed border-gray-100 opacity-40"
-                                                        : "cursor-pointer border-gray-200 hover:border-[#00C950]/40 hover:bg-[#00C950]/3"
-                                                }`}
-                                            >
-                                                <div
-                                                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
-                                                    style={{ backgroundColor: iconBg }}
-                                                >
-                                                    {(() => {
-                                                        const Icon = getCategoryIcon(budget.category.name, budget.category.tags);
-                                                        return <Icon size={14} style={{ color: iconColor }} />;
-                                                    })()}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <p className="truncate text-xs font-semibold text-gray-700">{budget.name}</p>
-                                                    <p className="truncate text-[10px] text-gray-400">{budget.category.name}</p>
-                                                    <p className={`mt-0.5 text-[10px] font-mono ${isFull ? "text-red-400" : "text-gray-400"}`}>
-                                                        {isFull ? "Budget full" : `Rs.${budgetRemaining.toLocaleString()} left`}
-                                                    </p>
-                                                    <div className="mt-1 h-1 w-full overflow-hidden rounded-full bg-gray-100">
-                                                        <div
-                                                            className="h-full rounded-full"
-                                                            style={{
-                                                                width: `${Math.min(budgetPct, 100)}%`,
-                                                                backgroundColor: budgetPct >= 90 ? "#ef4444" : iconColor,
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="col-span-2 rounded-2xl border border-dashed border-gray-200 bg-gray-50/60 px-4 py-6 text-center text-xs text-gray-500">
-                                        No budgets found.
+                        {selectedBudget && (
+                            <div className="mt-2.5 rounded-xl bg-[#00C950]/5 border border-[#00C950]/20 px-4 py-2.5">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs font-semibold text-gray-700">
+                                            {selectedBudget.name}
+                                        </p>
+                                        <p className="text-[11px] text-gray-500 mt-0.5">
+                                            {selectedBudget.category.name}
+                                        </p>
                                     </div>
+                                    <div className="text-right">
+                                        <p className="text-xs font-semibold text-gray-900">
+                                            Rs.{remaining!.toLocaleString()} remaining
+                                        </p>
+                                        <p className="text-[10px] text-gray-500">
+                                            of Rs.{selectedBudget.amount.toLocaleString()}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-gray-200">
+                                    <div
+                                        className="h-full rounded-full"
+                                        style={{
+                                            width: `${Math.min(
+                                                ((selectedBudget.spendAmount ?? 0) /
+                                                    selectedBudget.amount) *
+                                                    100,
+                                                100,
+                                            )}%`,
+                                            backgroundColor:
+                                                ((selectedBudget.spendAmount ?? 0) /
+                                                    selectedBudget.amount) *
+                                                    100 >=
+                                                90
+                                                    ? "#ef4444"
+                                                    : "#00C950",
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    <div>
+                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                            Amount *
+                        </label>
+                        <div
+                            className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 transition-all ${
+                                wouldExceed
+                                    ? "border-red-300 bg-red-50/30"
+                                    : "border-gray-200 focus-within:border-[#00C950] focus-within:bg-[#00C950]/2"
+                            }`}
+                        >
+                            <span className="text-sm font-semibold text-gray-500">
+                                Rs.
+                            </span>
+                            <input
+                                type="number"
+                                placeholder="0"
+                                value={formState.amount}
+                                onChange={(event) =>
+                                    setFormState((current) => ({
+                                        ...current,
+                                        amount: event.target.value,
+                                    }))
+                                }
+                                className="flex-1 bg-transparent text-xl font-bold font-mono text-gray-900 outline-none placeholder:text-gray-300"
+                            />
+                        </div>
+                        {remaining !== null && (
+                            <div
+                                className={`mt-1.5 flex items-center gap-1.5 text-[11px] ${wouldExceed ? "text-red-500" : "text-gray-400"}`}
+                            >
+                                {wouldExceed ? (
+                                    <>
+                                        <AlertTriangle size={11} /> Exceeds remaining budget of
+                                        Rs.{remaining.toLocaleString()}
+                                    </>
+                                ) : (
+                                    <>
+                                        <Wallet size={11} /> Rs.{remaining.toLocaleString()}{" "}
+                                        available in {selectedBudget.name}
+                                    </>
                                 )}
                             </div>
                         )}
                     </div>
 
-                    {selectedBudget && step === 2 && (
-                        <>
-                            <div>
-                                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                                    2. Amount *
-                                </label>
-                                <div
-                                    className={`flex items-center gap-2 rounded-xl border-2 px-4 py-3 transition-all ${
-                                        wouldExceed
-                                            ? "border-red-300 bg-red-50/30"
-                                            : "border-gray-200 focus-within:border-[#00C950] focus-within:bg-[#00C950]/2"
+                    <div>
+                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                            Merchant / Where *
+                        </label>
+                        <div className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-3 transition-all focus-within:border-[#00C950]">
+                            <Receipt size={14} className="shrink-0 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="e.g. Zomato, D-Mart, Amazon…"
+                                value={formState.merchant}
+                                onChange={(event) =>
+                                    setFormState((current) => ({
+                                        ...current,
+                                        merchant: event.target.value,
+                                    }))
+                                }
+                                className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-300"
+                            />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                            Note (optional)
+                        </label>
+                        <div className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-3 transition-all focus-within:border-[#00C950]">
+                            <Tag size={14} className="shrink-0 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="e.g. lunch with team, birthday gift…"
+                                value={formState.note}
+                                onChange={(event) =>
+                                    setFormState((current) => ({
+                                        ...current,
+                                        note: event.target.value,
+                                    }))
+                                }
+                                className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-300"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3">
+                        <div>
+                            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                                Date
+                            </label>
+                            <div className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2.5 transition-all focus-within:border-[#00C950]">
+                                <Calendar size={13} className="shrink-0 text-gray-400" />
+                                <input
+                                    type="date"
+                                    value={formState.date}
+                                    min={dateConstraints.min}
+                                    max={dateConstraints.max}
+                                    onChange={(event) =>
+                                        setFormState((current) => ({
+                                            ...current,
+                                            date: event.target.value,
+                                        }))
+                                    }
+                                    className="flex-1 bg-transparent text-xs text-gray-700 outline-none"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                                Payment
+                            </label>
+                            <div className="relative">
+                                <select
+                                    value={formState.paymentMethod}
+                                    onChange={(event) =>
+                                        setFormState((current) => ({
+                                            ...current,
+                                            paymentMethod: event.target
+                                                .value as ExpenseFormValues["paymentMethod"],
+                                        }))
+                                    }
+                                    className={`w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-3 py-2.5 pr-8 text-xs outline-none transition-all focus:border-[#00C950] ${
+                                        formState.paymentMethod
+                                            ? "text-gray-700"
+                                            : "text-gray-400"
                                     }`}
                                 >
-                                    <span className="text-sm font-semibold text-gray-500">Rs.</span>
-                                    <input
-                                        type="number"
-                                        placeholder="0"
-                                        value={formState.amount}
-                                        onChange={(event) =>
-                                            setFormState((current) => ({ ...current, amount: event.target.value }))
-                                        }
-                                        className="flex-1 bg-transparent text-xl font-bold font-mono text-gray-900 outline-none placeholder:text-gray-300"
-                                    />
-                                </div>
-                                {remaining !== null && (
-                                    <div className={`mt-1.5 flex items-center gap-1.5 text-[11px] ${wouldExceed ? "text-red-500" : "text-gray-400"}`}>
-                                        {wouldExceed ? (
-                                            <>
-                                                <AlertTriangle size={11} /> Exceeds remaining budget of Rs.{remaining.toLocaleString()}
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Wallet size={11} /> Rs.{remaining.toLocaleString()} available in {selectedBudget.name}
-                                            </>
-                                        )}
-                                    </div>
-                                )}
+                                    <option value="" >
+                                        Select payment method
+                                    </option>
+                                    {expensePaymentMethodOptions.map((option) => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <ChevronDown
+                                    size={13}
+                                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                                />
                             </div>
+                        </div>
+                    </div>
 
-                            <div>
-                                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                                    3. Merchant / Where *
-                                </label>
-                                <div className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-3 transition-all focus-within:border-[#00C950]">
-                                    <Receipt size={14} className="shrink-0 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. Zomato, D-Mart, Amazon…"
-                                        value={formState.merchant}
-                                        onChange={(event) =>
-                                            setFormState((current) => ({ ...current, merchant: event.target.value }))
-                                        }
-                                        className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-300"
-                                    />
-                                </div>
-                            </div>
+                    <ReceiptScanner onScanComplete={handleScanComplete} />
 
-                            <div>
-                                <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                                    4. Note (optional)
-                                </label>
-                                <div className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-4 py-3 transition-all focus-within:border-[#00C950]">
-                                    <Tag size={14} className="shrink-0 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="e.g. lunch with team, birthday gift…"
-                                        value={formState.note}
-                                        onChange={(event) =>
-                                            setFormState((current) => ({ ...current, note: event.target.value }))
-                                        }
-                                        className="flex-1 bg-transparent text-sm text-gray-800 outline-none placeholder:text-gray-300"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                                <div>
-                                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                                        Date
-                                    </label>
-                                    <div className="flex items-center gap-2 rounded-xl border-2 border-gray-200 px-3 py-2.5 transition-all focus-within:border-[#00C950]">
-                                        <Calendar size={13} className="shrink-0 text-gray-400" />
-                                        <input
-                                            type="date"
-                                            value={formState.date}
-                                            min={dateConstraints.min}
-                                            max={dateConstraints.max}
-                                            onChange={(event) =>
-                                                setFormState((current) => ({ ...current, date: event.target.value }))
-                                            }
-                                            className="flex-1 bg-transparent text-xs text-gray-700 outline-none"
-                                        />
-                                    </div>
-                                </div>
-                                <div>
-                                    <label className="mb-2 block text-[11px] font-semibold uppercase tracking-wider text-gray-400">
-                                        Payment
-                                    </label>
-                                    <div className="relative">
-                                        <select
-                                            value={formState.paymentMethod}
-                                            onChange={(event) =>
-                                                setFormState((current) => ({
-                                                    ...current,
-                                                    paymentMethod: event.target.value as ExpenseFormValues["paymentMethod"],
-                                                }))
-                                            }
-                                            className="w-full appearance-none rounded-xl border-2 border-gray-200 bg-white px-3 py-2.5 pr-8 text-xs text-gray-700 outline-none transition-all focus:border-[#00C950]"
-                                        >
-                                            {expensePaymentMethodOptions.map((option) => (
-                                                <option key={option.value} value={option.value}>
-                                                    {option.label}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <ChevronDown size={13} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* <button
-                                type="button"
-                                className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 py-2.5 text-xs font-medium text-gray-400 transition-all hover:border-[#00C950]/40 hover:bg-[#00C950]/3 hover:text-[#00C950]"
-                            >
-                                <ScanLine size={14} /> Scan Receipt (optional)
-                            </button> */}
-                            <ReceiptScanner onScanComplete={handleScanComplete} />
-                        </>
-                    )}
-
-                    {selectedBudget && step === 1 && (
+                    <div className="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
                         <button
                             type="button"
-                            onClick={() => setStep(2)}
-                            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00C950] py-3 text-sm font-semibold text-white shadow-md shadow-[#00C950]/20 transition-colors hover:bg-[#00b347]"
+                            onClick={onClose}
+                            className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
                         >
-                            Continue
+                            Cancel
                         </button>
-                    )}
-
-                    {selectedBudget && step === 2 && (
-                        <div className="flex items-center justify-end gap-3 border-t border-gray-100 pt-4">
-                            <button
-                                type="button"
-                                onClick={onClose}
-                                className="h-11 rounded-xl border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={!canSubmit || isPending}
-                                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#00C950] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#00b848] disabled:cursor-not-allowed disabled:opacity-60"
-                            >
-                                {isPending ? (
-                                    <>
-                                        <Loader2 size={14} className="animate-spin" />
-                                        {mode === "edit" ? "Saving..." : "Adding..."}
-                                    </>
-                                ) : mode === "edit" ? (
-                                    "Save changes"
-                                ) : (
-                                    "Add Expense"
-                                )}
-                            </button>
-                        </div>
-                    )}
+                        <button
+                            type="submit"
+                            disabled={!canSubmit || isPending}
+                            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#00C950] px-4 text-sm font-semibold text-white transition-colors hover:bg-[#00b848] disabled:cursor-not-allowed disabled:opacity-60"
+                        >
+                            {isPending ? (
+                                <>
+                                    <Loader2 size={14} className="animate-spin" />
+                                    {mode === "edit" ? "Saving..." : "Adding..."}
+                                </>
+                            ) : mode === "edit" ? (
+                                "Save changes"
+                            ) : (
+                                "Add Expense"
+                            )}
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

@@ -7,26 +7,29 @@ datasource db {
 }
 
 model User {
-  id           String     @id @default(uuid())
+  id           String    @id @default(uuid())
   name         String
-  email        String     @unique
+  email        String    @unique
   password     String?
-  googleId     String?    @unique
+  googleId     String?   @unique
   avatar       String?
   refreshToken String?
   otp          String?
   otpExpiresAt DateTime?
-  createdAt    DateTime   @default(now())
-  city         String?
-  country      String?
-  dob          DateTime?
-  phoneNumber  String?
-  state        String?
-  budgets      Budget[]
-  categories   Category[]
-  expenses     Expense[]
-  income       Income[]
-  loan         Loan[]
+  createdAt    DateTime  @default(now())
+
+  //patch data
+  dob         DateTime?
+  phoneNumber String?
+  city        String?
+  country     String?
+  state       String?
+
+  budgets    Budget[]
+  categories Category[]
+  expenses   Expense[]
+  income     Income[]
+  loan       Loan[]
 }
 
 model Category {

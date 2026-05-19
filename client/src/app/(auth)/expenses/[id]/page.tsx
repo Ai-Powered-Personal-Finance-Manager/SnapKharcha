@@ -1,11 +1,11 @@
 import { ExpenseDetailsPage } from "@/src/features/expenses/pages/ExpenseDetailsPage";
 
 export default async function ExpenseDetailsRoute({
-    params,
+  params,
 }: {
-    params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }) {
-    const { id } = await params;
+  const { id } = await params;
 
-    return <ExpenseDetailsPage expenseId={id} />;
+  return <ExpenseDetailsPage expenseId={id} />;
 }

@@ -180,6 +180,22 @@ export function ExpensesPage() {
         event.target.value = "";
     };
 
+    // const handleScanComplete = (scannedData: any) => {
+    //     console.log("Scanned data received in modal:", scannedData);
+    //     if(scannedData) {
+    //         setFormState((current) => ({ ...current, amount: String(scannedData.amount), merchant: scannedData.merchant, date: scannedData.date }));
+    //         if(scannedData.note){
+    //             setFormState((current) => ({ ...current, note: scannedData.note }));
+    //         }
+    //         if(scannedData.category){
+    //             const matchedBudget = budgets.find(budget => budget.category.name.toLowerCase() === scannedData.category.toLowerCase());
+    //             if(matchedBudget){
+    //                 setFormState((current) => ({ ...current, budgetId: matchedBudget.id }));
+    //             }
+    //         }
+    //     }
+    // }
+
     if (isExpensesLoading || isBudgetsLoading) {
         return <ExpenseSkeletonLoading/>;
     }

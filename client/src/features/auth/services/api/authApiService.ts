@@ -40,6 +40,11 @@ export class AuthAPIService {
     const res = await clientAPI.get("/auth/me");
     return res?.data;
   }
+
+  async dashbaord() {
+    const res = await clientAPI.get("/dashboard");
+    return res?.data?.data;
+  }
 }
 
 export const authService = new AuthAPIService();
