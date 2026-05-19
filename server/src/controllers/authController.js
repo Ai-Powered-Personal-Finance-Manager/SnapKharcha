@@ -454,8 +454,11 @@ export const me = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader) {
-      return res.status(401).json({ message: "No token provided" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
     }
 
     const token = authHeader.split(" ")[1];
@@ -470,12 +473,23 @@ export const me = async (req, res) => {
         id: true,
         name: true,
         email: true,
+        avatar: true,
         createdAt: true,
+
+        // profile fields
+        dob: true,
+        phoneNumber: true,
+        city: true,
+        country: true,
+        state: true,
       },
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
     }
 
     return res.status(200).json({
@@ -486,7 +500,73 @@ export const me = async (req, res) => {
     console.error("ME ERROR:", err);
 
     return res.status(401).json({
+      success: false,
       message: "Invalid or expired token",
     });
+  }
+};
+
+// PATCH auth
+export const updateMe = async (req, res, next) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "No token provided",
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+
+    // verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const userId = decoded.id;
+
+    const { name, dob, phoneNumber, city, country, state, avatar } = req.body;
+
+    // optional validation
+    if (phoneNumber && typeof phoneNumber !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "Phone number must be a string",
+      });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        ...(name && { name }),
+        ...(dob && { dob: new Date(dob) }),
+        ...(phoneNumber && { phoneNumber }),
+        ...(city && { city }),
+        ...(country && { country }),
+        ...(state && { state }),
+        ...(avatar && { avatar }),
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        avatar: true,
+        dob: true,
+        phoneNumber: true,
+        city: true,
+        country: true,
+        state: true,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    next(error);
   }
 };
