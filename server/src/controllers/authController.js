@@ -506,6 +506,7 @@ export const me = async (req, res) => {
   }
 };
 
+// PATCH auth
 export const updateMe = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
