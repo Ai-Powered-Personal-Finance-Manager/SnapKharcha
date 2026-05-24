@@ -2,6 +2,7 @@
 
 import { useDashboard } from "@/src/components/dashboard-layout/hooks/useDashboard";
 import { useUser } from "@/src/components/dashboard-layout/hooks/useUser";
+import { ErrorFallback } from "@/src/components/ErrorFallback";
 import { DashboardSkeletonLoading } from "@/src/components/loading-skeletons/DashboardSkeletonLoading";
 import { StatsGrid } from "@/src/components/StatsGrid";
 import { getGreeting } from "@/src/core/utils/getGreetings";
@@ -10,12 +11,17 @@ import { BudgetOverview } from "@/src/features/dashboard/components/BudgetOvervi
 import { RecentTransactions } from "@/src/features/dashboard/components/RecentTransactions";
 import { SavingsGoal } from "@/src/features/dashboard/components/SavingsGoal";
 import { WelcomeBanner } from "@/src/features/dashboard/components/WelcomeBanner";
+import { error } from "console";
 import {
   Car,
   Coffee,
+  CreditCard,
+  PiggyBank,
   ShoppingBag,
   ShoppingCart,
+  TrendingUp,
   Utensils,
+  Wallet,
   Zap,
 } from "lucide-react";
 import { useMemo } from "react";
@@ -84,9 +90,44 @@ export default function DashboardPage() {
   const { user, isLoading: isUserLoading } = useUser();
   const userData = user?.user;
   const greeting = useMemo(() => getGreeting(), []);
-  const { dashbaord, isLoading: isDashboardLoading } = useDashboard();
+  const { dashbaord, isLoading: isDashboardLoading, error, refetch } = useDashboard();
+  const statsData = useMemo(() => {
+    if(!dashbaord) {
+      return [];
+    }
+    return [
+      {
+        label: "Total Balance",
+        value: dashbaord?.summary.totalBalance ?? "Rs.0",
+        icon: <Wallet size={18} />,
+        meta: "Available money",
+      },
+      {
+        label: "Total Spent",
+        value: dashbaord?.summary.totalSpent ?? "Rs.0",
+        icon: <TrendingUp size={18} />,
+        meta: "All expenses",
+      },
+      {
+        label: "Total Budget",
+        value: dashbaord?.summary.totalBudget ?? "Rs.0",
+        icon: <PiggyBank size={18} />,
+        meta: "Active budgets",
+      },
+      {
+        label: "EMIs",
+        value: dashbaord?.summary.totalEMIs ?? "Rs.0",
+        icon: <CreditCard size={18} />,
+        meta: "Monthly EMI",
+      },
+    ]
+  }, [dashbaord]);
 
-  if (isDashboardLoading || !dashbaord) return <DashboardSkeletonLoading />;
+  if (isDashboardLoading) return <DashboardSkeletonLoading />;
+
+  if(error || !dashbaord) {
+    return <ErrorFallback resetErrorBoundary={refetch}/>
+  }
 
   return (
     <div className="space-y-6">
@@ -94,7 +135,7 @@ export default function DashboardPage() {
       <WelcomeBanner greeting={greeting} userName={userData?.name} />
 
       {/* Stat Cards */}
-      <StatsGrid stats={dashbaord.summary} />
+      <StatsGrid stats={statsData} />
 
       {/* Main Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-5">
