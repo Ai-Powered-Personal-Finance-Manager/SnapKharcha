@@ -110,14 +110,14 @@ export default function ProfilePage() {
 
           {/* Info */}
           <div className="flex-1 min-w-0">
-            <h3 className="text-white text-xl font-bold">Arjun Kapoor</h3>
-            <p className="text-white/50 text-sm mt-0.5">arjun.kapoor@gmail.com · +91 98765 43210</p>
+            <h3 className="text-white text-xl font-bold">Rohan Shrestha</h3>
+            <p className="text-white/50 text-sm mt-0.5">rohanxtha2060@gmail.com · +977 9828075695</p>
             <div className="flex items-center gap-2 mt-3 flex-wrap">
               <span className="flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#00C950]/15 text-[#00C950] border border-[#00C950]/20">
                 <StatusIcon size={11} /> {selectedStatus.label}
               </span>
               <span className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-white/8 text-white/60">
-                <MapPin size={11} /> Mumbai, Maharashtra
+                <MapPin size={11} /> Kathmandu, Bagmati
               </span>
               <span className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-full bg-white/8 text-white/60">
                 <Clock size={11} /> Member since Jan 2025
@@ -160,23 +160,20 @@ export default function ProfilePage() {
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <SectionHeader title="Personal Information" id="personal" />
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Field label="Full Name"       value="Arjun Kapoor"              editable={editingSection === "personal"} />
-          <Field label="Date of Birth"   value="March 15, 1998"  type="date" editable={editingSection === "personal"} />
-          <Field label="Email Address"   value="arjun.kapoor@gmail.com" type="email" editable={editingSection === "personal"} />
-          <Field label="Phone Number"    value="+91 98765 43210" type="tel" editable={editingSection === "personal"} />
-          <Field label="City"            value="Mumbai"                    editable={editingSection === "personal"} />
-          <Field label="State"           value="Maharashtra"               editable={editingSection === "personal"} />
-          <Field label="PIN Code"        value="400053"                    editable={editingSection === "personal"} />
+          <Field label="Full Name"       value="Rohan Shrestha"              editable={editingSection === "personal"} />
+          <Field label="Date of Birth"   value="April 7, 2004"  type="date" editable={editingSection === "personal"} />
+          <Field label="Email Address"   value="rohanxtha2060@gmail.com" type="email" editable={editingSection === "personal"} />
+          <Field label="Phone Number"    value="+977 9828075695" type="tel" editable={editingSection === "personal"} />
+          <Field label="City"            value="kathmandu"                    editable={editingSection === "personal"} />
+          <Field label="State"           value="Bagmati"               editable={editingSection === "personal"} />
           <Field label="Country"         value="Nepal"                     editable={editingSection === "personal"} />
         </div>
       </div>
 
       {/* ── Employment & Professional ─────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <SectionHeader title="Employment & Professional" id="employment" />
         <div className="p-6 space-y-5">
-
-          {/* Status picker */}
           <div>
             <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-3">
               Current Status *
@@ -201,7 +198,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Conditional fields based on status */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {(status === "employed" || status === "self") && (
               <>
@@ -233,14 +229,13 @@ export default function ProfilePage() {
             )}
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Financial Profile ────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <SectionHeader title="Financial Profile" id="finance" />
         <div className="p-6 space-y-5">
 
-          {/* Annual income range */}
           <div>
             <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">
               Annual Income Range
@@ -254,7 +249,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Primary financial goals */}
           <div>
             <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-3">
               Primary Financial Goals <span className="text-gray-300 normal-case font-normal">(select all that apply)</span>
@@ -276,7 +270,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Risk appetite */}
           <div>
             <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-2">
               Investment Risk Appetite
@@ -300,7 +293,6 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* PAN & Aadhar (masked) */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 block mb-1.5">PAN Number</label>
@@ -318,10 +310,10 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* ── Preferences ──────────────────────────────────── */}
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <SectionHeader title="App Preferences" id="prefs" />
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
@@ -347,7 +339,7 @@ export default function ProfilePage() {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
 
     </div>
   );

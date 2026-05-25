@@ -71,11 +71,11 @@ export const mainNavSections: NavSection[] = [
                 href: "/incomes",
                 icon: Wallet,
             },
-            {
-                label: "Banks",
-                href: "/banks",
-                icon: Building2,
-            },
+            // {
+            //     label: "Banks",
+            //     href: "/banks",
+            //     icon: Building2,
+            // },
             {
                 label: "Loans And EMIs",
                 href: "/loans-and-emis",
@@ -86,11 +86,11 @@ export const mainNavSections: NavSection[] = [
             //     href: "/net-worth",
             //     icon: BarChart3,
             // },
-            {
-                label: "Savings Goals",
-                href: "/savings-goals",
-                icon: Target,
-            },
+            // {
+            //     label: "Savings Goals",
+            //     href: "/savings-goals",
+            //     icon: Target,
+            // },
         ],
     },
     {
@@ -101,11 +101,11 @@ export const mainNavSections: NavSection[] = [
                 href: "/analytics",
                 icon: BarChart3,
             },
-            {
-                label: "Reports",
-                href: "/reports",
-                icon: FileText,
-            },
+            // {
+            //     label: "Reports",
+            //     href: "/reports",
+            //     icon: FileText,
+            // },
         ],
     },
     {

@@ -9,7 +9,7 @@ import {
 } from "@/src/features/expenses/api";
 import { ExpenseDeleteDialog } from "@/src/features/expenses/components/ExpenseDeleteDialog";
 import { ExpenseFormModal } from "@/src/features/expenses/components/ExpenseFormModal";
-import { ExpenseFormValues } from "@/src/features/expenses/types";
+import { ExpenseFormValues, ExpensePaymentMethod } from "@/src/features/expenses/types";
 import { getCategoryIcon } from "@/src/utils/budget";
 import {
   formatExpenseDate,
@@ -67,7 +67,7 @@ export function ExpenseDetailsPage({ expenseId }: { expenseId: string }) {
           merchant: values.merchant.trim(),
           note: values.note.trim() || undefined,
           budgetId: values.budgetId,
-          paymentMethod: values.paymentMethod,
+          paymentMethod: values.paymentMethod as ExpensePaymentMethod,
           date: new Date(`${values.date}T00:00:00Z`).toISOString(),
         },
       },
@@ -235,6 +235,7 @@ export function ExpenseDetailsPage({ expenseId }: { expenseId: string }) {
       </div>
 
       <ExpenseFormModal
+        key={`${editOpen ? "edit-open" : "edit-closed"}-${expense.id}`}
         open={editOpen}
         mode="edit"
         budgets={budgets}
