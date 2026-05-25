@@ -61,7 +61,7 @@ const incomeThemes = [
 // ─── Formatters ───────────────────────────────────────────────────────────────
 
 export const formatIncomeAmount = (value: number) =>
-    `Rs.${value.toLocaleString("en-IN")}`;
+    `Rs.${value?.toLocaleString("en-IN")}`;
 
 export const formatIncomeDelta = (value: number) => {
     const prefix = value >= 0 ? "+" : "-";

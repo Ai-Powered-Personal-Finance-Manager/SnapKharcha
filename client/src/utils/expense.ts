@@ -136,7 +136,7 @@ export const buildExpenseFormValues = (expense?: ExpenseListItem | null): Expens
         merchant: expense?.merchant ?? "",
         note: expense?.note ?? "",
         budgetId: expense?.budgetId ?? "",
-        paymentMethod: (expense?.paymentMethod as ExpensePaymentMethod) ?? "BANK",
+        paymentMethod: (expense?.paymentMethod as ExpensePaymentMethod) ?? "",
         date: toDateInputValue(expense?.date ?? expense?.createdAt ?? null),
     };
 };

@@ -1,7 +1,8 @@
 "use client";
 
 import { cn } from "@/src/lib/utils";
-import { Control, useWatch } from "react-hook-form";
+import { Control, FieldValues, Path, useWatch } from "react-hook-form";
+
 import CheckboxField from "./CheckboxField";
 
 const passwordRules = {
@@ -12,9 +13,9 @@ const passwordRules = {
   special: (v: string) => /[^a-zA-Z0-9]/.test(v),
 };
 
-interface IPasswordStrength {
-  tracker: string;
-  control: Control<any>;
+interface PasswordStrengthProps<T extends FieldValues> {
+  tracker: Path<T>;
+  control: Control<T>;
 }
 
 const VisualizerData = [
@@ -26,11 +27,18 @@ const VisualizerData = [
   { key: 2, checks: "uppercase", message: "At least 1 uppercase letter" },
   { key: 3, checks: "lowercase", message: "At least 1 lowercase letter" },
   { key: 4, checks: "number", message: "At least 1 number" },
-  { key: 5, checks: "special", message: "At least 1 special charecter" },
+  { key: 5, checks: "special", message: "At least 1 special character" },
 ];
 
-const PasswordStrength = ({ tracker, control }: IPasswordStrength) => {
-  const password = useWatch({ control, name: tracker }) || "";
+const PasswordStrength = <T extends FieldValues>({
+  tracker,
+  control,
+}: PasswordStrengthProps<T>) => {
+  const password =
+    (useWatch({
+      control,
+      name: tracker,
+    }) as string) || "";
 
   const checks = {
     length: passwordRules.length(password),
@@ -53,8 +61,6 @@ const PasswordStrength = ({ tracker, control }: IPasswordStrength) => {
 
   const strength = strengthMap[passedCount as keyof typeof strengthMap];
 
-  //   if (!password) return null;
-
   return (
     <div className="-mt-1 mb-3 space-y-2">
       {/* Strength Bar */}
@@ -64,30 +70,32 @@ const PasswordStrength = ({ tracker, control }: IPasswordStrength) => {
           style={{ width: `${(passedCount / 5) * 100}%` }}
         />
       </div>
+
       <div className="bg-neutral-gray border-gray-200 rounded-xl border p-5">
-        {/* Strength Label */}
         <p className="pb-2 text-sm font-medium text-gray-700">
-          {/* Strength: <span className="font-semibold">{strength.label}</span> */}
-          Password, Must Contain:
+          Password must contain:
         </p>
 
-        {/* Rules */}
         <ul className="space-y-1 text-xs text-gray-600">
           {VisualizerData.map((item) => {
             const checkingCondition = item.checks as keyof typeof checks;
+
             return (
               <li
                 key={item.key}
-                className={`${checks[checkingCondition] && "text-green-600"} flex items-center gap-1`}
+                className={cn(
+                  "flex items-center gap-1",
+                  checks[checkingCondition] && "text-green-600",
+                )}
               >
                 <CheckboxField
                   name={item.checks}
                   checked={checks[checkingCondition]}
                   className="cursor-not-allowed"
                   checkboxClassName={cn(
-                    "data-[state=checked]:bg-green-400 rounded-[4px]",
+                    "rounded-[4px] data-[state=checked]:bg-green-400",
                     "hover:cursor-not-allowed",
-                    checks[checkingCondition] ? "border-0" : "",
+                    checks[checkingCondition] && "border-0",
                   )}
                   size="sm"
                   label={item.message}
