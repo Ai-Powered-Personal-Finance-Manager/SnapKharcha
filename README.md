@@ -1,4 +1,4 @@
-# 📸 SnapKharcha — AI-Powered Finance Manager
+# 📸 SnapKharcha — A Personal Finance Manager
 
 > A final year team project | AI-powered personal & business expense tracking with bill scanning, smart insights, and budget alerts.
 
@@ -418,5 +418,5 @@ This project is licensed under the **ISC License** — see the [LICENSE](LICENSE
 
 ---
 
-> Built with ❤️ as a Final Year Team Project — 2025  
+> Built with ❤️ as a Final Year Team Project — 2025
 > [github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha](https://github.com/Ai-Powered-Personal-Finance-Manager/SnapKharcha)
