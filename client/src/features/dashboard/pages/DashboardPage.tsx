@@ -98,25 +98,25 @@ export default function DashboardPage() {
     return [
       {
         label: "Total Balance",
-        value: dashbaord?.summary.totalBalance ?? "Rs.0",
+        value: `Rs. ${dashbaord?.summary.totalBalance ?? 0}`,
         icon: <Wallet size={18} />,
         meta: "Available money",
       },
       {
         label: "Total Spent",
-        value: dashbaord?.summary.totalSpent ?? "Rs.0",
+        value: `Rs. ${dashbaord?.summary.totalSpent ?? 0}`,
         icon: <TrendingUp size={18} />,
         meta: "All expenses",
       },
       {
         label: "Total Budget",
-        value: dashbaord?.summary.totalBudget ?? "Rs.0",
+        value: `${dashbaord?.summary.totalBudget ?? 0}`,
         icon: <PiggyBank size={18} />,
         meta: "Active budgets",
       },
       {
         label: "EMIs",
-        value: dashbaord?.summary.totalEMIs ?? "Rs.0",
+        value: `Rs. ${dashbaord?.summary.totalEMIs ?? 0}`,
         icon: <CreditCard size={18} />,
         meta: "Monthly EMI",
       },

@@ -4,12 +4,12 @@ import { ErrorFallback } from "@/src/components/ErrorFallback";
 import { ExpenseDeleteDialog } from "../components/ExpenseDeleteDialog";
 import { ExpenseFormModal } from "@/src/features/expenses/components/ExpenseFormModal";
 import { ExpenseList } from "../components/ExpenseList";
-import { expenseOverviewCards, expenseInsight, expenseSidebarStats } from "./expenseStatic";
+import { expenseInsight } from "./expenseStatic";
 import { useDeleteExpense, useGetExpenses, useCreateExpense, useUpdateExpense } from "@/src/features/expenses/api";
 import { useGetBudgets } from "@/src/features/budgets/api";
-import type { ExpenseListItem, ExpenseFormValues } from "@/src/features/expenses/types";
+import type { ExpenseListItem, ExpenseFormValues, ExpensePaymentMethod } from "@/src/features/expenses/types";
 import { formatExpensePaymentMethod } from "@/src/utils/expense";
-import { Plus, Search, Filter, ScanLine, AlertTriangle, TrendingDown, ArrowDownLeft, Zap } from "lucide-react";
+import { Plus, Search, Filter, ScanLine, TrendingDown, ArrowDownLeft, Zap } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PageHeader } from "@/src/components/PageHeader";
@@ -33,8 +33,8 @@ export function ExpensesPage() {
     const [activeBudgetFilter, setActiveBudgetFilter] = useState<string>("all");
     const [searchQuery, setSearchQuery] = useState("");
 
-    const budgets = budgetsResponse?.data?.budget ?? [];
-    const expenses = expensesResponse?.data?.expenses ?? [];
+    const budgets = useMemo(() => budgetsResponse?.data?.budget ?? [], [budgetsResponse]);
+    const expenses = useMemo(() => expensesResponse?.data?.expenses ?? [], [expensesResponse]);
     const summary = expensesResponse?.data?.summary;
 
     const filteredExpenses = useMemo(() => {
@@ -62,14 +62,6 @@ export function ExpensesPage() {
         activeBudgetFilter === "all"
             ? undefined
             : budgets.find((budget) => budget.id === activeBudgetFilter)?.name;
-
-    const nearLimitBudgets = useMemo(() => {
-        return budgets.filter((budget) => {
-            const amount = budget.amount || 0;
-            const spent = budget.spendAmount ?? 0;
-            return amount > 0 && spent / amount >= 0.9;
-        });
-    }, [budgets]);
 
     const summaryCards = useMemo(() => {
         if (!summary) {
@@ -128,7 +120,7 @@ export function ExpensesPage() {
             merchant: values.merchant.trim(),
             note: values.note.trim() || undefined,
             budgetId: values.budgetId,
-            paymentMethod: values.paymentMethod,
+            paymentMethod: values.paymentMethod as ExpensePaymentMethod,
             date: new Date(`${values.date}T00:00:00Z`).toISOString(),
         };
 
@@ -211,12 +203,12 @@ export function ExpensesPage() {
                     title="Expenses"
                     description="Manage your spending by logging expenses against your budgets"
                     action={[
-                        {
-                            icon: ScanLine,
-                            label: "Scan Receipt",
-                            variant: "outline",
-                            onClick: () => receiptInputRef.current?.click(), // TODO: Implement receipt scanning
-                        },
+                        // {
+                        //     icon: ScanLine,
+                        //     label: "Scan Receipt",
+                        //     variant: "outline",
+                        //     onClick: () => receiptInputRef.current?.click(), // TODO: Implement receipt scanning
+                        // },
                         {
                             icon: Plus,
                             label: "Add Expense",
@@ -409,6 +401,7 @@ export function ExpensesPage() {
             </div>
 
             <ExpenseFormModal
+                key={`${showCreateModal ? "create-open" : "create-closed"}-${editingExpense?.id ?? "new"}`}
                 open={showCreateModal || Boolean(editingExpense)}
                 mode={editingExpense ? "edit" : "create"}
                 budgets={budgets}

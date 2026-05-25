@@ -11,13 +11,13 @@ import {
     Wallet,
     X,
 } from "lucide-react";
-import { getCategoryIcon } from "@/src/utils/budget";
 
 import type { BudgetApiItem } from "@/src/features/budgets/types";
 import type { ExpenseListItem, ExpenseFormValues } from "@/src/features/expenses/types";
 import {
     buildExpenseFormValues,
     expensePaymentMethodOptions,
+    toDateInputValue,
 } from "@/src/utils/expense";
 import ReceiptScanner from "./ReceiptScanner";
 
@@ -42,13 +42,28 @@ export const ExpenseFormModal = ({
 }: ExpenseFormModalProps) => {
     const [formState, setFormState] = useState<ExpenseFormValues>(() => buildExpenseFormValues(initialExpense));
 
-    useEffect(() => {
-        if (!open) {
-            return;
-        }
-
-        setFormState(buildExpenseFormValues(initialExpense));
-    }, [initialExpense, mode, open]);
+    type ReceiptScanResult = {
+        amount?: number;
+        date?: string;
+        note?: string;
+        merchant?: string;
+        paymentMethod?: ExpenseFormValues["paymentMethod"];
+        categoryId?: string | null;
+        category?: {
+            id: string;
+            name: string;
+        } | null;
+        categoryName?: string | null;
+        budgetId?: string | null;
+        budget?: {
+            id: string;
+            name?: string;
+            category?: {
+                id: string;
+                name: string;
+            } | null;
+        } | null;
+    };
 
     useEffect(() => {
         if (!open) {
@@ -92,19 +107,11 @@ export const ExpenseFormModal = ({
         return { min, max };
     }, [selectedBudget]);
 
-    // Ensure the date stays within the budget's constraints when the budget changes
-    useEffect(() => {
-        if (!formState.date) {
-            return;
-        }
-
-        const { min, max } = dateConstraints;
-        if (min && formState.date < min) {
-            setFormState((current) => ({ ...current, date: min }));
-        } else if (max && formState.date > max) {
-            setFormState((current) => ({ ...current, date: max }));
-        }
-    }, [dateConstraints, formState.date]);
+    const isDateWithinBudgetRange =
+        !selectedBudget ||
+        !formState.date ||
+        ((dateConstraints.min ? formState.date >= dateConstraints.min : true) &&
+            (dateConstraints.max ? formState.date <= dateConstraints.max : true));
 
     const canSubmit =
         formState.budgetId.length > 0 &&
@@ -113,7 +120,8 @@ export const ExpenseFormModal = ({
         parsedAmount > 0 &&
         formState.date.length > 0 &&
         !Number.isNaN(new Date(`${formState.date}T00:00:00`).getTime()) &&
-        formState.paymentMethod.length > 0;
+        formState.paymentMethod.length > 0 &&
+        isDateWithinBudgetRange;
 
     const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -130,35 +138,62 @@ export const ExpenseFormModal = ({
         });
     };
 
-    const handleScanComplete = (scannedData: any) => {
-        console.log("Scanned data received in modal:", scannedData);
-        if (scannedData) {
-            setFormState((current) => ({
-                ...current,
-                amount: String(scannedData.amount),
-                merchant: scannedData.merchant,
-                date: scannedData.date,
-            }));
-            if (scannedData.note) {
-                setFormState((current) => ({ ...current, note: scannedData.note }));
-            }
-            if (scannedData.paymentMethod) {
-                setFormState((current) => ({
-                    ...current,
-                    paymentMethod: scannedData.paymentMethod,
-                }));
-            }
-            if (scannedData.category) {
-                const matchedBudget = budgets.find(
-                    (budget) =>
-                        budget.category.name.toLowerCase() ===
-                        scannedData.category.toLowerCase(),
-                );
-                if (matchedBudget) {
-                    setFormState((current) => ({ ...current, budgetId: matchedBudget.id }));
-                }
-            }
+    const findMatchingBudget = (categoryId?: string | null, categoryName?: string | null) => {
+        if (categoryId) {
+            const categoryBudgets = budgets.filter(
+                (budget) => budget.category.id === categoryId || budget.categoryId === categoryId,
+            );
+
+            return (
+                categoryBudgets.find((budget) => Math.max(budget.amount - (budget.spendAmount ?? 0), 0) > 0) ??
+                categoryBudgets[0] ??
+                null
+            );
         }
+
+        if (categoryName) {
+            const normalizedCategoryName = categoryName.trim().toLowerCase();
+            return budgets.find(
+                (budget) => budget.category.name.trim().toLowerCase() === normalizedCategoryName,
+            ) ?? null;
+        }
+
+        return null;
+    };
+
+    const handleScanComplete = (scannedData: ReceiptScanResult) => {
+        if (!scannedData) {
+            return;
+        }
+
+        const scannedAmount = typeof scannedData.amount === "number" ? scannedData.amount : Number(scannedData.amount);
+        const scannedDate = toDateInputValue(scannedData.date);
+        const scannedMerchant = typeof scannedData.merchant === "string" ? scannedData.merchant.trim() : "";
+        const scannedNote = typeof scannedData.note === "string" ? scannedData.note.trim() : "";
+        const scannedPaymentMethod = scannedData.paymentMethod;
+        const scannedCategoryId = scannedData.categoryId ?? scannedData.category?.id ?? null;
+        const scannedCategoryName = scannedData.category?.name ?? scannedData.categoryName ?? null;
+        const scannedBudgetId = scannedData.budget?.id ?? scannedData.budgetId ?? null;
+
+        let matchedBudget = null as BudgetApiItem | null;
+
+        if (scannedBudgetId) {
+            matchedBudget = budgets.find((budget) => budget.id === scannedBudgetId) ?? null;
+        }
+
+        if (!matchedBudget) {
+            matchedBudget = findMatchingBudget(scannedCategoryId, scannedCategoryName);
+        }
+
+        setFormState((current) => ({
+            ...current,
+            amount: Number.isFinite(scannedAmount) && scannedAmount > 0 ? String(scannedAmount) : current.amount,
+            merchant: scannedMerchant || current.merchant,
+            note: scannedNote || current.note,
+            date: scannedDate || current.date,
+            paymentMethod: scannedPaymentMethod ?? current.paymentMethod,
+            budgetId: matchedBudget?.id ?? current.budgetId,
+        }));
     };
 
     if (!open) {
@@ -324,7 +359,7 @@ export const ExpenseFormModal = ({
                                 ) : (
                                     <>
                                         <Wallet size={11} /> Rs.{remaining.toLocaleString()}{" "}
-                                        available in {selectedBudget.name}
+                                        available in {selectedBudget?.name}
                                     </>
                                 )}
                             </div>

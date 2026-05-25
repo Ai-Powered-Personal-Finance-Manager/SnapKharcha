@@ -81,7 +81,7 @@ function ActionButton({ label, variant = "default" }: { label: string; variant?:
 // ── Page ─────────────────────────────────────────────────────
 export default function SettingsPage() {
     return (
-        <div className="max-w-2xl mx-auto space-y-5">
+        <div className="max-w-3xl mx-auto space-y-5">
 
         {/* Header */}
         <div>
@@ -90,9 +90,8 @@ export default function SettingsPage() {
         </div>
 
         {/* Profile */}
-        <Section title="Profile" description="Your personal information">
+        {/* <Section title="Profile" description="Your personal information">
 
-            {/* Avatar row */}
             <div className="flex items-center gap-5 px-6 py-5 border-b border-gray-50">
             <div className="w-16 h-16 rounded-2xl bg-[#01271E] flex items-center justify-center shrink-0 shadow-md">
                 <span className="text-xl font-bold text-[#00C950]">AK</span>
@@ -124,7 +123,7 @@ export default function SettingsPage() {
             <div className="px-6 py-4 flex justify-end">
             <ActionButton label="Save Changes" variant="green" />
             </div>
-        </Section>
+        </Section> */}
 
         {/* Security */}
         <Section title="Security" description="Manage your password and account access">
