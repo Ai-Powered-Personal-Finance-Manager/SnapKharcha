@@ -148,12 +148,12 @@ export default function DashboardPage() {
           <BudgetOverview budgets={dashbaord.budgets} />
 
           {/* Savings Goal */}
-          <SavingsGoal
+          {/* <SavingsGoal
             goalName="New MacBook Pro"
             savedAmount={144000}
             targetAmount={200000}
             completionDate="Aug 2025"
-          />
+          /> */}
 
           {/* Quick AI Insight */}
           <AIInsight insight="You spend 34% more on food on weekends. Cooking at home 2 days could save you Rs.1,200/month." />

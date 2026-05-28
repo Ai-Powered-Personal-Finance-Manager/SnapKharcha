@@ -13,10 +13,11 @@ import errorHandler from "./middleware/errorHandler.js";
 import authRouter from "./routes/authRoutes.js";
 import budgetRouter from "./routes/budgetRoutes.js";
 import categoryRouter from "./routes/categoryRoutes.js";
+import dashboardRouter from "./routes/dashboardRoutes.js";
 import expenseRouter from "./routes/expenseRoutes.js";
 import incomeRouter from "./routes/incomeRoutes.js";
+import insightRouter from "./routes/insightRoutes.js";
 import loanRouter from "./routes/loanRoutes.js";
-import dashboardRouter from "./routes/dashboardRoutes.js";
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -58,9 +59,12 @@ app.use(passport.session());
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
-app.get("/",/* #swagger.ignore = true */ (req, res) => {
-  res.send("API running...");
-});
+app.get(
+  "/",
+  /* #swagger.ignore = true */ (req, res) => {
+    res.send("API running...");
+  },
+);
 
 //routes
 app.use("/api/auth", authRouter);
@@ -82,6 +86,9 @@ app.use("/api/income", incomeRouter);
 
 //dashboard
 app.use("/api/dashboard", dashboardRouter);
+
+//insights
+app.use("/api/insights", insightRouter);
 
 // must be after all routes
 app.use(errorHandler);
