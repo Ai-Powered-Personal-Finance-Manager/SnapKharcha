@@ -17,6 +17,7 @@ import expenseRouter from "./routes/expenseRoutes.js";
 import incomeRouter from "./routes/incomeRoutes.js";
 import loanRouter from "./routes/loanRoutes.js";
 import dashboardRouter from "./routes/dashboardRoutes.js";
+import analyticsRouter from "./routes/analyticsRoutes.js";
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -82,6 +83,9 @@ app.use("/api/income", incomeRouter);
 
 //dashboard
 app.use("/api/dashboard", dashboardRouter);
+
+//analytics
+app.use("/api/analytics", analyticsRouter);
 
 // must be after all routes
 app.use(errorHandler);
