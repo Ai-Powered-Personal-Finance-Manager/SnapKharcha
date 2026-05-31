@@ -18,13 +18,7 @@ model User {
   otpExpiresAt DateTime?
   createdAt    DateTime  @default(now())
 
-  //patch data
-  dob         DateTime?
-  phoneNumber String?
-  city        String?
-  country     String?
-  state       String?
-
+  profile      Profile?
   budgets    Budget[]
   categories Category[]
   expenses   Expense[]
@@ -117,6 +111,23 @@ model Income {
   creditDay Int?
   status    IncomeStaus
   user      User        @relation(fields: [userId], references: [id])
+}
+
+model Profile {
+  id        String    @id @default(uuid())
+  name      String?
+  email     String
+  image     String?
+  phone     String?
+  dob       DateTime?
+  city      String?
+  country   String?
+  state     String?
+  createdAt DateTime  @default(now())
+
+  userId    String    @unique
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id])
 }
 
 enum PaymentMethod {

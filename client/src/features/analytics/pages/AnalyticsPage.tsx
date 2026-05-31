@@ -13,7 +13,7 @@ import { LoanSummary } from "../components/LoanSummary";
 import { AnalyticsExportPreview } from "../components/AnalyticsExportPreview";
 import { ErrorFallback } from "@/src/components/ErrorFallback";
 import { AnalyticsSkeletonLoading } from "@/src/components/loading-skeletons/AnalyticsSkeletonLoading";
-import { ChartColumn, Download, FileText } from "lucide-react";
+import { ChartColumn, ChevronDown, Download, FileText } from "lucide-react";
 import { useAnalyticsExport } from "../useAnalyticsExport";
 
 type Period = "today" | "yesterday" | "lastweek" | "lastmonth";
@@ -68,6 +68,7 @@ export default function AnalyticsPage() {
             >
               <Download size={18} />
               Download Report
+              <ChevronDown size={16} className={`transition-transform ${openDownloadModal ? "rotate-180" : ""}`} />
             </button>
             {openDownloadModal && (
               <div className="absolute top-12 right-0 w-56 rounded-xl shadow-lg border border-gray-200 bg-white z-50 overflow-hidden">
