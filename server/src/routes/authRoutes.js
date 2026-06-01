@@ -10,7 +10,6 @@ import {
   register,
   resetForgotPassword,
   resetPassword,
-  updateMe,
   verifyOtp,
 } from "../controllers/authController.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
@@ -280,7 +279,5 @@ authRouter.post("/refresh", refreshToken);
 authRouter.post("/logout", authMiddleware, logout);
 
 authRouter.get("/me", authMiddleware, me);
-
-authRouter.patch("/", authMiddleware, updateMe);
 
 export default authRouter;
