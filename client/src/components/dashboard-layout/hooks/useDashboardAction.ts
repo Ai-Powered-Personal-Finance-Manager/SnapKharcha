@@ -6,6 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 export const useDashboardAction = () => {
   return useQuery<DashboardData>({
     queryKey: [CONFIG.REVALIDATE.DASHBOARD],
-    queryFn: authService.dashbaord,
+    queryFn: async () => {
+      return authService.dashbaord();
+    },
+
+    staleTime: 0,
+    gcTime: 0,
   });
 };
