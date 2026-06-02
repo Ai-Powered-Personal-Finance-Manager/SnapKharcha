@@ -40,82 +40,97 @@ export const register = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await prisma.user.create({
-      data: { name, email, password: hashedPassword },
-    });
+    const { user } = await prisma.$transaction(async (tx) => {
+      // 1. Create user
+      const user = await tx.user.create({
+        data: { name, email, password: hashedPassword },
+      });
 
-    // create default category
-    await prisma.category.createMany({
-      data: [
-        {
-          name: "Overall",
-          color: "#94a3b8",
+      // 2. Create profile with name and email from user
+      await tx.profile.create({
+        data: {
+          name: user.name,
+          email: user.email,
           userId: user.id,
-          tags: ["Default"],
         },
-        {
-          name: "Food & Dining",
-          color: "#f97316",
-          userId: user.id,
-          tags: ["Restaurants", "cafés", "food delivery"],
-        },
-        {
-          name: "Groceries",
-          color: "#84cc16",
-          userId: user.id,
-          tags: ["Supermarket", "vegetables", "dairy"],
-        },
-        {
-          name: "Shopping",
-          color: "#f59e0b",
-          userId: user.id,
-          tags: ["Clothing", "electronics", "online"],
-        },
-        {
-          name: "Transport",
-          color: "#3b82f6",
-          userId: user.id,
-          tags: ["Cabs", "fuel", "auto", "metro"],
-        },
-        {
-          name: "Utilities",
-          color: "#8b5cf6",
-          userId: user.id,
-          tags: ["Electricity", "water", "gas"],
-        },
-        {
-          name: "Subscriptions",
-          color: "#ec4899",
-          userId: user.id,
-          tags: ["Netflix", "Spotify", "Amazon Prime"],
-        },
-        {
-          name: "Health & Medical",
-          color: "#14b8a6",
-          userId: user.id,
-          tags: ["Doctor", "pharmacy", "labs"],
-        },
-        {
-          name: "Education",
-          color: "#6366f1",
-          userId: user.id,
-          tags: ["Courses", "books", "tuition"],
-        },
-        {
-          name: "Gym & Fitness",
-          color: "#22c55e",
-          userId: user.id,
-          tags: ["Membership", "equipment", "classes"],
-        },
-        {
-          name: "Travel & Trips",
-          color: "#0ea5e9",
-          userId: user.id,
-          tags: ["Flights", "hotels", "sightseeing"],
-        },
-      ],
-      skipDuplicates: true,
+      });
+
+      // 3. Create default categories
+      await tx.category.createMany({
+        data: [
+          {
+            name: "Overall",
+            color: "#94a3b8",
+            userId: user.id,
+            tags: ["Default"],
+          },
+          {
+            name: "Food & Dining",
+            color: "#f97316",
+            userId: user.id,
+            tags: ["Restaurants", "cafés", "food delivery"],
+          },
+          {
+            name: "Groceries",
+            color: "#84cc16",
+            userId: user.id,
+            tags: ["Supermarket", "vegetables", "dairy"],
+          },
+          {
+            name: "Shopping",
+            color: "#f59e0b",
+            userId: user.id,
+            tags: ["Clothing", "electronics", "online"],
+          },
+          {
+            name: "Transport",
+            color: "#3b82f6",
+            userId: user.id,
+            tags: ["Cabs", "fuel", "auto", "metro"],
+          },
+          {
+            name: "Utilities",
+            color: "#8b5cf6",
+            userId: user.id,
+            tags: ["Electricity", "water", "gas"],
+          },
+          {
+            name: "Subscriptions",
+            color: "#ec4899",
+            userId: user.id,
+            tags: ["Netflix", "Spotify", "Amazon Prime"],
+          },
+          {
+            name: "Health & Medical",
+            color: "#14b8a6",
+            userId: user.id,
+            tags: ["Doctor", "pharmacy", "labs"],
+          },
+          {
+            name: "Education",
+            color: "#6366f1",
+            userId: user.id,
+            tags: ["Courses", "books", "tuition"],
+          },
+          {
+            name: "Gym & Fitness",
+            color: "#22c55e",
+            userId: user.id,
+            tags: ["Membership", "equipment", "classes"],
+          },
+          {
+            name: "Travel & Trips",
+            color: "#0ea5e9",
+            userId: user.id,
+            tags: ["Flights", "hotels", "sightseeing"],
+          },
+        ],
+        skipDuplicates: true,
+      });
+
+      return { user };
     });
+    
     sendWelcomeEmail(user.email, user.name).catch((err) =>
       console.error("Welcome email failed:", err),
     );
@@ -137,6 +152,7 @@ export const login = async (req, res, next) => {
   /* #swagger.tags = ['Auth'] */
   try {
     const { email, password } = req.body;
+    console.log("cred", email, password);
 
     if (!email || !password) {
       return next(new AppError("Email and password are required", 400));
@@ -475,13 +491,6 @@ export const me = async (req, res) => {
         email: true,
         avatar: true,
         createdAt: true,
-
-        // profile fields
-        dob: true,
-        phoneNumber: true,
-        city: true,
-        country: true,
-        state: true,
       },
     });
 
@@ -503,70 +512,5 @@ export const me = async (req, res) => {
       success: false,
       message: "Invalid or expired token",
     });
-  }
-};
-
-// PATCH auth
-export const updateMe = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "No token provided",
-      });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    // verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const userId = decoded.id;
-
-    const { name, dob, phoneNumber, city, country, state, avatar } = req.body;
-
-    // optional validation
-    if (phoneNumber && typeof phoneNumber !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Phone number must be a string",
-      });
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        ...(name && { name }),
-        ...(dob && { dob: new Date(dob) }),
-        ...(phoneNumber && { phoneNumber }),
-        ...(city && { city }),
-        ...(country && { country }),
-        ...(state && { state }),
-        ...(avatar && { avatar }),
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        avatar: true,
-        dob: true,
-        phoneNumber: true,
-        city: true,
-        country: true,
-        state: true,
-      },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      user: updatedUser,
-    });
-  } catch (error) {
-    next(error);
   }
 };

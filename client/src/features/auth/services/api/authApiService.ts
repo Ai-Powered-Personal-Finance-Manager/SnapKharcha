@@ -45,6 +45,11 @@ export class AuthAPIService {
     const res = await clientAPI.get("/dashboard");
     return res?.data?.data;
   }
+
+  async insights() {
+    const res = await clientAPI.get("/insights");
+    return res?.data?.insights ?? [];
+  }
 }
 
 export const authService = new AuthAPIService();

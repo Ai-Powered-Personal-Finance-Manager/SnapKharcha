@@ -11,13 +11,13 @@ import { useRouter } from "next/navigation";
 
 export function BudgetsPage() {
     const router = useRouter();
-    
+
     const { data: budgets, isLoading, isError, refetch } = useGetBudgets();
     const budgetsData = budgets?.data?.budget;
     const summaryData = budgets?.data?.summary;
-    
+
     if (isLoading) {
-        return <BudgetSkeletonLoading />; 
+        return <BudgetSkeletonLoading />;
     }
 
     if (isError || !budgets) {
@@ -27,17 +27,17 @@ export function BudgetsPage() {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <PageHeader 
-                title="Budgets" 
-                description="Manage your budgets for different categories." 
+            <PageHeader
+                title="Budgets"
+                description="Manage your budgets for different categories."
                 back={false}
                 action={[
-                    { 
+                    {
                         label: "Add Budget",
-                        icon: Plus, 
-                        onClick: () => router.push("/budgets/create") 
+                        icon: Plus,
+                        onClick: () => router.push("/budgets/create")
                     }
-                ]} 
+                ]}
             />
 
             {/* Overview banner */}
