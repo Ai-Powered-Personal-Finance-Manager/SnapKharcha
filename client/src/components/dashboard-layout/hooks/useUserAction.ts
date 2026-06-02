@@ -5,6 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 export const useUserAction = () => {
   return useQuery({
     queryKey: [CONFIG.REVALIDATE.AUTH_ME],
-    queryFn: authService.authMe,
+    queryFn: async () => {
+      return authService.authMe();
+    },
+
+    staleTime: 0,
+    gcTime: 0,
   });
 };

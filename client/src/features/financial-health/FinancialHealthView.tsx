@@ -32,7 +32,6 @@ export const FinancialHealthView = () => {
   const { insights, isLoading, isFetching } = useFinancialHealth(
     user?.user?.id,
   );
-
   if (isLoading || isFetching) {
     return <FinancialHealthSkeleton />;
   }
