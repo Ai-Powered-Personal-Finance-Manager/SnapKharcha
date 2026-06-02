@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import passport from "./config/passport.js";
 import prisma from "./config/prisma.js";
 import errorHandler from "./middleware/errorHandler.js";
+import analyticsRouter from "./routes/analyticsRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import budgetRouter from "./routes/budgetRoutes.js";
 import categoryRouter from "./routes/categoryRoutes.js";
@@ -18,8 +19,7 @@ import expenseRouter from "./routes/expenseRoutes.js";
 import incomeRouter from "./routes/incomeRoutes.js";
 import insightRouter from "./routes/insightRoutes.js";
 import loanRouter from "./routes/loanRoutes.js";
-import analyticsRouter from "./routes/analyticsRoutes.js";
-import profileRouter from "./routes/profileRoutes.js"; 
+import profileRouter from "./routes/profileRoutes.js";
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -94,6 +94,9 @@ app.use("/api/analytics", analyticsRouter);
 
 //profile
 app.use("/api/profile", profileRouter);
+
+//insight
+app.use("/api/insights", insightRouter);
 
 // must be after all routes
 app.use(errorHandler);
