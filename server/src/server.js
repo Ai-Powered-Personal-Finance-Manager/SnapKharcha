@@ -18,7 +18,6 @@ import expenseRouter from "./routes/expenseRoutes.js";
 import incomeRouter from "./routes/incomeRoutes.js";
 import insightRouter from "./routes/insightRoutes.js";
 import loanRouter from "./routes/loanRoutes.js";
-import dashboardRouter from "./routes/dashboardRoutes.js";
 import analyticsRouter from "./routes/analyticsRoutes.js";
 import profileRouter from "./routes/profileRoutes.js"; 
 const require = createRequire(import.meta.url);
