@@ -18,13 +18,14 @@ const columns: {
   key: InsightInterface["type"];
   title: string;
   icon?: ElementType;
+  bg: string;
   color?: string;
 }[] = [
-  { key: "ALERT", title: "Critical", icon: Activity, color: "#FF0000" },
-  { key: "WARNING", title: "Attention", icon: TriangleAlert, color: "#FFBF00" },
-  { key: "TIP", title: "Recommendations", icon: Lightbulb, color: "#FFFF00" },
-  { key: "PATTERN", title: "Patterns", icon: ChartLine, color: "#0000FF" },
-  { key: "POSITIVE", title: "Wins", icon: TrendingUp, color: "#00FF00" },
+  { key: "ALERT", title: "Critical", icon: Activity, bg: "#FECACA", color: "#B91C1C" },
+  { key: "WARNING", title: "Attention", icon: TriangleAlert, bg: "#FEF08A" , color: "#CA8A04"},
+  { key: "TIP", title: "Recommendations", icon: Lightbulb, bg: "#FED7AA", color: "#C2410C" },
+  { key: "PATTERN", title: "Patterns", icon: ChartLine, bg: "#E9D5FF", color: "#7C3AED" },
+  { key: "POSITIVE", title: "Wins", icon: TrendingUp, bg: "#BBF7D0", color: "#15803D" },
 ];
 
 export const FinancialHealthView = () => {
@@ -72,18 +73,16 @@ export const FinancialHealthView = () => {
             <div
               key={column.key}
               style={{
-                backgroundColor: getShade(column.color || "", 0.3),
-
-                borderColor: "#808080",
+                backgroundColor: getShade(column.bg || "", 0.3),
               }}
-              className="rounded-2xl border p-4 text-black"
+              className="rounded-2xl border border-gray-200 p-4 text-black"
             >
               {/* COLUMN HEADER */}
-              <div className="mb-4 border-l-4 pl-3 border-[#01271e]">
+              <div className="mb-4 border-l-4 pl-3" style={{ borderLeftColor: column.color }}>
                 <div className="flex gap-2 items-end">
-                  {Icon && <Icon className=" text-[#01271e] mb-1" size={18} />}
+                  {Icon && <Icon className="mb-1" style={{ color: column.color }} size={18} />}
 
-                  <h2 className="font-semibold text-[#01271e]  text-lg">
+                  <h2 className="font-semibold text-lg" style={{ color: column.color }}>
                     {column.title}
                   </h2>
                 </div>
@@ -98,9 +97,9 @@ export const FinancialHealthView = () => {
                 {items.map((item, index) => (
                   <div
                     key={`${item.title}-${index}`}
-                    className="rounded-xl p-4 border"
+                    className="rounded-xl p-4"
                     style={{
-                      backgroundColor: getShade(column.color || "", 0.5),
+                      backgroundColor: getShade(column.bg || "", 0.5),
                       borderColor: column.color,
                     }}
                   >
