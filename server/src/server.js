@@ -13,8 +13,10 @@ import errorHandler from "./middleware/errorHandler.js";
 import authRouter from "./routes/authRoutes.js";
 import budgetRouter from "./routes/budgetRoutes.js";
 import categoryRouter from "./routes/categoryRoutes.js";
+import dashboardRouter from "./routes/dashboardRoutes.js";
 import expenseRouter from "./routes/expenseRoutes.js";
 import incomeRouter from "./routes/incomeRoutes.js";
+import insightRouter from "./routes/insightRoutes.js";
 import loanRouter from "./routes/loanRoutes.js";
 import dashboardRouter from "./routes/dashboardRoutes.js";
 import analyticsRouter from "./routes/analyticsRoutes.js";
@@ -60,9 +62,12 @@ app.use(passport.session());
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
 
-app.get("/",/* #swagger.ignore = true */ (req, res) => {
-  res.send("API running...");
-});
+app.get(
+  "/",
+  /* #swagger.ignore = true */ (req, res) => {
+    res.send("API running...");
+  },
+);
 
 //routes
 app.use("/api/auth", authRouter);

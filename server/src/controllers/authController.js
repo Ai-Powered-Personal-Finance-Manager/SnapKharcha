@@ -152,6 +152,7 @@ export const login = async (req, res, next) => {
   /* #swagger.tags = ['Auth'] */
   try {
     const { email, password } = req.body;
+    console.log("cred", email, password);
 
     if (!email || !password) {
       return next(new AppError("Email and password are required", 400));
@@ -511,70 +512,5 @@ export const me = async (req, res) => {
       success: false,
       message: "Invalid or expired token",
     });
-  }
-};
-
-// PATCH auth
-export const updateMe = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "No token provided",
-      });
-    }
-
-    const token = authHeader.split(" ")[1];
-
-    // verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const userId = decoded.id;
-
-    const { name, dob, phoneNumber, city, country, state, avatar } = req.body;
-
-    // optional validation
-    if (phoneNumber && typeof phoneNumber !== "string") {
-      return res.status(400).json({
-        success: false,
-        message: "Phone number must be a string",
-      });
-    }
-
-    const updatedUser = await prisma.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        ...(name && { name }),
-        ...(dob && { dob: new Date(dob) }),
-        ...(phoneNumber && { phoneNumber }),
-        ...(city && { city }),
-        ...(country && { country }),
-        ...(state && { state }),
-        ...(avatar && { avatar }),
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        avatar: true,
-        dob: true,
-        phoneNumber: true,
-        city: true,
-        country: true,
-        state: true,
-      },
-    });
-
-    return res.status(200).json({
-      success: true,
-      message: "Profile updated successfully",
-      user: updatedUser,
-    });
-  } catch (error) {
-    next(error);
   }
 };
