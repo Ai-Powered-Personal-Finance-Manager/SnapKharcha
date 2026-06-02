@@ -1,5 +1,3 @@
-// controllers/insight.controller.js
-
 import prisma from "../config/prisma.js";
 
 export const generateInsights = async (req, res) => {
@@ -27,9 +25,10 @@ export const generateInsights = async (req, res) => {
       if (percentage >= 80) {
         insights.push({
           type: "WARNING",
-          insight: `Your ${budget.category.name} budget is ${percentage.toFixed(
-            0,
-          )}% used`,
+          title: `${budget.category.name} Budget`,
+          description: `${percentage.toFixed(0)}% of monthly budget used`,
+          severity: percentage >= 100 ? "CRITICAL" : "HIGH",
+          category: budget.category.name,
         });
       }
     }
@@ -84,9 +83,16 @@ export const generateInsights = async (req, res) => {
       const lastMonthExpense = groupedExpenses[category].lastMonth;
 
       if (lastMonthExpense > 0 && thisMonthExpense > lastMonthExpense * 1.2) {
+        const increasePercent = Math.round(
+          ((thisMonthExpense - lastMonthExpense) / lastMonthExpense) * 100,
+        );
+
         insights.push({
           type: "ALERT",
-          insight: `You spent 20% more on ${category} than last month`,
+          title: `${category} Spending Increased`,
+          description: `${increasePercent}% higher than last month`,
+          severity: increasePercent >= 50 ? "CRITICAL" : "HIGH",
+          category,
         });
       }
     }
@@ -114,7 +120,10 @@ export const generateInsights = async (req, res) => {
     if (availableForBudget > totalIncome * 0.3) {
       insights.push({
         type: "TIP",
-        insight: `You have Rs ${availableForBudget} unbudgeted — consider saving it`,
+        title: "Unallocated Income",
+        description: `₹${availableForBudget.toLocaleString()} remains unbudgeted`,
+        severity: "LOW",
+        category: "Savings",
       });
     }
 
@@ -126,9 +135,16 @@ export const generateInsights = async (req, res) => {
       const spent = budget.spendAmount || 0;
 
       if (spent > budget.amount) {
+        // insights.push({
+        //   type: "PATTERN",
+        //   insight: `You consistently overspend on ${budget.category.name} — consider increasing budget`,
+        // });
         insights.push({
           type: "PATTERN",
-          insight: `You consistently overspend on ${budget.category.name} — consider increasing budget`,
+          title: `${budget.category.name} Overspending`,
+          description: "Repeatedly exceeding allocated budget",
+          severity: "MEDIUM",
+          category: budget.category.name,
         });
       }
     }
@@ -151,10 +167,12 @@ export const generateInsights = async (req, res) => {
 
     if (totalIncome > 0 && totalEMIs > totalIncome * 0.4) {
       const percentage = ((totalEMIs / totalIncome) * 100).toFixed(0);
-
       insights.push({
         type: "ALERT",
-        insight: `Your EMIs are ${percentage}% of income — financially risky`,
+        title: "High EMI Burden",
+        description: `EMIs consume ${percentage}% of income`,
+        severity: percentage >= 50 ? "CRITICAL" : "HIGH",
+        category: "Loans",
       });
     }
 
@@ -178,7 +196,10 @@ export const generateInsights = async (req, res) => {
     if (allBudgetsHealthy && budgets.length > 0) {
       insights.push({
         type: "POSITIVE",
-        insight: "Great job! You're well within your budgets this month",
+        title: "Budget Health",
+        description: "All budgets are comfortably within limits",
+        severity: "INFO",
+        category: "Finance",
       });
     }
 

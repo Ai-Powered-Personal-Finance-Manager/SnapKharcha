@@ -1,10 +1,11 @@
 "use client";
 
 import { CONFIG } from "@/src/core/config";
+import { bottomNavItems } from "@/src/core/constant/sidebarData";
 import { localStorageUtil } from "@/src/core/utils";
 import { CapitalizeFirst } from "@/src/core/utils/capitalizeFirst";
-import { LogoutResponse } from "@/src/features/auth/interface/loginInterface";
-import { bottomNavItems } from "@/src/core/constant/sidebarData";
+import { clientAPI } from "@/src/lib/api/api";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback } from "../ui/avatar";
@@ -25,25 +26,23 @@ const mockUser = {
 export default function SidebarFooter({ collapsed, user }: Props) {
   const router = useRouter();
 
-  // const useLogoutHandler = () => {
-  //   localStorageUtil.remove(CONFIG.LOCALSTORAGE.ACCESS_TOKEN);
-  //   console.log(
-  //     "Token removed:",
-  //     localStorageUtil.get(CONFIG.LOCALSTORAGE.ACCESS_TOKEN),
-  //   );
-  //   logout.handleLogout();
-  //   console.log("first");
-  //   router.replace(CONFIG.AUTH.HOME);
-  // };
   const useLogoutHandler = () => {
-    const { mutate: logout, isPending } = useLogoutAction();
+    const { mutate: logout } = useLogoutAction();
+    const queryClient = useQueryClient();
+
     const logoutUser = () => {
       logout(undefined, {
-        onSuccess: (res: LogoutResponse) => {
+        onSuccess: (res) => {
+          queryClient.clear();
           localStorageUtil.remove(CONFIG.LOCALSTORAGE.ACCESS_TOKEN);
+
+          delete clientAPI.defaults.headers.common.Authorization;
+
           toast.success(res.message);
+
           router.replace(CONFIG.AUTH.HOME);
         },
+
         onError: (error) => {
           toast.error(error.message);
         },

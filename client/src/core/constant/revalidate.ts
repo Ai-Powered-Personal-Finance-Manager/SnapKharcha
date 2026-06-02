@@ -6,4 +6,5 @@ export const REVALIDATE = {
   AUTH_ME: "auth-me",
   LOGOUT: "logout",
   DASHBOARD: "dashboard",
+  INSIGHTS: "insights",
 };
