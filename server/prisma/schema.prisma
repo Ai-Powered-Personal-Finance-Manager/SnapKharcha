@@ -16,14 +16,13 @@ model User {
   refreshToken String?
   otp          String?
   otpExpiresAt DateTime?
-  createdAt    DateTime  @default(now())
-
+  createdAt    DateTime   @default(now())
+  budgets      Budget[]
+  categories   Category[]
+  expenses     Expense[]
+  income       Income[]
+  loan         Loan[]
   profile      Profile?
-  budgets    Budget[]
-  categories Category[]
-  expenses   Expense[]
-  income     Income[]
-  loan       Loan[]
 }
 
 model Category {
@@ -117,16 +116,15 @@ model Profile {
   id        String    @id @default(uuid())
   name      String?
   email     String
-  image     String?
   phone     String?
   dob       DateTime?
   city      String?
   country   String?
   state     String?
-  createdAt DateTime  @default(now())
-
   userId    String    @unique
   updatedAt DateTime  @updatedAt
+  image     String?
+  createdAt DateTime  @default(now())
   user      User      @relation(fields: [userId], references: [id])
 }
 
