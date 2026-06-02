@@ -18,6 +18,8 @@ import expenseRouter from "./routes/expenseRoutes.js";
 import incomeRouter from "./routes/incomeRoutes.js";
 import insightRouter from "./routes/insightRoutes.js";
 import loanRouter from "./routes/loanRoutes.js";
+import analyticsRouter from "./routes/analyticsRoutes.js";
+import profileRouter from "./routes/profileRoutes.js"; 
 const require = createRequire(import.meta.url);
 const swaggerOutput = require("./swagger-output.json");
 
@@ -34,7 +36,7 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // if using cookies or auth
   }),
@@ -87,8 +89,11 @@ app.use("/api/income", incomeRouter);
 //dashboard
 app.use("/api/dashboard", dashboardRouter);
 
-//insights
-app.use("/api/insights", insightRouter);
+//analytics
+app.use("/api/analytics", analyticsRouter);
+
+//profile
+app.use("/api/profile", profileRouter);
 
 // must be after all routes
 app.use(errorHandler);
